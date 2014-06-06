@@ -16,6 +16,13 @@
 
 package com.sixrr.metrics.utils;
 
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiType;
+
 public class MethodUtils
 {
 	private MethodUtils()
@@ -54,7 +61,7 @@ public class MethodUtils
 			className = "";
 		}
 		final String methodName = method.getName();
-		final StringBuffer out = new StringBuffer(256);
+		final StringBuilder out = new StringBuilder(256);
 		out.append(className);
 		out.append('.');
 		out.append(methodName);

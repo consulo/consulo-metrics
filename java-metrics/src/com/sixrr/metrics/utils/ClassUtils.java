@@ -26,8 +26,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiAnonymousClass;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiTypeParameter;
 import com.intellij.psi.search.searches.DirectClassInheritorsSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Query;
@@ -49,16 +56,16 @@ public class ClassUtils
 		return file.getPackageName();
 	}
 
-	public static PsiPackage[] calculatePackagesRecursive(PsiClass aClass)
+	public static PsiJavaPackage[] calculatePackagesRecursive(PsiClass aClass)
 	{
-		PsiPackage aPackage = findPackage(aClass);
-		final List<PsiPackage> out = new ArrayList<PsiPackage>();
+		PsiJavaPackage aPackage = findPackage(aClass);
+		final List<PsiJavaPackage> out = new ArrayList<PsiJavaPackage>();
 		while(aPackage != null)
 		{
 			out.add(aPackage);
 			aPackage = aPackage.getParentPackage();
 		}
-		return out.toArray(new PsiPackage[out.size()]);
+		return out.toArray(new PsiJavaPackage[out.size()]);
 	}
 
 	public static String calculatePackageName(PsiJavaFile file)
@@ -66,16 +73,16 @@ public class ClassUtils
 		return file.getPackageName();
 	}
 
-	public static PsiPackage[] calculatePackagesRecursive(PsiJavaFile file)
+	public static PsiJavaPackage[] calculatePackagesRecursive(PsiJavaFile file)
 	{
-		PsiPackage aPackage = findPackage(file);
-		final List<PsiPackage> out = new ArrayList<PsiPackage>();
+		PsiJavaPackage aPackage = findPackage(file);
+		final List<PsiJavaPackage> out = new ArrayList<PsiJavaPackage>();
 		while(aPackage != null)
 		{
 			out.add(aPackage);
 			aPackage = aPackage.getParentPackage();
 		}
-		return out.toArray(new PsiPackage[out.size()]);
+		return out.toArray(new PsiJavaPackage[out.size()]);
 	}
 
 	public static boolean isAnonymous(PsiClass aClass)
@@ -179,7 +186,7 @@ public class ClassUtils
 	}
 
 	@Nullable
-	public static PsiPackage findPackage(PsiJavaFile file)
+	public static PsiJavaPackage findPackage(PsiJavaFile file)
 	{
 		if(file == null)
 		{
@@ -196,7 +203,7 @@ public class ClassUtils
 	}
 
 	@Nullable
-	public static PsiPackage findPackage(PsiClass referencedClass)
+	public static PsiJavaPackage findPackage(PsiClass referencedClass)
 	{
 		if(referencedClass == null)
 		{

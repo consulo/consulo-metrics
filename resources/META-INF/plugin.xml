@@ -5,7 +5,7 @@
 	<version>1.0 alpha 3</version>
 
 	<extensionPoints>
-		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
+		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.Metricrovider"/>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij">

@@ -22,12 +22,10 @@ import org.jetbrains.annotations.NonNls;
 import com.intellij.analysis.AnalysisScope;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
-import com.sixrr.metrics.MetricsResultsHolder;
 import com.sixrr.metrics.profile.MetricsProfile;
 
-public interface MetricsRun extends MetricsResultsHolder
+public interface MetricsRun
 {
-
 	List<Metric> getMetrics();
 
 	MetricsResult getResultsForCategory(MetricCategory category);

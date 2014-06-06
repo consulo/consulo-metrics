@@ -42,10 +42,11 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiPackage;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
+import com.sixrr.metrics.MetricsResultsHolder;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class MetricsRunImpl implements MetricsRun
+public class MetricsRunImpl implements MetricsRun, MetricsResultsHolder
 {
 
 	private static final Logger logger = Logger.getInstance("MetricsReloaded");
@@ -63,6 +64,7 @@ public class MetricsRunImpl implements MetricsRun
 		}
 	}
 
+	@Override
 	public List<Metric> getMetrics()
 	{
 		final Set<Metric> allMetrics = new HashSet<Metric>();
@@ -75,6 +77,7 @@ public class MetricsRunImpl implements MetricsRun
 		return new ArrayList<Metric>(allMetrics);
 	}
 
+	@Override
 	public void postProjectMetric(Metric metric, double value)
 	{
 		final MetricCategory category = metric.getCategory();
@@ -86,6 +89,7 @@ public class MetricsRunImpl implements MetricsRun
 		results.postValue(metric, "project", value);
 	}
 
+	@Override
 	public void postModuleMetric(Metric metric, Module module, double value)
 	{
 		final MetricCategory category = metric.getCategory();
@@ -156,6 +160,7 @@ public class MetricsRunImpl implements MetricsRun
 		results.setElementForMeasuredObject(signature, method);
 	}
 
+	@Override
 	public void postProjectMetric(Metric metric, double numerator, double denominator)
 	{
 
@@ -168,6 +173,7 @@ public class MetricsRunImpl implements MetricsRun
 		results.postValue(metric, "project", numerator, denominator);
 	}
 
+	@Override
 	public void postModuleMetric(Metric metric, Module module, double numerator, double denominator)
 	{
 		final MetricCategory category = metric.getCategory();
@@ -268,6 +274,7 @@ public class MetricsRunImpl implements MetricsRun
 		}
 	}
 
+	@Override
 	public MetricsResult getResultsForCategory(MetricCategory category)
 	{
 		return metricResults.get(category);
@@ -278,6 +285,7 @@ public class MetricsRunImpl implements MetricsRun
 		metricResults.put(category, results);
 	}
 
+	@Override
 	public void writeToFile(String fileName)
 	{
 		FileOutputStream fileStr = null;
@@ -318,6 +326,7 @@ public class MetricsRunImpl implements MetricsRun
 		}
 	}
 
+	@Override
 	public String getProfileName()
 	{
 		return profileName;
@@ -338,16 +347,19 @@ public class MetricsRunImpl implements MetricsRun
 		this.timestamp = timestamp;
 	}
 
+	@Override
 	public TimeStamp getTimestamp()
 	{
 		return timestamp;
 	}
 
+	@Override
 	public AnalysisScope getContext()
 	{
 		return context;
 	}
 
+	@Override
 	public MetricsRun filterRowsWithoutWarnings(MetricsProfile profile)
 	{
 		final MetricsRunImpl out = new MetricsRunImpl();
