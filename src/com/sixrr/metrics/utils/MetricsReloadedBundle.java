@@ -16,19 +16,22 @@
 
 package com.sixrr.metrics.utils;
 
-import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
+import com.intellij.AbstractBundle;
 
-public class MetricsReloadedBundle extends AbstractBundle {
+public class MetricsReloadedBundle extends AbstractBundle
+{
 
-    public static final String BUNDLE_NAME = "com.sixrr.metrics.utils.MetricsReloadedBundle";
-    private static final MetricsReloadedBundle INSTANCE = new MetricsReloadedBundle();
+	public static final String BUNDLE_NAME = "com.sixrr.metrics.utils.MetricsReloadedBundle";
+	private static final MetricsReloadedBundle INSTANCE = new MetricsReloadedBundle();
 
-    private MetricsReloadedBundle() {
-        super(BUNDLE_NAME);
-    }
+	private MetricsReloadedBundle()
+	{
+		super(BUNDLE_NAME);
+	}
 
-    public static String message(@PropertyKey(resourceBundle = BUNDLE_NAME) String key, Object... params) {
-        return INSTANCE.getMessage(key, params);
-    }
+	public static String message(@PropertyKey(resourceBundle = BUNDLE_NAME) String key, Object... params)
+	{
+		return INSTANCE.getMessage(key, params);
+	}
 }

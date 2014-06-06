@@ -16,5 +16,6 @@
 
 package com.sixrr.metrics.plugin;
 
-public interface MetricsPluginApplication {
+public interface MetricsPluginApplication
+{
 }

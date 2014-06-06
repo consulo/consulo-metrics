@@ -16,97 +16,116 @@
 
 package com.sixrr.metrics.export;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.jetbrains.annotations.NonNls;
 import com.intellij.analysis.AnalysisScope;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.metricModel.MetricsResult;
 import com.sixrr.metrics.metricModel.MetricsRun;
-import org.jetbrains.annotations.NonNls;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+public class XMLExporter implements Exporter
+{
+	private final MetricsRun run;
 
-public class XMLExporter implements Exporter {
-    private final MetricsRun run;
+	public XMLExporter(MetricsRun run)
+	{
+		super();
+		this.run = run;
+	}
 
-    public XMLExporter(MetricsRun run) {
-        super();
-        this.run = run;
-    }
+	public void export(String fileName) throws IOException
+	{
+		FileOutputStream outputStream = null;
+		@NonNls PrintWriter writer = null;
+		try
+		{
+			outputStream = new FileOutputStream(fileName);
+			writer = new PrintWriter(outputStream);
+			writer.println("<METRICS " + " profile = \"" + run.getProfileName() + '\"' + " timestamp = \"" +
+					run.getTimestamp() + '\"' + '>');
+			writeContext(run.getContext());
+			final MetricCategory[] categories = MetricCategory.values();
+			for(MetricCategory category : categories)
+			{
+				writeResultsForCategory(category, writer);
+			}
+			writer.println("</METRICS>");
+		}
+		finally
+		{
+			if(writer != null)
+			{
+				writer.close();
+			}
+			if(outputStream != null)
+			{
+				outputStream.close();
+			}
+		}
+	}
 
-    public void export(String fileName) throws IOException {
-        FileOutputStream outputStream = null;
-        @NonNls PrintWriter writer = null;
-        try {
-            outputStream = new FileOutputStream(fileName);
-            writer = new PrintWriter(outputStream);
-            writer.println("<METRICS " + " profile = \"" + run.getProfileName() + '\"' + " timestamp = \"" +
-                    run.getTimestamp() + '\"' + '>');
-            writeContext(run.getContext());
-            final MetricCategory[] categories = MetricCategory.values();
-            for (MetricCategory category : categories) {
-                writeResultsForCategory(category, writer);
-            }
-            writer.println("</METRICS>");
-        } finally {
-            if (writer != null) {
-                writer.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        }
-    }
+	private void writeContext(AnalysisScope context)
+	{
+	}
 
-    private void writeContext(AnalysisScope context) {
-    }
+	private void writeResultsForCategory(MetricCategory category, PrintWriter writer)
+	{
+		final MetricsResult results = run.getResultsForCategory(category);
+		final Metric[] metrics = results.getMetrics();
+		for(final Metric metric : metrics)
+		{
+			writeResultsForMetric(category, metric, results, writer);
+		}
+	}
 
-    private void writeResultsForCategory(MetricCategory category, PrintWriter writer) {
-        final MetricsResult results = run.getResultsForCategory(category);
-        final Metric[] metrics = results.getMetrics();
-        for (final Metric metric : metrics) {
-            writeResultsForMetric(category, metric, results, writer);
-        }
-    }
+	private static void writeResultsForMetric(
+			MetricCategory category, Metric metric, MetricsResult results, @NonNls PrintWriter writer)
+	{
+		final String[] measuredObjects = results.getMeasuredObjects();
+		writer.println("\t\t<METRIC" + " category = \"" + category.name() + '\"' + " name= \"" +
+				metric.getDisplayName() + '\"' + " abbreviation= \"" + metric.getAbbreviation() + '\"' + '>');
+		for(final String measuredObject : measuredObjects)
+		{
+			writeValue(results, metric, measuredObject, writer);
+		}
+		writer.println("\t\t</METRIC>");
+	}
 
-    private static void writeResultsForMetric(MetricCategory category, Metric metric, MetricsResult results,
-                                              @NonNls PrintWriter writer) {
-        final String[] measuredObjects = results.getMeasuredObjects();
-        writer.println("\t\t<METRIC" + " category = \"" + category.name() + '\"' + " name= \"" +
-                metric.getDisplayName() + '\"' + " abbreviation= \"" + metric.getAbbreviation() + '\"' + '>');
-        for (final String measuredObject : measuredObjects) {
-            writeValue(results, metric, measuredObject, writer);
-        }
-        writer.println("\t\t</METRIC>");
-    }
+	private static void writeValue(
+			MetricsResult results, Metric metric, String measuredObject, @NonNls PrintWriter writer)
+	{
+		final Double value = results.getValueForMetric(metric, measuredObject);
+		if(value != null)
+		{
+			writer.println("\t\t\t<VALUE measured = \"" + escape(measuredObject) + "\" value = \"" + value + "\"/>");
+		}
+	}
 
-    private static void writeValue(MetricsResult results, Metric metric, String measuredObject,
-                                   @NonNls PrintWriter writer) {
-        final Double value = results.getValueForMetric(metric, measuredObject);
-        if (value != null) {
-            writer.println("\t\t\t<VALUE measured = \"" + escape(measuredObject) + "\" value = \"" + value + "\"/>");
-        }
-    }
+	private static String escape(String measuredObject)
+	{
+		@NonNls final StringBuilder sb = new StringBuilder(measuredObject.length());
 
-    private static String escape(String measuredObject) {
-        @NonNls final StringBuilder sb = new StringBuilder(measuredObject.length());
+		for(int idx = 0; idx < measuredObject.length(); idx++)
+		{
+			final char c = measuredObject.charAt(idx);
 
-        for (int idx = 0; idx < measuredObject.length(); idx++) {
-            final char c = measuredObject.charAt(idx);
+			switch(c)
+			{
+				case '<':
+					sb.append("&lt;");
+					break;
+				case '>':
+					sb.append("&gt;");
+					break;
+				default:
+					sb.append(c);
+			}
+		}
 
-            switch (c) {
-                case'<':
-                    sb.append("&lt;");
-                    break;
-                case'>':
-                    sb.append("&gt;");
-                    break;
-                default:
-                    sb.append(c);
-            }
-        }
-
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 }

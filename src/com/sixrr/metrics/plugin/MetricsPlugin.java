@@ -20,11 +20,12 @@ import com.sixrr.metrics.config.MetricsReloadedConfig;
 import com.sixrr.metrics.profile.MetricsProfileRepository;
 import com.sixrr.metrics.ui.metricdisplay.MetricsToolWindow;
 
-public interface MetricsPlugin {
+public interface MetricsPlugin
+{
 
-    MetricsReloadedConfig getConfiguration();
+	MetricsReloadedConfig getConfiguration();
 
-    MetricsToolWindow getMetricsToolWindow();
+	MetricsToolWindow getMetricsToolWindow();
 
-    MetricsProfileRepository getProfileRepository();
+	MetricsProfileRepository getProfileRepository();
 }

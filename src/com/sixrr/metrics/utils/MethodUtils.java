@@ -16,51 +16,60 @@
 
 package com.sixrr.metrics.utils;
 
-import com.intellij.psi.*;
+public class MethodUtils
+{
+	private MethodUtils()
+	{
+		super();
+	}
 
-public class MethodUtils {
-    private MethodUtils() {
-        super();
-    }
+	public static boolean isAbstract(PsiMethod method)
+	{
+		if(method.hasModifierProperty(PsiModifier.ABSTRACT))
+		{
+			return true;
+		}
+		final PsiClass containingClass = method.getContainingClass();
+		if(containingClass == null)
+		{
+			return false;
+		}
+		return containingClass.isInterface();
+	}
 
-    public static boolean isAbstract(PsiMethod method) {
-        if (method.hasModifierProperty(PsiModifier.ABSTRACT)) {
-            return true;
-        }
-        final PsiClass containingClass = method.getContainingClass();
-        if (containingClass == null) {
-            return false;
-        }
-        return containingClass.isInterface();
-    }
+	public static String calculateSignature(PsiMethod method)
+	{
 
-    public static String calculateSignature(PsiMethod method) {
+		final PsiClass containingClass = method.getContainingClass();
 
-        final PsiClass containingClass = method.getContainingClass();
-
-        final PsiParameterList parameterList = method.getParameterList();
-        final PsiParameter[] parameters = parameterList.getParameters();
-        final String className;
-        if (containingClass != null) {
-            className = containingClass.getQualifiedName();
-        } else {
-            className = "";
-        }
-        final String methodName = method.getName();
-        final StringBuffer out = new StringBuffer(256);
-        out.append(className);
-        out.append('.');
-        out.append(methodName);
-        out.append('(');
-        for (int i = 0; i < parameters.length; i++) {
-            if (i != 0) {
-                out.append(',');
-            }
-            final PsiType parameterType = parameters[i].getType();
-            final String parameterTypeText = parameterType.getPresentableText();
-            out.append(parameterTypeText);
-        }
-        out.append(')');
-        return out.toString();
-    }
+		final PsiParameterList parameterList = method.getParameterList();
+		final PsiParameter[] parameters = parameterList.getParameters();
+		final String className;
+		if(containingClass != null)
+		{
+			className = containingClass.getQualifiedName();
+		}
+		else
+		{
+			className = "";
+		}
+		final String methodName = method.getName();
+		final StringBuffer out = new StringBuffer(256);
+		out.append(className);
+		out.append('.');
+		out.append(methodName);
+		out.append('(');
+		for(int i = 0; i < parameters.length; i++)
+		{
+			if(i != 0)
+			{
+				out.append(',');
+			}
+			final PsiType parameterType = parameters[i].getType();
+			final String parameterTypeText = parameterType.getPresentableText();
+			out.append(parameterTypeText);
+		}
+		out.append(')');
+		return out.toString();
+	}
 }

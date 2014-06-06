@@ -26,32 +26,37 @@ import com.sixrr.metrics.metricModel.TimeStamp;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-class UpdateMetricsViewAction extends AnAction {
+class UpdateMetricsViewAction extends AnAction
+{
 
-    private final MetricsToolWindow toolWindow;
-    private final Project project;
+	private final MetricsToolWindow toolWindow;
+	private final Project project;
 
-    UpdateMetricsViewAction(MetricsToolWindow toolWindow, Project project) {
-        super(MetricsReloadedBundle.message("update.metrics.action"),
-                MetricsReloadedBundle.message("update.metrics.description"), AllIcons.Actions.Refresh);
-        this.toolWindow = toolWindow;
-        this.project = project;
-    }
+	UpdateMetricsViewAction(MetricsToolWindow toolWindow, Project project)
+	{
+		super(MetricsReloadedBundle.message("update.metrics.action"), MetricsReloadedBundle.message("update.metrics.description"),
+				AllIcons.Actions.Refresh);
+		this.toolWindow = toolWindow;
+		this.project = project;
+	}
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-        final AnalysisScope currentScope = toolWindow.getCurrentScope();
-        final MetricsProfile currentProfile = toolWindow.getCurrentProfile();
-        final MetricsRunImpl metricsRun = new MetricsRunImpl();
-        new MetricsExecutionContextImpl(project, currentScope) {
-            
-            @Override
-            public void onFinish() {
-                metricsRun.setProfileName(currentProfile.getName());
-                metricsRun.setContext(currentScope);
-                metricsRun.setTimestamp(new TimeStamp());
-                toolWindow.update(metricsRun);
-            }
-        }.execute(currentProfile, metricsRun);
-    }
+	@Override
+	public void actionPerformed(AnActionEvent event)
+	{
+		final AnalysisScope currentScope = toolWindow.getCurrentScope();
+		final MetricsProfile currentProfile = toolWindow.getCurrentProfile();
+		final MetricsRunImpl metricsRun = new MetricsRunImpl();
+		new MetricsExecutionContextImpl(project, currentScope)
+		{
+
+			@Override
+			public void onFinish()
+			{
+				metricsRun.setProfileName(currentProfile.getName());
+				metricsRun.setContext(currentScope);
+				metricsRun.setTimestamp(new TimeStamp());
+				toolWindow.update(metricsRun);
+			}
+		}.execute(currentProfile, metricsRun);
+	}
 }

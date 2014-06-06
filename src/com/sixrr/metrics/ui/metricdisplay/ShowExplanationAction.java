@@ -16,33 +16,38 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JTable;
+
 import com.intellij.openapi.project.Project;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.ui.dialogs.ExplanationDialog;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
+class ShowExplanationAction extends AbstractAction
+{
 
-class ShowExplanationAction extends AbstractAction {
+	private final Project project;
+	private final JTable table;
+	private final MetricTableModel model;
 
-    private final Project project;
-    private final JTable table;
-    private final MetricTableModel model;
+	ShowExplanationAction(Project project, JTable table)
+	{
+		super(MetricsReloadedBundle.message("show.explanation.action"));
+		this.project = project;
+		this.table = table;
+		model = (MetricTableModel) table.getModel();
+	}
 
-    ShowExplanationAction(Project project, JTable table) {
-        super(MetricsReloadedBundle.message("show.explanation.action"));
-        this.project = project;
-        this.table = table;
-        model = (MetricTableModel) table.getModel();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        final ExplanationDialog dialog = new ExplanationDialog(project);
-        final int selectedColumn = table.getSelectedColumn();
-        final int modelColumn = table.convertColumnIndexToModel(selectedColumn);
-        final Metric metric = model.getMetricForColumn(modelColumn).getMetric();
-        dialog.run(metric);
-    }
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		final ExplanationDialog dialog = new ExplanationDialog(project);
+		final int selectedColumn = table.getSelectedColumn();
+		final int modelColumn = table.convertColumnIndexToModel(selectedColumn);
+		final Metric metric = model.getMetricForColumn(modelColumn).getMetric();
+		dialog.run(metric);
+	}
 }

@@ -2,31 +2,32 @@ package com.sixrr.metrics.metricModel;
 
 import com.sixrr.metrics.Metric;
 
-public interface MetricInstance extends Cloneable, Comparable<MetricInstance> {
+public interface MetricInstance extends Cloneable, Comparable<MetricInstance>
+{
 
-    Metric getMetric();
+	Metric getMetric();
 
-    void copyFrom(MetricInstance o);
+	void copyFrom(MetricInstance o);
 
-    boolean isEnabled();
+	boolean isEnabled();
 
-    void setEnabled(boolean enabled);
+	void setEnabled(boolean enabled);
 
-    boolean isUpperThresholdEnabled();
+	boolean isUpperThresholdEnabled();
 
-    void setUpperThresholdEnabled(boolean upperThresholdEnabled);
+	void setUpperThresholdEnabled(boolean upperThresholdEnabled);
 
-    void setUpperThreshold(double upperThreshold);
+	void setUpperThreshold(double upperThreshold);
 
-    boolean isLowerThresholdEnabled();
+	boolean isLowerThresholdEnabled();
 
-    void setLowerThresholdEnabled(boolean lowerThresholdEnabled);
+	void setLowerThresholdEnabled(boolean lowerThresholdEnabled);
 
-    void setLowerThreshold(double lowerThreshold);
+	void setLowerThreshold(double lowerThreshold);
 
-    double getUpperThreshold();
+	double getUpperThreshold();
 
-    double getLowerThreshold();
+	double getLowerThreshold();
 
-    MetricInstance clone() throws CloneNotSupportedException;
+	MetricInstance clone() throws CloneNotSupportedException;
 }

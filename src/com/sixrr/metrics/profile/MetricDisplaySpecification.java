@@ -16,24 +16,27 @@
 
 package com.sixrr.metrics.profile;
 
-import com.sixrr.metrics.MetricCategory;
-
 import java.util.EnumMap;
 import java.util.Map;
 
-public class MetricDisplaySpecification {
-    private final Map<MetricCategory, MetricTableSpecification> specs =
-            new EnumMap<MetricCategory, MetricTableSpecification>(MetricCategory.class);
+import com.sixrr.metrics.MetricCategory;
 
-    public MetricDisplaySpecification() {
-        super();
-        final MetricCategory[] categories = MetricCategory.values();
-        for (MetricCategory category : categories) {
-            specs.put(category, new MetricTableSpecification());
-        }
-    }
+public class MetricDisplaySpecification
+{
+	private final Map<MetricCategory, MetricTableSpecification> specs = new EnumMap<MetricCategory, MetricTableSpecification>(MetricCategory.class);
 
-    public MetricTableSpecification getSpecification(MetricCategory category) {
-        return specs.get(category);
-    }
+	public MetricDisplaySpecification()
+	{
+		super();
+		final MetricCategory[] categories = MetricCategory.values();
+		for(MetricCategory category : categories)
+		{
+			specs.put(category, new MetricTableSpecification());
+		}
+	}
+
+	public MetricTableSpecification getSpecification(MetricCategory category)
+	{
+		return specs.get(category);
+	}
 }

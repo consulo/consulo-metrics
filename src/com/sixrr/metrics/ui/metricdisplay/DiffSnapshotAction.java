@@ -15,6 +15,12 @@
  */
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.Window;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -24,37 +30,35 @@ import com.sixrr.metrics.metricModel.MetricsRun;
 import com.sixrr.metrics.metricModel.MetricsRunImpl;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import java.awt.*;
-import java.io.File;
+class DiffSnapshotAction extends AnAction
+{
 
-class DiffSnapshotAction extends AnAction {
+	private final MetricsToolWindow toolWindow;
+	private final Project project;
 
-    private final MetricsToolWindow toolWindow;
-    private final Project project;
+	DiffSnapshotAction(MetricsToolWindow toolWindow, Project project)
+	{
+		super(MetricsReloadedBundle.message("compare.with.snapshot.action"), MetricsReloadedBundle.message("compare.with.snapshot.description"),
+				AllIcons.Diff.Diff);
+		this.toolWindow = toolWindow;
+		this.project = project;
+	}
 
-    DiffSnapshotAction(MetricsToolWindow toolWindow, Project project) {
-        super(MetricsReloadedBundle.message("compare.with.snapshot.action"),
-                MetricsReloadedBundle.message("compare.with.snapshot.description"), AllIcons.Diff.Diff);
-        this.toolWindow = toolWindow;
-        this.project = project;
-    }
+	@Override
+	public void actionPerformed(AnActionEvent event)
+	{
+		final JFileChooser chooser = new JFileChooser();
+		final FileFilter filter = new SnapshotFileFilter();
+		chooser.setFileFilter(filter);
+		final WindowManager myWindowManager = WindowManager.getInstance();
+		final Window parent = myWindowManager.suggestParentWindow(project);
+		final int returnVal = chooser.showOpenDialog(parent);
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-        final JFileChooser chooser = new JFileChooser();
-        final FileFilter filter = new SnapshotFileFilter();
-        chooser.setFileFilter(filter);
-        final WindowManager myWindowManager = WindowManager.getInstance();
-        final Window parent = myWindowManager.suggestParentWindow(project);
-        final int returnVal = chooser.showOpenDialog(parent);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            final File selectedFile = chooser.getSelectedFile();
-            final MetricsRun previousResults =
-                    MetricsRunImpl.readFromFile(selectedFile);
-            toolWindow.reloadAsDiff(previousResults);
-        }
-    }
+		if(returnVal == JFileChooser.APPROVE_OPTION)
+		{
+			final File selectedFile = chooser.getSelectedFile();
+			final MetricsRun previousResults = MetricsRunImpl.readFromFile(selectedFile);
+			toolWindow.reloadAsDiff(previousResults);
+		}
+	}
 }

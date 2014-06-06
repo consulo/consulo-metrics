@@ -26,32 +26,37 @@ import com.sixrr.metrics.metricModel.TimeStamp;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-class UpdateWithDiffAction extends AnAction {
+class UpdateWithDiffAction extends AnAction
+{
 
-    private final MetricsToolWindow toolWindow;
-    private final Project project;
+	private final MetricsToolWindow toolWindow;
+	private final Project project;
 
-    UpdateWithDiffAction(MetricsToolWindow toolWindow, Project project) {
-        super(MetricsReloadedBundle.message("update.with.differences.action"),
-                MetricsReloadedBundle.message("update.with.differences.description"), AllIcons.Actions.Rerun);
-        this.toolWindow = toolWindow;
-        this.project = project;
-    }
+	UpdateWithDiffAction(MetricsToolWindow toolWindow, Project project)
+	{
+		super(MetricsReloadedBundle.message("update.with.differences.action"), MetricsReloadedBundle.message("update.with.differences.description"),
+				AllIcons.Actions.Rerun);
+		this.toolWindow = toolWindow;
+		this.project = project;
+	}
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-        final AnalysisScope scope = toolWindow.getCurrentScope();
-        final MetricsProfile currentProfile = toolWindow.getCurrentProfile();
-        final MetricsRunImpl metricsRun = new MetricsRunImpl();
-        new MetricsExecutionContextImpl(project, scope) {
+	@Override
+	public void actionPerformed(AnActionEvent event)
+	{
+		final AnalysisScope scope = toolWindow.getCurrentScope();
+		final MetricsProfile currentProfile = toolWindow.getCurrentProfile();
+		final MetricsRunImpl metricsRun = new MetricsRunImpl();
+		new MetricsExecutionContextImpl(project, scope)
+		{
 
-            @Override
-            public void onFinish() {
-                metricsRun.setContext(scope);
-                metricsRun.setProfileName(currentProfile.getName());
-                metricsRun.setTimestamp(new TimeStamp());
-                toolWindow.updateWithDiff(metricsRun);
-            }
-        }.execute(currentProfile, metricsRun);
-    }
+			@Override
+			public void onFinish()
+			{
+				metricsRun.setContext(scope);
+				metricsRun.setProfileName(currentProfile.getName());
+				metricsRun.setTimestamp(new TimeStamp());
+				toolWindow.updateWithDiff(metricsRun);
+			}
+		}.execute(currentProfile, metricsRun);
+	}
 }

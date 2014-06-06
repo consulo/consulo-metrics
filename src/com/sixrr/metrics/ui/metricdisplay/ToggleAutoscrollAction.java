@@ -21,23 +21,27 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.sixrr.metrics.config.MetricsReloadedConfig;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-class ToggleAutoscrollAction extends ToggleAction {
+class ToggleAutoscrollAction extends ToggleAction
+{
 
-    private final MetricsReloadedConfig configuration;
+	private final MetricsReloadedConfig configuration;
 
-    ToggleAutoscrollAction(MetricsReloadedConfig configuration) {
-        super(MetricsReloadedBundle.message("autoscroll.to.source.action"),
-                MetricsReloadedBundle.message("autoscroll.to.source.description"), AllIcons.General.AutoscrollToSource);
-        this.configuration = configuration;
-    }
+	ToggleAutoscrollAction(MetricsReloadedConfig configuration)
+	{
+		super(MetricsReloadedBundle.message("autoscroll.to.source.action"), MetricsReloadedBundle.message("autoscroll.to.source.description"),
+				AllIcons.General.AutoscrollToSource);
+		this.configuration = configuration;
+	}
 
-    @Override
-    public boolean isSelected(AnActionEvent event) {
-        return configuration.isAutoscroll();
-    }
+	@Override
+	public boolean isSelected(AnActionEvent event)
+	{
+		return configuration.isAutoscroll();
+	}
 
-    @Override
-    public void setSelected(AnActionEvent event, boolean b) {
-        configuration.setAutoscroll(b);
-    }
+	@Override
+	public void setSelected(AnActionEvent event, boolean b)
+	{
+		configuration.setAutoscroll(b);
+	}
 }

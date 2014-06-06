@@ -16,6 +16,8 @@
 
 package com.sixrr.metrics.plugin;
 
+import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
@@ -25,68 +27,82 @@ import com.sixrr.metrics.config.MetricsReloadedConfig;
 import com.sixrr.metrics.profile.MetricsProfileRepository;
 import com.sixrr.metrics.ui.metricdisplay.MetricsToolWindow;
 import com.sixrr.metrics.ui.metricdisplay.MetricsToolWindowImpl;
-import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 
-public class MetricsPluginImpl implements ProjectComponent, MetricsPlugin, JDOMExternalizable {
-    
-    private MetricsProfileRepository profileRepository = null;
-    private final MetricsReloadedConfig config = new MetricsReloadedConfig();
-    private final Project project;
-    private MetricsToolWindow metricsToolWindow = null;
+public class MetricsPluginImpl implements ProjectComponent, MetricsPlugin, JDOMExternalizable
+{
 
-    public MetricsPluginImpl(Project project) {
-        this.project = project;
-    }
+	private MetricsProfileRepository profileRepository = null;
+	private final MetricsReloadedConfig config = new MetricsReloadedConfig();
+	private final Project project;
+	private MetricsToolWindow metricsToolWindow = null;
 
-    @Override
-    @NotNull public String getComponentName() {
-        return "com.sixrr.metrics.MetricsReloaded";
-    }
+	public MetricsPluginImpl(Project project)
+	{
+		this.project = project;
+	}
 
-    @Override
-    public void initComponent() {}
+	@Override
+	@NotNull
+	public String getComponentName()
+	{
+		return "com.sixrr.metrics.MetricsReloaded";
+	}
 
-    @Override
-    public void disposeComponent() {}
+	@Override
+	public void initComponent()
+	{
+	}
 
-    @Override
-    public void projectOpened() {
-        metricsToolWindow = new MetricsToolWindowImpl(project, this, config);
-        metricsToolWindow.register();
-    }
+	@Override
+	public void disposeComponent()
+	{
+	}
 
-    @Override
-    public void projectClosed() {
-        metricsToolWindow.unregister();
-    }
+	@Override
+	public void projectOpened()
+	{
+		metricsToolWindow = new MetricsToolWindowImpl(project, this, config);
+		metricsToolWindow.register();
+	}
 
-    @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        config.readExternal(element);
-    }
+	@Override
+	public void projectClosed()
+	{
+		metricsToolWindow.unregister();
+	}
 
-    @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-        config.writeExternal(element);
-    }
+	@Override
+	public void readExternal(Element element) throws InvalidDataException
+	{
+		config.readExternal(element);
+	}
 
-    @Override
-    public MetricsReloadedConfig getConfiguration() {
-        return config;
-    }
+	@Override
+	public void writeExternal(Element element) throws WriteExternalException
+	{
+		config.writeExternal(element);
+	}
 
-    @Override
-    public MetricsToolWindow getMetricsToolWindow() {
-        return metricsToolWindow;
-    }
+	@Override
+	public MetricsReloadedConfig getConfiguration()
+	{
+		return config;
+	}
 
-    @Override
-    public MetricsProfileRepository getProfileRepository() {
-        if (profileRepository == null) {
-            profileRepository = new MetricsProfileRepository(config);
-            profileRepository.initialize();
-        }
-        return profileRepository;
-    }
+	@Override
+	public MetricsToolWindow getMetricsToolWindow()
+	{
+		return metricsToolWindow;
+	}
+
+	@Override
+	public MetricsProfileRepository getProfileRepository()
+	{
+		if(profileRepository == null)
+		{
+			profileRepository = new MetricsProfileRepository(config);
+			profileRepository.initialize();
+		}
+		return profileRepository;
+	}
 }

@@ -16,42 +16,43 @@
 
 package com.sixrr.metrics.metricModel;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.profile.MetricsProfile;
-import org.jetbrains.annotations.Nullable;
 
-public interface MetricsResult {
+public interface MetricsResult
+{
 
-    void postValue(Metric metric, String measured, double value);
+	void postValue(Metric metric, String measured, double value);
 
-    void postValue(Metric metric, String measured, double numerator, double denominator);
+	void postValue(Metric metric, String measured, double numerator, double denominator);
 
-    @Nullable
-    Double getValueForMetric(Metric metric, String measured);
+	@Nullable
+	Double getValueForMetric(Metric metric, String measured);
 
-    String[] getMeasuredObjects();
+	String[] getMeasuredObjects();
 
-    Metric[] getMetrics();
+	Metric[] getMetrics();
 
-    @Nullable
-    Double getTotalForMetric(Metric metric);
+	@Nullable
+	Double getTotalForMetric(Metric metric);
 
-    @Nullable
-    Double getAverageForMetric(Metric metric);
+	@Nullable
+	Double getAverageForMetric(Metric metric);
 
-    @Nullable
-    Double getMinimumForMetric(Metric metric);
+	@Nullable
+	Double getMinimumForMetric(Metric metric);
 
-    @Nullable
-    Double getMaximumForMetric(Metric metric);
+	@Nullable
+	Double getMaximumForMetric(Metric metric);
 
-    void setElementForMeasuredObject(String measuredObject, PsiElement element);
+	void setElementForMeasuredObject(String measuredObject, PsiElement element);
 
-    @Nullable
-    PsiElement getElementForMeasuredObject(String measuredObject);
+	@Nullable
+	PsiElement getElementForMeasuredObject(String measuredObject);
 
-    boolean hasWarnings(MetricsProfile profile);
+	boolean hasWarnings(MetricsProfile profile);
 
-    MetricsResult filterRowsWithoutWarnings(MetricsProfile profile);
+	MetricsResult filterRowsWithoutWarnings(MetricsProfile profile);
 }

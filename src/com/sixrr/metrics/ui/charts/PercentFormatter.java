@@ -16,36 +16,41 @@
 
 package com.sixrr.metrics.ui.charts;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 
-class PercentFormatter extends NumberFormat {
-    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
+import org.jetbrains.annotations.Nullable;
 
-    static {
-        numberFormatter.setMaximumFractionDigits(2);
-        numberFormatter.setMinimumFractionDigits(2);
-    }
+class PercentFormatter extends NumberFormat
+{
+	private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
 
-    public StringBuffer format(double number, StringBuffer toAppendTo,
-                               FieldPosition pos) {
-        final double value = number * 100.0;
-        toAppendTo.append(numberFormatter.format(value) + '%');
-        return toAppendTo;
-    }
+	static
+	{
+		numberFormatter.setMaximumFractionDigits(2);
+		numberFormatter.setMinimumFractionDigits(2);
+	}
 
-    public StringBuffer format(long number, StringBuffer toAppendTo,
-                               FieldPosition pos) {
-        final double value = (double) number * 100.0;
-        toAppendTo.append(numberFormatter.format(value) + '%');
-        return toAppendTo;
-    }
+	public StringBuffer format(
+			double number, StringBuffer toAppendTo, FieldPosition pos)
+	{
+		final double value = number * 100.0;
+		toAppendTo.append(numberFormatter.format(value) + '%');
+		return toAppendTo;
+	}
 
-    @Nullable
-    public Number parse(String source, ParsePosition parsePosition) {
-        return null;
-    }
+	public StringBuffer format(
+			long number, StringBuffer toAppendTo, FieldPosition pos)
+	{
+		final double value = (double) number * 100.0;
+		toAppendTo.append(numberFormatter.format(value) + '%');
+		return toAppendTo;
+	}
+
+	@Nullable
+	public Number parse(String source, ParsePosition parsePosition)
+	{
+		return null;
+	}
 }

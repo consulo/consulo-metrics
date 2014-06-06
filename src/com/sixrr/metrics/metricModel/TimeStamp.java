@@ -16,43 +16,52 @@
 
 package com.sixrr.metrics.metricModel;
 
-import org.jetbrains.annotations.NonNls;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * Currently use in file/DB exporter.
  */
-public class TimeStamp {
-    @NonNls public static final String TIMESTAMP_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
-    @NonNls public static final String TIMESTAMP_DB_FORMAT = "yyyy-MM-dd";
+public class TimeStamp
+{
+	@NonNls
+	public static final String TIMESTAMP_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+	@NonNls
+	public static final String TIMESTAMP_DB_FORMAT = "yyyy-MM-dd";
 
-    private final Date timestamp;
+	private final Date timestamp;
 
-    public TimeStamp() {
-        timestamp = new Date();
-    }
+	public TimeStamp()
+	{
+		timestamp = new Date();
+	}
 
-    public TimeStamp(String timestamp) {
-        try {
-            DateFormat df = new SimpleDateFormat(TIMESTAMP_FORMAT);
-            this.timestamp = df.parse(timestamp);
-        }
-        catch (ParseException ex) {
-            throw new RuntimeException("Internal error :: could not parse the timestamp [" + timestamp + "]");
-        }
-    }
+	public TimeStamp(String timestamp)
+	{
+		try
+		{
+			DateFormat df = new SimpleDateFormat(TIMESTAMP_FORMAT);
+			this.timestamp = df.parse(timestamp);
+		}
+		catch(ParseException ex)
+		{
+			throw new RuntimeException("Internal error :: could not parse the timestamp [" + timestamp + "]");
+		}
+	}
 
-    public String toString() {
-        DateFormat df = new SimpleDateFormat(TIMESTAMP_FORMAT);
-        return df.format(timestamp);
-    }
+	public String toString()
+	{
+		DateFormat df = new SimpleDateFormat(TIMESTAMP_FORMAT);
+		return df.format(timestamp);
+	}
 
-    public String toSQLString() {
-        DateFormat df = new SimpleDateFormat(TIMESTAMP_DB_FORMAT);
-        return df.format(timestamp);
-    }
+	public String toSQLString()
+	{
+		DateFormat df = new SimpleDateFormat(TIMESTAMP_DB_FORMAT);
+		return df.format(timestamp);
+	}
 }

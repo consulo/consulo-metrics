@@ -15,6 +15,16 @@
  */
 package com.sixrr.metrics.ui.dialogs;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.List;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ScrollPaneFactory;
@@ -22,44 +32,43 @@ import com.intellij.ui.table.JBTable;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricsResult;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
+public class ThresholdDialog extends DialogWrapper
+{
 
-public class ThresholdDialog extends DialogWrapper {
+	private final JBTable thresholdTable;
 
-    private final JBTable thresholdTable;
+	public ThresholdDialog(
+			Project project, String profileName, List<MetricInstance> metrics, MetricsResult result)
+	{
+		super(project, false);
+		final ThresholdTableModel model = new ThresholdTableModel(metrics, result);
+		thresholdTable = new JBTable(model);
+		setTitle(MetricsReloadedBundle.message("thresholds.for.profile", profileName));
+		init();
+	}
 
-    public ThresholdDialog(Project project, String profileName,
-                           List<MetricInstance> metrics, MetricsResult result) {
-        super(project, false);
-        final ThresholdTableModel model = new ThresholdTableModel(metrics, result);
-        thresholdTable = new JBTable(model);
-        setTitle(MetricsReloadedBundle.message("thresholds.for.profile", profileName));
-        init();
-    }
+	@Override
+	@Nullable
+	protected JComponent createCenterPanel()
+	{
+		final JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+		final GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(thresholdTable);
+		final Dimension preferredSize = thresholdTable.getPreferredSize();
+		preferredSize.height += thresholdTable.getRowHeight() + 2; // header height
+		scrollPane.setPreferredSize(preferredSize);
+		panel.add(scrollPane, constraints);
+		return panel;
+	}
 
-    @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
-        final JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(thresholdTable);
-        final Dimension preferredSize = thresholdTable.getPreferredSize();
-        preferredSize.height += thresholdTable.getRowHeight() + 2; // header height
-        scrollPane.setPreferredSize(preferredSize);
-        panel.add(scrollPane, constraints);
-        return panel;
-    }
-
-    @Override
-    protected String getDimensionServiceKey() {
-        return "MetricsReloaded.ThresholdDialog";
-    }
+	@Override
+	protected String getDimensionServiceKey()
+	{
+		return "MetricsReloaded.ThresholdDialog";
+	}
 }

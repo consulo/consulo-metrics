@@ -19,41 +19,50 @@ package com.sixrr.metrics.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetricTableSpecification {
-    private int sortColumn = 0;
-    private boolean ascending = true;
-    private List<String> columnOrder = new ArrayList<String>();
-    private List<Integer> columnWidths = new ArrayList<Integer>();
+public class MetricTableSpecification
+{
+	private int sortColumn = 0;
+	private boolean ascending = true;
+	private List<String> columnOrder = new ArrayList<String>();
+	private List<Integer> columnWidths = new ArrayList<Integer>();
 
-    public int getSortColumn() {
-        return sortColumn;
-    }
+	public int getSortColumn()
+	{
+		return sortColumn;
+	}
 
-    public void setSortColumn(int sortColumn) {
-        this.sortColumn = sortColumn;
-    }
+	public void setSortColumn(int sortColumn)
+	{
+		this.sortColumn = sortColumn;
+	}
 
-    public boolean isAscending() {
-        return ascending;
-    }
+	public boolean isAscending()
+	{
+		return ascending;
+	}
 
-    public void setAscending(boolean ascending) {
-        this.ascending = ascending;
-    }
+	public void setAscending(boolean ascending)
+	{
+		this.ascending = ascending;
+	}
 
-    public List<String> getColumnOrder() {
-        return columnOrder;
-    }
+	public List<String> getColumnOrder()
+	{
+		return columnOrder;
+	}
 
-    public void setColumnOrder(List<String> columnOrder) {
-        this.columnOrder = columnOrder;
-    }
+	public void setColumnOrder(List<String> columnOrder)
+	{
+		this.columnOrder = columnOrder;
+	}
 
-    public List<Integer> getColumnWidths() {
-        return columnWidths;
-    }
+	public List<Integer> getColumnWidths()
+	{
+		return columnWidths;
+	}
 
-    public void setColumnWidths(List<Integer> columnWidths) {
-        this.columnWidths = columnWidths;
-    }
+	public void setColumnWidths(List<Integer> columnWidths)
+	{
+		this.columnWidths = columnWidths;
+	}
 }

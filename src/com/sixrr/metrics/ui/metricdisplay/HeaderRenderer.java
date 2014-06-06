@@ -16,57 +16,68 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.Component;
+
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
+
 import org.jfree.ui.BevelArrowIcon;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
+class HeaderRenderer extends DefaultTableCellRenderer
+{
+	private static final Icon UP_ARROW = new BevelArrowIcon(BevelArrowIcon.UP, false, false);
+	private static final Icon DOWN_ARROW = new BevelArrowIcon(BevelArrowIcon.DOWN, false, false);
+	private final String toolTipText;
+	private final MetricTableModel model;
 
-class HeaderRenderer extends DefaultTableCellRenderer {
-    private static final Icon UP_ARROW = new BevelArrowIcon(BevelArrowIcon.UP,
-            false, false);
-    private static final Icon DOWN_ARROW = new BevelArrowIcon(BevelArrowIcon.DOWN, false, false);
-    private final String toolTipText;
-    private final MetricTableModel model;
+	HeaderRenderer(String toolTipText, MetricTableModel model)
+	{
+		super();
+		this.toolTipText = toolTipText;
+		this.model = model;
+	}
 
-    HeaderRenderer(String toolTipText, MetricTableModel model) {
-        super();
-        this.toolTipText = toolTipText;
-        this.model = model;
-    }
-
-    public Component getTableCellRendererComponent(JTable table, Object value,
-                                                   boolean isSelected,
-                                                   boolean hasFocus, int row,
-                                                   int column) {
-        final JLabel label =
-                (JLabel) super.getTableCellRendererComponent(table, value,
-                        isSelected,
-                        hasFocus, row,
-                        column);
-        if (toolTipText != null) {
-            label.setToolTipText(toolTipText);
-        } else {
-            label.setToolTipText("");
-        }
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        //noinspection HardCodedStringLiteral
-        label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-        if (!isSelected) {
-            label.setBackground(table.getTableHeader().getBackground());
-        }
-        final int sortColumn = model.getSortColumn();
-        final int modelColumn = table.convertColumnIndexToModel(column);
-        if (sortColumn == modelColumn) {
-            if (model.isAscending()) {
-                label.setIcon(DOWN_ARROW);
-            } else {
-                label.setIcon(UP_ARROW);
-            }
-        } else {
-            label.setIcon(null);
-        }
-        label.setFont(table.getTableHeader().getFont());
-        return label;
-    }
+	public Component getTableCellRendererComponent(
+			JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+	{
+		final JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		if(toolTipText != null)
+		{
+			label.setToolTipText(toolTipText);
+		}
+		else
+		{
+			label.setToolTipText("");
+		}
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		//noinspection HardCodedStringLiteral
+		label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+		if(!isSelected)
+		{
+			label.setBackground(table.getTableHeader().getBackground());
+		}
+		final int sortColumn = model.getSortColumn();
+		final int modelColumn = table.convertColumnIndexToModel(column);
+		if(sortColumn == modelColumn)
+		{
+			if(model.isAscending())
+			{
+				label.setIcon(DOWN_ARROW);
+			}
+			else
+			{
+				label.setIcon(UP_ARROW);
+			}
+		}
+		else
+		{
+			label.setIcon(null);
+		}
+		label.setFont(table.getTableHeader().getFont());
+		return label;
+	}
 }

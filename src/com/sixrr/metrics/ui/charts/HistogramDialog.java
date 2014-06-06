@@ -16,10 +16,11 @@
 
 package com.sixrr.metrics.ui.charts;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.sixrr.metrics.MetricType;
-import com.sixrr.metrics.utils.MetricsReloadedBundle;
+import java.awt.Dimension;
+
+import javax.swing.Action;
+import javax.swing.JComponent;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jfree.chart.ChartPanel;
@@ -37,112 +38,131 @@ import org.jfree.chart.renderer.XYItemRenderer;
 import org.jfree.data.HistogramDataset;
 import org.jfree.data.IntegerHistogramDataset;
 import org.jfree.data.IntervalXYDataset;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.sixrr.metrics.MetricType;
+import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-import javax.swing.*;
-import java.awt.*;
+public class HistogramDialog extends DialogWrapper
+{
+	private static final int DEFAULT_BIN_COUNT = 20;
+	private final ChartPanel chartPanel;
+	private final String metricName;
+	private final String metricCategoryName;
+	private final MetricType metricType;
+	private static final double EPSILON = 0.0000001;
 
-public class HistogramDialog extends DialogWrapper {
-    private static final int DEFAULT_BIN_COUNT = 20;
-    private final ChartPanel chartPanel;
-    private final String metricName;
-    private final String metricCategoryName;
-    private final MetricType metricType;
-    private static final double EPSILON = 0.0000001;
+	public HistogramDialog(
+			Project project, String metricName, String metricCategoryName, Double[] datapoints, MetricType metricType)
+	{
+		super(project, false);
+		this.metricName = metricName;
+		this.metricCategoryName = metricCategoryName;
+		this.metricType = metricType;
+		final double[] strippedData = GraphUtils.stripNulls(datapoints);
+		final boolean isIntegral = isIntegralData(strippedData);
 
-    public HistogramDialog(Project project, String metricName, String metricCategoryName, Double[] datapoints,
-                           MetricType metricType) {
-        super(project, false);
-        this.metricName = metricName;
-        this.metricCategoryName = metricCategoryName;
-        this.metricType = metricType;
-        final double[] strippedData = GraphUtils.stripNulls(datapoints);
-        final boolean isIntegral = isIntegralData(strippedData);
+		final IntervalXYDataset dataset = createDataset(strippedData, isIntegral);
+		final JFreeChart chart = createChart(dataset, isIntegral);
+		chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(500, 270));
+		chartPanel.setMouseZoomable(true, false);
+		init();
+	}
 
-        final IntervalXYDataset dataset = createDataset(strippedData, isIntegral);
-        final JFreeChart chart = createChart(dataset, isIntegral);
-        chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(500, 270));
-        chartPanel.setMouseZoomable(true, false);
-        init();
-    }
+	private IntervalXYDataset createDataset(double[] strippedData, boolean isIntegral)
+	{
+		if(isIntegral)
+		{
+			final IntegerHistogramDataset dataset = new IntegerHistogramDataset();
+			dataset.setType(HistogramDataset.FREQUENCY);
+			dataset.addSeries(metricName, strippedData);
+			return dataset;
+		}
+		else
+		{
+			final HistogramDataset dataset = new HistogramDataset();
+			dataset.setType(HistogramDataset.FREQUENCY);
+			dataset.addSeries(metricName, strippedData, DEFAULT_BIN_COUNT);
+			return dataset;
+		}
+	}
 
-    private IntervalXYDataset createDataset(double[] strippedData, boolean isIntegral) {
-        if (isIntegral) {
-            final IntegerHistogramDataset dataset = new IntegerHistogramDataset();
-            dataset.setType(HistogramDataset.FREQUENCY);
-            dataset.addSeries(metricName, strippedData);
-            return dataset;
-        } else {
-            final HistogramDataset dataset = new HistogramDataset();
-            dataset.setType(HistogramDataset.FREQUENCY);
-            dataset.addSeries(metricName, strippedData, DEFAULT_BIN_COUNT);
-            return dataset;
-        }
-    }
+	private static boolean isIntegralData(double[] data)
+	{
+		boolean isIntegral = true;
+		double maximum = Double.MIN_VALUE;
+		for(double aData : data)
+		{
+			if(!isIntegral(aData))
+			{
+				isIntegral = false;
+			}
+			maximum = Math.max(maximum, aData);
+		}
+		return isIntegral && maximum < 2 * DEFAULT_BIN_COUNT;
+	}
 
-    private static boolean isIntegralData(double[] data) {
-        boolean isIntegral = true;
-        double maximum = Double.MIN_VALUE;
-        for (double aData : data) {
-            if (!isIntegral(aData)) {
-                isIntegral = false;
-            }
-            maximum = Math.max(maximum, aData);
-        }
-        return isIntegral && maximum < 2 * DEFAULT_BIN_COUNT;
-    }
+	private static boolean isIntegral(double v)
+	{
+		if(Math.abs(Math.ceil(v) - v) < EPSILON)
+		{
+			return true;
+		}
+		return Math.abs(v - Math.floor(v)) < EPSILON;
+	}
 
-    private static boolean isIntegral(double v) {
-        if (Math.abs(Math.ceil(v) - v) < EPSILON) {
-            return true;
-        }
-        return Math.abs(v - Math.floor(v)) < EPSILON;
-    }
+	private JFreeChart createChart(IntervalXYDataset dataset, boolean isIntegral)
+	{
+		final String title = getTitle();
+		final NumberAxis xAxis = new NumberAxis();
+		if(isIntegral)
+		{
+			xAxis.setTickUnit(new NumberTickUnit(1.0));
+		}
+		if(metricType == MetricType.Ratio || metricType == MetricType.RecursiveRatio)
+		{
+			xAxis.setNumberFormatOverride(new PercentFormatter());
+		}
 
-    private JFreeChart createChart(IntervalXYDataset dataset, boolean isIntegral) {
-        final String title = getTitle();
-        final NumberAxis xAxis = new NumberAxis();
-        if (isIntegral) {
-            xAxis.setTickUnit(new NumberTickUnit(1.0));
-        }
-        if (metricType == MetricType.Ratio || metricType == MetricType.RecursiveRatio) {
-            xAxis.setNumberFormatOverride(new PercentFormatter());
-        }
+		final XYToolTipGenerator tooltipGenerator = new StandardXYToolTipGenerator();
 
-        final XYToolTipGenerator tooltipGenerator = new StandardXYToolTipGenerator();
+		final XYItemRenderer renderer = new XYBarRenderer();
+		renderer.setToolTipGenerator(tooltipGenerator);
+		renderer.setURLGenerator(null);
 
-        final XYItemRenderer renderer = new XYBarRenderer();
-        renderer.setToolTipGenerator(tooltipGenerator);
-        renderer.setURLGenerator(null);
+		final ValueAxis yAxis = new NumberAxis();
+		final XYPlot plot = new XYPlot(dataset, xAxis, yAxis, null);
+		plot.setRenderer(renderer);
+		plot.setOrientation(PlotOrientation.VERTICAL);
 
-        final ValueAxis yAxis = new NumberAxis();
-        final XYPlot plot = new XYPlot(dataset, xAxis, yAxis, null);
-        plot.setRenderer(renderer);
-        plot.setOrientation(PlotOrientation.VERTICAL);
+		return new JFreeChart(title, JFreeChartConstants.DEFAULT_TITLE_FONT, plot, true);
+	}
 
-        return new JFreeChart(title, JFreeChartConstants.DEFAULT_TITLE_FONT, plot, true);
-    }
+	@Override
+	public JComponent createCenterPanel()
+	{
+		return chartPanel;
+	}
 
-    @Override
-    public JComponent createCenterPanel() {
-        return chartPanel;
-    }
+	@NotNull
+	@Override
+	public Action[] createActions()
+	{
+		return new Action[0];
+	}
 
-    @NotNull
-    @Override
-    public Action[] createActions() {
-        return new Action[0];
-    }
+	@Override
+	public String getTitle()
+	{
+		return MetricsReloadedBundle.message("diff.histogram.dialog.title", metricName, metricCategoryName);
+	}
 
-    @Override
-    public String getTitle() {
-        return MetricsReloadedBundle.message("diff.histogram.dialog.title", metricName, metricCategoryName);
-    }
-
-    @Override
-    @NonNls
-    protected String getDimensionServiceKey() {
-        return "MetricsReloaded.HistogramDialog";
-    }
+	@Override
+	@NonNls
+	protected String getDimensionServiceKey()
+	{
+		return "MetricsReloaded.HistogramDialog";
+	}
 
 }

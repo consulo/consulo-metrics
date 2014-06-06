@@ -16,46 +16,58 @@
 
 package com.sixrr.metrics.utils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class BucketedCount<T> {
+import org.jetbrains.annotations.NotNull;
 
-    private final Map<T, Integer> buckets = new HashMap<T, Integer>();
+public class BucketedCount<T>
+{
 
-    public void createBucket(@NotNull T bucketName) {
-        if (!buckets.containsKey(bucketName)) {
-            buckets.put(bucketName, 0);
-        }
-    }
+	private final Map<T, Integer> buckets = new HashMap<T, Integer>();
 
-    public Set<T> getBuckets() {
-        return buckets.keySet();
-    }
+	public void createBucket(@NotNull T bucketName)
+	{
+		if(!buckets.containsKey(bucketName))
+		{
+			buckets.put(bucketName, 0);
+		}
+	}
 
-    public void incrementBucketValue(@NotNull T bucketName, int increment) {
-        if (buckets.containsKey(bucketName)) {
-            buckets.put(bucketName, buckets.get(bucketName) + increment);
-        } else {
-            buckets.put(bucketName, increment);
-        }
-    }
+	public Set<T> getBuckets()
+	{
+		return buckets.keySet();
+	}
 
-    public void incrementBucketValue(@NotNull T bucketName) {
-        incrementBucketValue(bucketName, 1);
-    }
+	public void incrementBucketValue(@NotNull T bucketName, int increment)
+	{
+		if(buckets.containsKey(bucketName))
+		{
+			buckets.put(bucketName, buckets.get(bucketName) + increment);
+		}
+		else
+		{
+			buckets.put(bucketName, increment);
+		}
+	}
 
-    public int getBucketValue(T bucketName) {
-        if (!buckets.containsKey(bucketName)) {
-            return 0;
-        }
-        return buckets.get(bucketName);
-    }
+	public void incrementBucketValue(@NotNull T bucketName)
+	{
+		incrementBucketValue(bucketName, 1);
+	}
 
-    public void clear() {
-        buckets.clear();
-    }
+	public int getBucketValue(T bucketName)
+	{
+		if(!buckets.containsKey(bucketName))
+		{
+			return 0;
+		}
+		return buckets.get(bucketName);
+	}
+
+	public void clear()
+	{
+		buckets.clear();
+	}
 }

@@ -16,34 +16,41 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
-import org.jetbrains.annotations.NonNls;
-
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
-class FileTypeFilter extends FileFilter {
-    private final String extension;
-    private final String description;
+import javax.swing.filechooser.FileFilter;
 
-    FileTypeFilter(@NonNls String extension, String description) {
-        super();
-        this.extension = extension;
-        this.description = description;
-    }
+import org.jetbrains.annotations.NonNls;
 
-    public boolean accept(File f) {
-        if (f.isDirectory()) {
-            return true;
-        }
-        final String name = f.getName();
-        return name.endsWith(extension);
-    }
+class FileTypeFilter extends FileFilter
+{
+	private final String extension;
+	private final String description;
 
-    public String getDescription() {
-        return description;
-    }
+	FileTypeFilter(@NonNls String extension, String description)
+	{
+		super();
+		this.extension = extension;
+		this.description = description;
+	}
 
-    public String getExtension() {
-        return extension;
-    }
+	public boolean accept(File f)
+	{
+		if(f.isDirectory())
+		{
+			return true;
+		}
+		final String name = f.getName();
+		return name.endsWith(extension);
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public String getExtension()
+	{
+		return extension;
+	}
 }

@@ -16,25 +16,28 @@
 
 package com.sixrr.metrics;
 
+import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.analysis.AnalysisScope;
 
 /**
  * The MetricsExecutionContext is used .  One MetricsExecutionContext is created for each metrics run, and shared by
  * all of the individual MetricsCalculators.  That makes it handy for sharing data between MetricsCalculators.
  */
-public interface MetricsExecutionContext extends UserDataHolder {
-    /**
-     * A reference to the project that metrics are being calculated for.
-     * @return  the project for the run.
-     */
-    Project getProject();
+public interface MetricsExecutionContext extends UserDataHolder
+{
+	/**
+	 * A reference to the project that metrics are being calculated for.
+	 *
+	 * @return the project for the run.
+	 */
+	Project getProject();
 
-  /**
-     * A reference to the analysis scope (i.e. set of files) that metrics are being calculated for.
-     * @return  the analysis scope for the run.
-     */
-    AnalysisScope getScope();
+	/**
+	 * A reference to the analysis scope (i.e. set of files) that metrics are being calculated for.
+	 *
+	 * @return the analysis scope for the run.
+	 */
+	AnalysisScope getScope();
 
 }

@@ -16,26 +16,33 @@
 
 package com.sixrr.metrics.ui.charts;
 
-class GraphUtils {
-    private GraphUtils() {
-        super();
-    }
+class GraphUtils
+{
+	private GraphUtils()
+	{
+		super();
+	}
 
-    public static double[] stripNulls(Double[] points) {
-        int numNonNullDatapoints = 0;
-        for (Double point : points) {
-            if (point != null) {
-                numNonNullDatapoints++;
-            }
-        }
-        final double[] clonedData = new double[numNonNullDatapoints];
-        int currentCount = 0;
-        for (Double point : points) {
-            if (point != null) {
-                clonedData[currentCount] = point;
-                currentCount++;
-            }
-        }
-        return clonedData;
-    }
+	public static double[] stripNulls(Double[] points)
+	{
+		int numNonNullDatapoints = 0;
+		for(Double point : points)
+		{
+			if(point != null)
+			{
+				numNonNullDatapoints++;
+			}
+		}
+		final double[] clonedData = new double[numNonNullDatapoints];
+		int currentCount = 0;
+		for(Double point : points)
+		{
+			if(point != null)
+			{
+				clonedData[currentCount] = point;
+				currentCount++;
+			}
+		}
+		return clonedData;
+	}
 }

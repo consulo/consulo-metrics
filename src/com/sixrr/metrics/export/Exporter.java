@@ -18,6 +18,7 @@ package com.sixrr.metrics.export;
 
 import java.io.IOException;
 
-public interface Exporter {
-    void export(String fileName) throws IOException;
+public interface Exporter
+{
+	void export(String fileName) throws IOException;
 }

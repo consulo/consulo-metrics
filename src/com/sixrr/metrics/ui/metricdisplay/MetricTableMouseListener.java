@@ -16,6 +16,15 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -24,80 +33,89 @@ import com.sixrr.metrics.MetricType;
 import com.sixrr.metrics.config.MetricsReloadedConfig;
 import com.sixrr.metrics.utils.EditorCaretMover;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+class MetricTableMouseListener extends MouseAdapter implements MouseListener
+{
+	private final Project project;
+	private final JTable table;
+	private final MetricsReloadedConfig configuration;
 
-class MetricTableMouseListener extends MouseAdapter implements MouseListener {
-    private final Project project;
-    private final JTable table;
-    private final MetricsReloadedConfig configuration;
+	MetricTableMouseListener(Project project, JTable table, MetricsReloadedConfig configuration)
+	{
+		super();
+		this.project = project;
+		this.table = table;
+		this.configuration = configuration;
+	}
 
-    MetricTableMouseListener(Project project, JTable table, MetricsReloadedConfig configuration) {
-        super();
-        this.project = project;
-        this.table = table;
-        this.configuration = configuration;
-    }
+	public void mouseClicked(MouseEvent e)
+	{
+		super.mouseClicked(e);
+		final int x = e.getX();
+		final int y = e.getY();
+		final Point point = new Point(x, y);
+		final int column = table.columnAtPoint(point);
+		final int row = table.rowAtPoint(point);
+		if(column == -1 || row == -1)
+		{
+			return;
+		}
+		final int modelIndex = table.convertColumnIndexToModel(column);
+		final boolean autoscroll = configuration.isAutoscroll();
+		if(modelIndex == 0 && (e.getClickCount() == 2 || autoscroll))
+		{
+			final EditorCaretMover caretMover = new EditorCaretMover(project);
+			final MetricTableModel model = (MetricTableModel) table.getModel();
+			final PsiElement element = model.getElementAtRow(row);
+			if(element != null)
+			{
+				final Editor editor = caretMover.openInEditor(element);
+				if(editor != null)
+				{
+					caretMover.moveEditorCaret(element);
+				}
+			}
+		}
+		table.setColumnSelectionInterval(column, column);
+		table.repaint();
+		final int button = e.getButton();
+		if(button == MouseEvent.BUTTON3)
+		{
+			showPopupMenu(e);
+		}
+	}
 
-    public void mouseClicked(MouseEvent e) {
-        super.mouseClicked(e);
-        final int x = e.getX();
-        final int y = e.getY();
-        final Point point = new Point(x, y);
-        final int column = table.columnAtPoint(point);
-        final int row = table.rowAtPoint(point);
-        if (column == -1 || row == -1) {
-            return;
-        }
-        final int modelIndex = table.convertColumnIndexToModel(column);
-        final boolean autoscroll = configuration.isAutoscroll();
-        if (modelIndex == 0 && (e.getClickCount() == 2 || autoscroll)) {
-            final EditorCaretMover caretMover = new EditorCaretMover(project);
-            final MetricTableModel model = (MetricTableModel) table.getModel();
-            final PsiElement element = model.getElementAtRow(row);
-            if (element != null) {
-                final Editor editor = caretMover.openInEditor(element);
-                if (editor != null) {
-                    caretMover.moveEditorCaret(element);
-                }
-            }
-        }
-        table.setColumnSelectionInterval(column, column);
-        table.repaint();
-        final int button = e.getButton();
-        if (button == MouseEvent.BUTTON3) {
-            showPopupMenu(e);
-        }
-    }
+	private void showPopupMenu(MouseEvent e)
+	{
+		final int selectedColumn = table.getSelectedColumn();
+		if(selectedColumn == -1 || selectedColumn == 0)
+		{
+			return;
+		}
+		final JPopupMenu popup = new JPopupMenu();
+		final MetricTableModel model = (MetricTableModel) table.getModel();
+		final Metric metric = model.getMetricForColumn(selectedColumn).getMetric();
+		final MetricType metricType = metric.getType();
+		if(model.hasDiff())
+		{
+			popup.add(new JMenuItem(new ShowDiffDistributionAction(project, table)));
+			popup.add(new JMenuItem(new ShowDiffHistogramAction(project, table)));
+		}
+		else
+		{
+			if(!metricType.equals(MetricType.RecursiveCount) && !metricType.equals(MetricType.RecursiveRatio))
+			{
+				popup.add(new JMenuItem(new ShowDistributionAction(project, table)));
+				popup.add(new JMenuItem(new ShowHistogramAction(project, table)));
+			}
+			if(metricType.equals(MetricType.Count))
+			{
+				popup.add(new JMenuItem(new ShowPieChartAction(project, table)));
+			}
+			popup.add(new JMenuItem(new ShowExplanationAction(project, table)));
+		}
 
-    private void showPopupMenu(MouseEvent e) {
-        final int selectedColumn = table.getSelectedColumn();
-        if (selectedColumn == -1 || selectedColumn == 0) {
-            return;
-        }
-        final JPopupMenu popup = new JPopupMenu();
-        final MetricTableModel model = (MetricTableModel) table.getModel();
-        final Metric metric = model.getMetricForColumn(selectedColumn).getMetric();
-        final MetricType metricType = metric.getType();
-        if (model.hasDiff()) {
-            popup.add(new JMenuItem(new ShowDiffDistributionAction(project, table)));
-            popup.add(new JMenuItem(new ShowDiffHistogramAction(project, table)));
-        } else {
-            if (!metricType.equals(MetricType.RecursiveCount) && !metricType.equals(MetricType.RecursiveRatio)) {
-                popup.add(new JMenuItem(new ShowDistributionAction(project, table)));
-                popup.add(new JMenuItem(new ShowHistogramAction(project, table)));
-            }
-            if (metricType.equals(MetricType.Count)) {
-                popup.add(new JMenuItem(new ShowPieChartAction(project, table)));
-            }
-            popup.add(new JMenuItem(new ShowExplanationAction(project, table)));
-        }
-
-        final int x = e.getX();
-        final int y = e.getY();
-        popup.show(table, x, y);
-    }
+		final int x = e.getX();
+		final int y = e.getY();
+		popup.show(table, x, y);
+	}
 }

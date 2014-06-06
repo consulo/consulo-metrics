@@ -16,28 +16,29 @@
 
 package com.sixrr.metrics.metricModel;
 
+import java.util.List;
+
+import org.jetbrains.annotations.NonNls;
 import com.intellij.analysis.AnalysisScope;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.MetricsResultsHolder;
 import com.sixrr.metrics.profile.MetricsProfile;
-import org.jetbrains.annotations.NonNls;
 
-import java.util.List;
+public interface MetricsRun extends MetricsResultsHolder
+{
 
-public interface MetricsRun extends MetricsResultsHolder {
+	List<Metric> getMetrics();
 
-    List<Metric> getMetrics();
+	MetricsResult getResultsForCategory(MetricCategory category);
 
-    MetricsResult getResultsForCategory(MetricCategory category);
+	void writeToFile(@NonNls String fileName);
 
-    void writeToFile(@NonNls String fileName);
+	String getProfileName();
 
-    String getProfileName();
+	TimeStamp getTimestamp();
 
-    TimeStamp getTimestamp();
+	AnalysisScope getContext();
 
-    AnalysisScope getContext();
-
-    MetricsRun filterRowsWithoutWarnings(MetricsProfile profile);
+	MetricsRun filterRowsWithoutWarnings(MetricsProfile profile);
 }

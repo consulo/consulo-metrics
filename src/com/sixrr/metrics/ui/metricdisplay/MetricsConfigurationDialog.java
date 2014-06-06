@@ -16,6 +16,49 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.NumberFormat;
+import java.util.EnumMap;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.Document;
+import javax.swing.text.NumberFormatter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -40,26 +83,6 @@ import com.sixrr.metrics.metricModel.MetricsCategoryNameUtil;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.profile.MetricsProfileRepository;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.Document;
-import javax.swing.text.NumberFormatter;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.text.NumberFormat;
-import java.util.EnumMap;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
 
 /**
  * todo if ok or apply is not pressed do not add or remove profiles!
@@ -69,802 +92,978 @@ import java.util.Map;
  * todo default action buttons
  * todo resizeability/splitter
  */
-public class MetricsConfigurationDialog extends DialogWrapper implements TreeSelectionListener {
-    private static final Logger logger = Logger.getInstance("MetricsReloaded");
-
-    private JComboBox profilesDropdown;
-    private JTextPane descriptionTextArea;
-    private JButton deleteButton;
-    private JButton saveAsButton;
-    private JPanel contentPanel;
-    private JFormattedTextField upperThresholdField;
-    private JCheckBox upperThresholdEnabledCheckbox;
-    private JFormattedTextField lowerThresholdField;
-    private JCheckBox lowerThresholdEnabledCheckbox;
-    @NonNls private JLabel urlLabel;
-    private JButton resetButton;
-    private ActionToolbarImpl treeToolbar;
-    private MetricInstance selectedMetricInstance = null;
-
-    private final MetricsProfileRepository repository;
-    @Nullable private MetricsProfile profile;
-    private boolean currentProfileIsModified = false;
-    private JBScrollPane treeScrollPane;
-    private FilterComponent filterComponent;
-    private Tree metricsTree;
-
-    private final Action applyAction = new ApplyAction();
-
-    public MetricsConfigurationDialog(Project project, MetricsProfileRepository repository) {
-        super(project, true);
-        this.repository = repository;
-        profile = this.repository.getCurrentProfile();
-        setupMetricsTree();
-
-        setDescriptionFromResource("/metricsDescriptions/Blank.html");
-        setupProfilesDropdown();
-        setupDeleteButton();
-        setupAddButton();
-        setupResetButton();
-        setupLowerThresholdEnabledButton();
-        setupLowerThresholdField();
-        setupUpperThresholdEnabledButton();
-        setupUpperThresholdField();
-        setupURLLabel();
-        toggleDeleteButton();
-        applyAction.setEnabled(false);
-        resetButton.setEnabled(false);
-        lowerThresholdField.setEnabled(false);
-        upperThresholdField.setEnabled(false);
-        lowerThresholdEnabledCheckbox.setEnabled(false);
-        upperThresholdEnabledCheckbox.setEnabled(false);
-        urlLabel.setText("");
-        init();
-        setTitle(MetricsReloadedBundle.message("metrics.profiles"));
-    }
-
-    private void setupLowerThresholdField() {
-        final NumberFormat formatter = NumberFormat.getIntegerInstance();
-        formatter.setParseIntegerOnly(true);
-        final DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory(new NumberFormatter(formatter));
-        lowerThresholdField.setFormatterFactory(formatterFactory);
-
-        final DocumentListener listener = new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            private void textChanged() {
-                final Number value = (Number) lowerThresholdField.getValue();
-                if (value != null) {
-                    final double threshold = value.doubleValue();
-                    selectedMetricInstance.setLowerThreshold(threshold);
-                    currentProfileIsModified = true;
-                }
-            }
-        };
-        final Document thresholdDocument = lowerThresholdField.getDocument();
-        thresholdDocument.addDocumentListener(listener);
-    }
-
-    private void setupUpperThresholdField() {
-        final NumberFormat formatter = NumberFormat.getIntegerInstance();
-        formatter.setParseIntegerOnly(true);
-        final DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory(new NumberFormatter(formatter));
-        upperThresholdField.setFormatterFactory(formatterFactory);
-
-        final DocumentListener listener = new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                textChanged();
-            }
-
-            private void textChanged() {
-                final Number value = (Number) upperThresholdField.getValue();
-                if (value != null) {
-                    final double threshold = value.doubleValue();
-                    selectedMetricInstance.setUpperThreshold(threshold);
-                    currentProfileIsModified = true;
-                }
-            }
-        };
-        final Document thresholdDocument = upperThresholdField.getDocument();
-        thresholdDocument.addDocumentListener(listener);
-    }
-
-    private void setupLowerThresholdEnabledButton() {
-        final ButtonModel checkboxModel = lowerThresholdEnabledCheckbox.getModel();
-        checkboxModel.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (selectedMetricInstance != null) {
-                    final boolean selected = checkboxModel.isSelected();
-                    selectedMetricInstance.setLowerThresholdEnabled(selected);
-                    lowerThresholdField.setEnabled(selectedMetricInstance.isLowerThresholdEnabled());
-                    if (selected) {
-                        lowerThresholdField.setText(Double.toString(selectedMetricInstance.getLowerThreshold()));
-                    } else {
-                        lowerThresholdField.setText("");
-                    }
-                    currentProfileIsModified = true;
-                }
-            }
-        });
-    }
-
-    private void setupUpperThresholdEnabledButton() {
-        final ButtonModel checkboxModel = upperThresholdEnabledCheckbox.getModel();
-        checkboxModel.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (selectedMetricInstance != null) {
-                    final boolean selected = checkboxModel.isSelected();
-                    selectedMetricInstance.setUpperThresholdEnabled(selected);
-                    upperThresholdField.setEnabled(selectedMetricInstance.isUpperThresholdEnabled());
-                    if (selected) {
-                        upperThresholdField.setText(Double.toString(selectedMetricInstance.getUpperThreshold()));
-                    } else {
-                        upperThresholdField.setText("");
-                    }
-                }
-                currentProfileIsModified = true;
-            }
-        });
-    }
-
-    private void setupMetricsTree() {
-
-        metricsTree = new MetricsTree();
-        treeScrollPane.setViewportView(metricsTree);
-        populateTree("");
-        final MyTreeCellRenderer renderer = new MyTreeCellRenderer();
-        metricsTree.setCellRenderer(renderer);
-        metricsTree.setRootVisible(true);
-        metricsTree.setShowsRootHandles(false);
-        //noinspection HardCodedStringLiteral
-        metricsTree.putClientProperty("JTree.lineStyle", "Angled");
-
-        metricsTree.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    final TreePath treePath = metricsTree.getLeadSelectionPath();
-                    final MetricTreeNode node = (MetricTreeNode) treePath.getLastPathComponent();
-                    toggleNode(metricsTree, node);
-                    e.consume();
-                }
-            }
-        });
-        //noinspection ResultOfObjectAllocationIgnored
-        new TreeSpeedSearch(metricsTree, new Convertor<TreePath, String>() {
-            @Override
-            public String convert(TreePath treePath) {
-                final DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
-                final Object userObject = node.getUserObject();
-                if (userObject instanceof MetricInstance) {
-                    return ((MetricInstance) userObject).getMetric().getDisplayName();
-                } else {
-                    return userObject.toString();
-                }
-            }
-        });
-        metricsTree.setSelectionRow(0);
-    }
-
-    private void populateTree(String filter) {
-        final MetricTreeNode root =
-                new MetricTreeNode(MetricsReloadedBundle.message("metrics"), true);
-        final Map<MetricCategory, MetricTreeNode> categoryNodes =
-                new EnumMap<MetricCategory, MetricTreeNode>(MetricCategory.class);
-
-        if (profile != null) {
-            final List<MetricInstance> metrics = profile.getMetrics();
-            for (final MetricInstance metricInstance : metrics) {
-                final Metric metric = metricInstance.getMetric();
-                if (!isMetricAccepted(metric, filter)) {
-                    continue;
-                }
-                final MetricCategory category = metric.getCategory();
-                MetricTreeNode categoryNode = categoryNodes.get(category);
-                if (categoryNode == null) {
-                    categoryNode = new MetricTreeNode(
-                            MetricsCategoryNameUtil.getLongNameForCategory(category), true);
-                    root.add(categoryNode);
-                    categoryNodes.put(category, categoryNode);
-                }
-                final MetricTreeNode metricNode =
-                        new MetricTreeNode(metricInstance, metricInstance.isEnabled());
-                categoryNode.add(metricNode);
-            }
-        }
-
-        final DefaultTreeModel treeModel = new DefaultTreeModel(root);
-        metricsTree.setModel(treeModel);
-        metricsTree.addTreeSelectionListener(this);
-        final TreeSelectionModel selectionModel = metricsTree.getSelectionModel();
-        selectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-        for (int j = root.getChildCount() - 1; j >= 0; j--) {
-            final MetricTreeNode categoryNode = (MetricTreeNode) root.getChildAt(j);
-            if (categoryNode.getChildCount() == 0) {
-                root.remove(categoryNode);
-            }
-        }
-        final TreePath rootPath = new TreePath(root);
-        metricsTree.expandPath(rootPath);
-        for (MetricTreeNode categoryNode : categoryNodes.values()) {
-            metricsTree.expandPath(rootPath.pathByAddingChild(categoryNode));
-        }
-    }
-
-    private void rebindMetricsTree() {
-        final TreeModel model = metricsTree.getModel();
-        final MetricTreeNode root = (MetricTreeNode) model.getRoot();
-        final int numCategories = root.getChildCount();
-        for (int i = 0; i < numCategories; i++) {
-            final MetricTreeNode category = (MetricTreeNode) root.getChildAt(i);
-            final int numMetrics = category.getChildCount();
-            for (int j = 0; j < numMetrics; j++) {
-                final MetricTreeNode metricNode = (MetricTreeNode) category.getChildAt(j);
-                final MetricInstance currentMetricInstance = (MetricInstance) metricNode.getUserObject();
-                final MetricInstance newMetric =
-                        profile.getMetricForClass(currentMetricInstance.getMetric().getClass());
-                metricNode.setUserObject(newMetric);
-                assert newMetric != null;
-                metricNode.enabled = newMetric.isEnabled();
-            }
-        }
-        metricsTree.treeDidChange();
-    }
-
-    private void setupProfilesDropdown() {
-        final String[] profiles = repository.getProfileNames();
-        final MutableComboBoxModel profilesModel = new DefaultComboBoxModel(profiles);
-        profilesDropdown.setModel(profilesModel);
-        final MetricsProfile currentProfile = repository.getCurrentProfile();
-        profilesDropdown.setSelectedItem(currentProfile.getName());
-        toggleDeleteButton();
-        profilesDropdown.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    return;
-                }
-                final String selectedProfile = (String) profilesDropdown.getSelectedItem();
-                final String currentProfileName = profile.getName();
-                if (!selectedProfile.equals(currentProfileName)) {
-                    repository.setSelectedProfile(selectedProfile);
-                    profile = repository.getCurrentProfile();
-                    currentProfileIsModified = false;
-                }
-                rebindMetricsTree();
-                toggleDeleteButton();
-                toggleResetButton();
-                applyAction.setEnabled(true);
-            }
-        });
-    }
-
-    @Override
-    protected void doOKAction() {
-        super.doOKAction();
-        if (currentProfileIsModified) {
-            MetricsProfileRepository.persistProfile(profile);
-        }
-    }
-
-    protected class ApplyAction extends DialogWrapperAction {
-
-        private ApplyAction() {
-            super(MetricsReloadedBundle.message("apply"));
-        }
-
-        @Override
-        protected void doAction(ActionEvent e) {
-            doApplyAction();
-        }
-    }
-
-    protected void doApplyAction() {
-        processDoNotAskOnOk(NEXT_USER_EXIT_CODE);
-        MetricsProfileRepository.persistProfile(profile);
-        currentProfileIsModified = false;
-        applyAction.setEnabled(false);
-        applyAction.setEnabled(false);
-    }
-
-    @Override
-    public void doCancelAction() {
-        super.doCancelAction();
-        repository.reloadProfileFromStorage(profile);
-    }
-
-    private void setupAddButton() {
-        saveAsButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent event) {
-                super.mousePressed(event);
-                final JPopupMenu popup = new JPopupMenu();
-                popup.add(new JMenuItem(new CopyProfileAction(repository)));
-                popup.add(new JMenuItem(new NewProfileAction(repository)));
-                popup.show(saveAsButton, 0, saveAsButton.getHeight());
-            }
-        });
-    }
-
-    public void updateSelection(String newProfileName) {
-        currentProfileIsModified = false;
-        profile = repository.getCurrentProfile();
-        profilesDropdown.addItem(newProfileName);
-        profilesDropdown.setSelectedItem(newProfileName);
-        rebindMetricsTree();
-        toggleDeleteButton();
-    }
-
-    private void setupResetButton() {
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repository.reloadProfileFromStorage(profile);
-                currentProfileIsModified = false;
-                populateTree(filterComponent.getFilter());
-            }
-        });
-    }
-
-    private void setupURLLabel() {
-        urlLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent event) {
-                final String helpURL = selectedMetricInstance.getMetric().getHelpURL();
-                if (helpURL != null) {
-                    BrowserUtil.launchBrowser("http://" + helpURL);
-                }
-            }
-        });
-    }
-
-    private void toggleDeleteButton() {
-//        deleteButton.setEnabled(repository.getProfileNames().length != 0);
-//        final boolean anyProfilesLeft = repository.getProfileNames().length != 0;
-//        if (!anyProfilesLeft) {
-//            deleteButton.setEnabled(anyProfilesLeft);
-//            return;
-//        }
-        deleteButton.setEnabled(profile != null && !profile.isBuiltIn());
-    }
-
-    private void toggleResetButton() {
-        resetButton.setEnabled(currentProfileIsModified);
-    }
-
-    private void setupDeleteButton() {
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final String currentProfileName = profile.getName();
-                repository.deleteProfile(profile);
-                profile = repository.getCurrentProfile();
-                currentProfileIsModified = false;
-                profilesDropdown.removeItem(currentProfileName);
-                profilesDropdown.setSelectedItem(profile.getName());
-                toggleDeleteButton();
-                resetButton.setEnabled(false);
-                applyAction.setEnabled(false);
-                rebindMetricsTree();
-            }
-        });
-    }
-
-    private void selectMetric(MetricInstance metricInstance) {
-        selectedMetricInstance = metricInstance;
-        final Metric metric = metricInstance.getMetric();
-        final String url = metric.getHelpURL();
-        final String displayString = metric.getHelpDisplayString();
-        if (url != null) {
-            urlLabel.setText("<html><a href = \'" + url + "\'>" + displayString + "</a></html>");
-        } else {
-            urlLabel.setText("");
-        }
-        final double threshold = metricInstance.getUpperThreshold();
-        final boolean thresholdEnabled = metricInstance.isUpperThresholdEnabled();
-        upperThresholdEnabledCheckbox.setSelected(thresholdEnabled);
-        upperThresholdEnabledCheckbox.setEnabled(true);
-        final String thresholdString = Double.toString(threshold);
-        upperThresholdField.setEnabled(thresholdEnabled);
-        if (thresholdEnabled) {
-            upperThresholdField.setText(thresholdString);
-        } else {
-            upperThresholdField.setText("");
-        }
-        final double lowerThreshold = metricInstance.getLowerThreshold();
-        final boolean lowerThresholdEnabled = metricInstance.isLowerThresholdEnabled();
-        lowerThresholdEnabledCheckbox.setSelected(lowerThresholdEnabled);
-        lowerThresholdEnabledCheckbox.setEnabled(true);
-        final String lowerThresholdString = Double.toString(lowerThreshold);
-        lowerThresholdField.setEnabled(thresholdEnabled);
-        if (thresholdEnabled) {
-            lowerThresholdField.setText(lowerThresholdString);
-        } else {
-            lowerThresholdField.setText("");
-        }
-        @NonNls final String descriptionName = "/metricsDescriptions/" + metric.getID() + ".html";
-        final boolean resourceFound = setDescriptionFromResource(descriptionName, metric);
-        if (!resourceFound) {
-            setDescriptionFromResource("/metricsDescriptions/UnderConstruction.html");
-        }
-    }
-
-    private boolean setDescriptionFromResource(@NonNls String resourceName) {
-        try {
-            final URL resourceURL = getClass().getResource(resourceName);
-            descriptionTextArea.setPage(resourceURL);
-            return true;
-        } catch (IOException ignore) {
-            return false;
-        }
-    }
-
-    private boolean setDescriptionFromResource(String resourceName, Metric metric) {
-        try {
-            final URL resourceURL = metric.getClass().getResource(resourceName);
-            descriptionTextArea.setPage(resourceURL);
-            return true;
-        } catch (IOException ignore) {
-            return false;
-        }
-    }
-
-    private void clearSelection() {
-        selectedMetricInstance = null;
-        lowerThresholdField.setText("");
-        lowerThresholdField.setEnabled(false);
-        lowerThresholdEnabledCheckbox.setEnabled(false);
-        upperThresholdField.setText("");
-        upperThresholdField.setEnabled(false);
-        upperThresholdEnabledCheckbox.setEnabled(false);
-        setDescriptionFromResource("/metricsDescriptions/Blank.html");
-    }
-
-    @Override
-    public void valueChanged(TreeSelectionEvent e) {
-        final TreePath selectionPath = e.getPath();
-        final MetricTreeNode lastPathComponent = (MetricTreeNode) selectionPath.getLastPathComponent();
-        final Object userObject = lastPathComponent.getUserObject();
-        if (userObject instanceof MetricInstance) {
-            selectMetric((MetricInstance) userObject);
-        } else {
-            clearSelection();
-        }
-    }
-
-
-    @NotNull
-    @Override
-    public Action[] createActions() {
-        if (SystemInfo.isMac) {
-            return new Action[] {getCancelAction(), applyAction, getOKAction()};
-        } else {
-            return new Action[] {getOKAction(), applyAction, getCancelAction()};
-        }
-    }
-
-    @Override
-    public String getTitle() {
-        return MetricsReloadedBundle.message("metrics.configuration.panel.title");
-    }
-
-    @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
-        return contentPanel;
-    }
-
-    @Override
-    @NonNls
-    protected String getDimensionServiceKey() {
-        return "MetricsReloaded.MetricsConfigurationDialog";
-    }
-
-    private void toggleNode(JTree tree, MetricTreeNode node) {
-        final Object userObject = node.getUserObject();
-        if (userObject instanceof MetricInstance) {
-            final MetricInstance tool = (MetricInstance) userObject;
-            node.enabled = !node.enabled;
-            if (node.enabled) {
-                final MetricTreeNode parent = (MetricTreeNode) node.getParent();
-                if (!parent.equals(tree.getModel().getRoot())) {
-                    parent.enabled = true;
-                }
-                tool.setEnabled(true);
-            } else {
-                tool.setEnabled(false);
-            }
-            currentProfileIsModified = true;
-            applyAction.setEnabled(true);
-            resetButton.setEnabled(true);
-        } else {
-            node.enabled = !node.enabled;
-            final Enumeration children = node.children();
-            while (children.hasMoreElements()) {
-                final MetricTreeNode child = (MetricTreeNode) children.nextElement();
-                child.enabled = node.enabled;
-                if (child.getUserObject()instanceof MetricInstance) {
-                    ((MetricInstance) child.getUserObject()).setEnabled(node.enabled);
-                }
-                else
-                {
-                    final Enumeration grandchildren = child.children();
-                    while (grandchildren.hasMoreElements()) {
-                        final MetricTreeNode grandChild = (MetricTreeNode) grandchildren.nextElement();
-                        grandChild.enabled = node.enabled;
-                        if (grandChild.getUserObject()instanceof MetricInstance) {
-                            ((MetricInstance) grandChild.getUserObject()).setEnabled(node.enabled);
-                        }
-                    }
-                }
-            }
-        }
-        tree.repaint();
-    }
-
-    public void createUIComponents() {
-        filterComponent = new MyFilterComponent();
-        final AnAction expandActon = new AnAction(MetricsReloadedBundle.message("expand.all.action"),
-                MetricsReloadedBundle.message("expand.all.description"), AllIcons.Actions.Expandall) {
-            @Override
-            public void actionPerformed(AnActionEvent anActionEvent) {
-                final MetricTreeNode root = (MetricTreeNode) metricsTree.getModel().getRoot();
-                final TreePath rootPath = new TreePath(root);
-                for (Enumeration e = root.children(); e.hasMoreElements();) {
-                    final MetricTreeNode childNode = (MetricTreeNode) e.nextElement();
-                    final TreePath path = rootPath.pathByAddingChild(childNode);
-                    metricsTree.expandPath(path);
-                }
-            }
-        };
-        final AnAction collapseAction = new AnAction(MetricsReloadedBundle.message("collapse.all.action"),
-                MetricsReloadedBundle.message("collapse.all.description"), AllIcons.Actions.Collapseall) {
-            @Override
-            public void actionPerformed(AnActionEvent anActionEvent) {
-                final MetricTreeNode root = (MetricTreeNode) metricsTree.getModel().getRoot();
-                final TreePath rootPath = new TreePath(root);
-                for (Enumeration e = root.children(); e.hasMoreElements();) {
-                    final MetricTreeNode childNode = (MetricTreeNode) e.nextElement();
-                    final TreePath path = rootPath.pathByAddingChild(childNode);
-                    metricsTree.collapsePath(path);
-                }
-            }
-        };
-        final ActionManager actionManager = ActionManager.getInstance();
-
-        final DefaultActionGroup expandCollapseGroup = new DefaultActionGroup();
-        expandCollapseGroup.add(expandActon);
-        expandCollapseGroup.add(collapseAction);
-
-        treeToolbar = (ActionToolbarImpl) actionManager
-                        .createActionToolbar("EXPAND_COLLAPSE_GROUP", expandCollapseGroup, true);
-    }
-
-    private class MyFilterComponent extends FilterComponent {
-
-        private MyFilterComponent() {
-            super("METRICS_FILTER_HISTORY", 10);
-        }
-
-        @Override
-        public void filter() {
-            populateTree(getFilter());
-        }
-    }
-
-    private static class MyTreeCellRenderer extends JPanel implements TreeCellRenderer {
-
-        private final JLabel myLabel;
-        private final JCheckBox myCheckbox;
-
-        @SuppressWarnings("OverridableMethodCallInConstructor")
-         MyTreeCellRenderer() {
-            super(new BorderLayout());
-            myCheckbox = new JCheckBox();
-            myLabel = new JLabel();
-            add(myCheckbox, BorderLayout.WEST);
-            add(myLabel, BorderLayout.CENTER);
-        }
-
-        @Override
-        @SuppressWarnings("HardCodedStringLiteral")
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
-                                                      boolean leaf, int row, boolean hasFocus) {
-            final MetricTreeNode node = (MetricTreeNode) value;
-            final Object object = node.getUserObject();
-
-            myCheckbox.setSelected(node.enabled);
-
-            myCheckbox.setBackground(UIManager.getColor("Tree.textBackground"));
-            setBackground(UIManager.getColor(selected ? "Tree.selectionBackground" : "Tree.textBackground"));
-            final Color foreground = UIManager.getColor(selected ? "Tree.selectionForeground" : "Tree.textForeground");
-            setForeground(foreground);
-            myCheckbox.setForeground(foreground);
-            myLabel.setForeground(foreground);
-            myCheckbox.setEnabled(true);
-
-            if (object instanceof MetricInstance) {
-                final MetricInstance tool = (MetricInstance) object;
-                myLabel.setFont(tree.getFont());
-                myLabel.setText(tool.getMetric().getDisplayName());
-            } else {
-                final Font font = tree.getFont();
-                final Font boldFont = new Font(font.getName(), Font.BOLD, font.getSize());
-                myLabel.setFont(boldFont);
-                myLabel.setText((String) object);
-            }
-
-            return this;
-        }
-    }
-
-    private class MetricsTree extends Tree {
-        @Override
-        public Dimension getPreferredScrollableViewportSize() {
-            Dimension size = super.getPreferredScrollableViewportSize();
-            size = new Dimension(size.width + 10, size.height);
-            return size;
-        }
-
-        @Override
-        protected void processMouseEvent(MouseEvent e) {
-            if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-                final int row = getRowForLocation(e.getX(), e.getY());
-                if (row >= 0) {
-                    final Rectangle rowBounds = getRowBounds(row);
-                    final MyTreeCellRenderer renderer = (MyTreeCellRenderer) getCellRenderer();
-                    renderer.setBounds(rowBounds);
-                    final Rectangle checkBounds = renderer.myCheckbox.getBounds();
-
-                    checkBounds.setLocation(rowBounds.getLocation());
-
-                    if (checkBounds.contains(e.getPoint())) {
-                        final MetricTreeNode node = (MetricTreeNode) getPathForRow(row)
-                                .getLastPathComponent();
-                        toggleNode(this, node);
-                        e.consume();
-                        setSelectionRow(row);
-                    }
-                }
-            }
-
-            if (!e.isConsumed()) {
-                super.processMouseEvent(e);
-            }
-        }
-    }
-
-    private static class MetricTreeNode extends DefaultMutableTreeNode {
-        private boolean enabled;
-
-        private MetricTreeNode(Object userObject, boolean enabled) {
-            super(userObject);
-            this.enabled = enabled;
-        }
-    }
-
-    private static boolean isMetricAccepted(Metric metric, String filter) {
-        final String lowerCaseFilterString = filter.toLowerCase();
-        if (metric.getDisplayName().toLowerCase().indexOf(lowerCaseFilterString) >= 1) {
-            return true;
-        }
-        @NonNls final String descriptionName = "/metricsDescriptions/" + metric.getID() + ".html";
-        try {
-            final InputStream resourceStream = metric.getClass().getResourceAsStream(descriptionName);
-            try {
-                return readStreamContents(resourceStream).toLowerCase().contains(lowerCaseFilterString);
-            } finally {
-                if (resourceStream != null) {
-                    resourceStream.close();
-                } else {
-                    logger.warn("no description found for " + metric.getID());
-                }
-            }
-        } catch (IOException e) {
-            logger.warn("problem reading metric description", e);
-            return false;
-        }
-    }
-
-    private static String readStreamContents(InputStream resourceStream) throws IOException {
-        if (resourceStream == null) {
-            return "";
-        }
-        final StringBuilder out = new StringBuilder();
-        while (true) {
-            final int c = resourceStream.read();
-            if (c == -1) {
-                break;
-            }
-            out.append((char) c);
-        }
-        return out.toString();
-    }
-
-    private class CopyProfileAction extends AbstractAction {
-
-        private final MetricsProfileRepository repository;
-
-        CopyProfileAction(MetricsProfileRepository repository) {
-            super(MetricsReloadedBundle.message("copy.profile.action"));
-            this.repository = repository;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            final String newProfileName = Messages.showInputDialog(saveAsButton,
-                    MetricsReloadedBundle.message("enter.new.profile.name"),
-                    MetricsReloadedBundle.message("create.new.metrics.profile"),
-                    Messages.getQuestionIcon());
-            if (newProfileName == null) {
-                return;
-            }
-            if (repository.profileExists(newProfileName)) {
-                Messages.showErrorDialog(
-                        MetricsReloadedBundle.message("unable.to.create.profile.dialog.message",
-                                newProfileName),
-                        MetricsReloadedBundle.message("unable.to.create.profile.dialog.title"));
-            } else {
-                repository.duplicateCurrentProfile(newProfileName);
-                updateSelection(newProfileName);
-            }
-        }
-    }
-
-    private class NewProfileAction extends AbstractAction {
-
-        private final MetricsProfileRepository repository;
-
-        NewProfileAction(MetricsProfileRepository repository) {
-            super(MetricsReloadedBundle.message("new.profile.action"));
-            this.repository = repository;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            final String newProfileName = Messages.showInputDialog(saveAsButton,
-                    MetricsReloadedBundle.message("enter.new.profile.name"),
-                    MetricsReloadedBundle.message("create.new.metrics.profile"),
-                    Messages.getQuestionIcon());
-            if (newProfileName == null) {
-                return;
-            }
-            if (repository.profileExists(newProfileName)) {
-                Messages.showErrorDialog(
-                        MetricsReloadedBundle.message("unable.to.create.profile.dialog.message",
-                                newProfileName),
-                        MetricsReloadedBundle.message("unable.to.create.profile.dialog.title"));
-            } else {
-                repository.createEmptyProfile(newProfileName);
-                updateSelection(newProfileName);
-            }
-        }
-    }
+public class MetricsConfigurationDialog extends DialogWrapper implements TreeSelectionListener
+{
+	private static final Logger logger = Logger.getInstance("MetricsReloaded");
+
+	private JComboBox profilesDropdown;
+	private JTextPane descriptionTextArea;
+	private JButton deleteButton;
+	private JButton saveAsButton;
+	private JPanel contentPanel;
+	private JFormattedTextField upperThresholdField;
+	private JCheckBox upperThresholdEnabledCheckbox;
+	private JFormattedTextField lowerThresholdField;
+	private JCheckBox lowerThresholdEnabledCheckbox;
+	@NonNls
+	private JLabel urlLabel;
+	private JButton resetButton;
+	private ActionToolbarImpl treeToolbar;
+	private MetricInstance selectedMetricInstance = null;
+
+	private final MetricsProfileRepository repository;
+	@Nullable
+	private MetricsProfile profile;
+	private boolean currentProfileIsModified = false;
+	private JBScrollPane treeScrollPane;
+	private FilterComponent filterComponent;
+	private Tree metricsTree;
+
+	private final Action applyAction = new ApplyAction();
+
+	public MetricsConfigurationDialog(Project project, MetricsProfileRepository repository)
+	{
+		super(project, true);
+		this.repository = repository;
+		profile = this.repository.getCurrentProfile();
+		setupMetricsTree();
+
+		setDescriptionFromResource("/metricsDescriptions/Blank.html");
+		setupProfilesDropdown();
+		setupDeleteButton();
+		setupAddButton();
+		setupResetButton();
+		setupLowerThresholdEnabledButton();
+		setupLowerThresholdField();
+		setupUpperThresholdEnabledButton();
+		setupUpperThresholdField();
+		setupURLLabel();
+		toggleDeleteButton();
+		applyAction.setEnabled(false);
+		resetButton.setEnabled(false);
+		lowerThresholdField.setEnabled(false);
+		upperThresholdField.setEnabled(false);
+		lowerThresholdEnabledCheckbox.setEnabled(false);
+		upperThresholdEnabledCheckbox.setEnabled(false);
+		urlLabel.setText("");
+		init();
+		setTitle(MetricsReloadedBundle.message("metrics.profiles"));
+	}
+
+	private void setupLowerThresholdField()
+	{
+		final NumberFormat formatter = NumberFormat.getIntegerInstance();
+		formatter.setParseIntegerOnly(true);
+		final DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory(new NumberFormatter(formatter));
+		lowerThresholdField.setFormatterFactory(formatterFactory);
+
+		final DocumentListener listener = new DocumentListener()
+		{
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+				textChanged();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				textChanged();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				textChanged();
+			}
+
+			private void textChanged()
+			{
+				final Number value = (Number) lowerThresholdField.getValue();
+				if(value != null)
+				{
+					final double threshold = value.doubleValue();
+					selectedMetricInstance.setLowerThreshold(threshold);
+					currentProfileIsModified = true;
+				}
+			}
+		};
+		final Document thresholdDocument = lowerThresholdField.getDocument();
+		thresholdDocument.addDocumentListener(listener);
+	}
+
+	private void setupUpperThresholdField()
+	{
+		final NumberFormat formatter = NumberFormat.getIntegerInstance();
+		formatter.setParseIntegerOnly(true);
+		final DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory(new NumberFormatter(formatter));
+		upperThresholdField.setFormatterFactory(formatterFactory);
+
+		final DocumentListener listener = new DocumentListener()
+		{
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+				textChanged();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				textChanged();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				textChanged();
+			}
+
+			private void textChanged()
+			{
+				final Number value = (Number) upperThresholdField.getValue();
+				if(value != null)
+				{
+					final double threshold = value.doubleValue();
+					selectedMetricInstance.setUpperThreshold(threshold);
+					currentProfileIsModified = true;
+				}
+			}
+		};
+		final Document thresholdDocument = upperThresholdField.getDocument();
+		thresholdDocument.addDocumentListener(listener);
+	}
+
+	private void setupLowerThresholdEnabledButton()
+	{
+		final ButtonModel checkboxModel = lowerThresholdEnabledCheckbox.getModel();
+		checkboxModel.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				if(selectedMetricInstance != null)
+				{
+					final boolean selected = checkboxModel.isSelected();
+					selectedMetricInstance.setLowerThresholdEnabled(selected);
+					lowerThresholdField.setEnabled(selectedMetricInstance.isLowerThresholdEnabled());
+					if(selected)
+					{
+						lowerThresholdField.setText(Double.toString(selectedMetricInstance.getLowerThreshold()));
+					}
+					else
+					{
+						lowerThresholdField.setText("");
+					}
+					currentProfileIsModified = true;
+				}
+			}
+		});
+	}
+
+	private void setupUpperThresholdEnabledButton()
+	{
+		final ButtonModel checkboxModel = upperThresholdEnabledCheckbox.getModel();
+		checkboxModel.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				if(selectedMetricInstance != null)
+				{
+					final boolean selected = checkboxModel.isSelected();
+					selectedMetricInstance.setUpperThresholdEnabled(selected);
+					upperThresholdField.setEnabled(selectedMetricInstance.isUpperThresholdEnabled());
+					if(selected)
+					{
+						upperThresholdField.setText(Double.toString(selectedMetricInstance.getUpperThreshold()));
+					}
+					else
+					{
+						upperThresholdField.setText("");
+					}
+				}
+				currentProfileIsModified = true;
+			}
+		});
+	}
+
+	private void setupMetricsTree()
+	{
+
+		metricsTree = new MetricsTree();
+		treeScrollPane.setViewportView(metricsTree);
+		populateTree("");
+		final MyTreeCellRenderer renderer = new MyTreeCellRenderer();
+		metricsTree.setCellRenderer(renderer);
+		metricsTree.setRootVisible(true);
+		metricsTree.setShowsRootHandles(false);
+		//noinspection HardCodedStringLiteral
+		metricsTree.putClientProperty("JTree.lineStyle", "Angled");
+
+		metricsTree.addKeyListener(new KeyAdapter()
+		{
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_SPACE)
+				{
+					final TreePath treePath = metricsTree.getLeadSelectionPath();
+					final MetricTreeNode node = (MetricTreeNode) treePath.getLastPathComponent();
+					toggleNode(metricsTree, node);
+					e.consume();
+				}
+			}
+		});
+		//noinspection ResultOfObjectAllocationIgnored
+		new TreeSpeedSearch(metricsTree, new Convertor<TreePath, String>()
+		{
+			@Override
+			public String convert(TreePath treePath)
+			{
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
+				final Object userObject = node.getUserObject();
+				if(userObject instanceof MetricInstance)
+				{
+					return ((MetricInstance) userObject).getMetric().getDisplayName();
+				}
+				else
+				{
+					return userObject.toString();
+				}
+			}
+		});
+		metricsTree.setSelectionRow(0);
+	}
+
+	private void populateTree(String filter)
+	{
+		final MetricTreeNode root = new MetricTreeNode(MetricsReloadedBundle.message("metrics"), true);
+		final Map<MetricCategory, MetricTreeNode> categoryNodes = new EnumMap<MetricCategory, MetricTreeNode>(MetricCategory.class);
+
+		if(profile != null)
+		{
+			final List<MetricInstance> metrics = profile.getMetrics();
+			for(final MetricInstance metricInstance : metrics)
+			{
+				final Metric metric = metricInstance.getMetric();
+				if(!isMetricAccepted(metric, filter))
+				{
+					continue;
+				}
+				final MetricCategory category = metric.getCategory();
+				MetricTreeNode categoryNode = categoryNodes.get(category);
+				if(categoryNode == null)
+				{
+					categoryNode = new MetricTreeNode(MetricsCategoryNameUtil.getLongNameForCategory(category), true);
+					root.add(categoryNode);
+					categoryNodes.put(category, categoryNode);
+				}
+				final MetricTreeNode metricNode = new MetricTreeNode(metricInstance, metricInstance.isEnabled());
+				categoryNode.add(metricNode);
+			}
+		}
+
+		final DefaultTreeModel treeModel = new DefaultTreeModel(root);
+		metricsTree.setModel(treeModel);
+		metricsTree.addTreeSelectionListener(this);
+		final TreeSelectionModel selectionModel = metricsTree.getSelectionModel();
+		selectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+		for(int j = root.getChildCount() - 1; j >= 0; j--)
+		{
+			final MetricTreeNode categoryNode = (MetricTreeNode) root.getChildAt(j);
+			if(categoryNode.getChildCount() == 0)
+			{
+				root.remove(categoryNode);
+			}
+		}
+		final TreePath rootPath = new TreePath(root);
+		metricsTree.expandPath(rootPath);
+		for(MetricTreeNode categoryNode : categoryNodes.values())
+		{
+			metricsTree.expandPath(rootPath.pathByAddingChild(categoryNode));
+		}
+	}
+
+	private void rebindMetricsTree()
+	{
+		final TreeModel model = metricsTree.getModel();
+		final MetricTreeNode root = (MetricTreeNode) model.getRoot();
+		final int numCategories = root.getChildCount();
+		for(int i = 0; i < numCategories; i++)
+		{
+			final MetricTreeNode category = (MetricTreeNode) root.getChildAt(i);
+			final int numMetrics = category.getChildCount();
+			for(int j = 0; j < numMetrics; j++)
+			{
+				final MetricTreeNode metricNode = (MetricTreeNode) category.getChildAt(j);
+				final MetricInstance currentMetricInstance = (MetricInstance) metricNode.getUserObject();
+				final MetricInstance newMetric = profile.getMetricForClass(currentMetricInstance.getMetric().getClass());
+				metricNode.setUserObject(newMetric);
+				assert newMetric != null;
+				metricNode.enabled = newMetric.isEnabled();
+			}
+		}
+		metricsTree.treeDidChange();
+	}
+
+	private void setupProfilesDropdown()
+	{
+		final String[] profiles = repository.getProfileNames();
+		final MutableComboBoxModel profilesModel = new DefaultComboBoxModel(profiles);
+		profilesDropdown.setModel(profilesModel);
+		final MetricsProfile currentProfile = repository.getCurrentProfile();
+		profilesDropdown.setSelectedItem(currentProfile.getName());
+		toggleDeleteButton();
+		profilesDropdown.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(e.getStateChange() == ItemEvent.DESELECTED)
+				{
+					return;
+				}
+				final String selectedProfile = (String) profilesDropdown.getSelectedItem();
+				final String currentProfileName = profile.getName();
+				if(!selectedProfile.equals(currentProfileName))
+				{
+					repository.setSelectedProfile(selectedProfile);
+					profile = repository.getCurrentProfile();
+					currentProfileIsModified = false;
+				}
+				rebindMetricsTree();
+				toggleDeleteButton();
+				toggleResetButton();
+				applyAction.setEnabled(true);
+			}
+		});
+	}
+
+	@Override
+	protected void doOKAction()
+	{
+		super.doOKAction();
+		if(currentProfileIsModified)
+		{
+			MetricsProfileRepository.persistProfile(profile);
+		}
+	}
+
+	protected class ApplyAction extends DialogWrapperAction
+	{
+
+		private ApplyAction()
+		{
+			super(MetricsReloadedBundle.message("apply"));
+		}
+
+		@Override
+		protected void doAction(ActionEvent e)
+		{
+			doApplyAction();
+		}
+	}
+
+	protected void doApplyAction()
+	{
+		processDoNotAskOnOk(NEXT_USER_EXIT_CODE);
+		MetricsProfileRepository.persistProfile(profile);
+		currentProfileIsModified = false;
+		applyAction.setEnabled(false);
+		applyAction.setEnabled(false);
+	}
+
+	@Override
+	public void doCancelAction()
+	{
+		super.doCancelAction();
+		repository.reloadProfileFromStorage(profile);
+	}
+
+	private void setupAddButton()
+	{
+		saveAsButton.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(MouseEvent event)
+			{
+				super.mousePressed(event);
+				final JPopupMenu popup = new JPopupMenu();
+				popup.add(new JMenuItem(new CopyProfileAction(repository)));
+				popup.add(new JMenuItem(new NewProfileAction(repository)));
+				popup.show(saveAsButton, 0, saveAsButton.getHeight());
+			}
+		});
+	}
+
+	public void updateSelection(String newProfileName)
+	{
+		currentProfileIsModified = false;
+		profile = repository.getCurrentProfile();
+		profilesDropdown.addItem(newProfileName);
+		profilesDropdown.setSelectedItem(newProfileName);
+		rebindMetricsTree();
+		toggleDeleteButton();
+	}
+
+	private void setupResetButton()
+	{
+		resetButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				repository.reloadProfileFromStorage(profile);
+				currentProfileIsModified = false;
+				populateTree(filterComponent.getFilter());
+			}
+		});
+	}
+
+	private void setupURLLabel()
+	{
+		urlLabel.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent event)
+			{
+				final String helpURL = selectedMetricInstance.getMetric().getHelpURL();
+				if(helpURL != null)
+				{
+					BrowserUtil.launchBrowser("http://" + helpURL);
+				}
+			}
+		});
+	}
+
+	private void toggleDeleteButton()
+	{
+		//        deleteButton.setEnabled(repository.getProfileNames().length != 0);
+		//        final boolean anyProfilesLeft = repository.getProfileNames().length != 0;
+		//        if (!anyProfilesLeft) {
+		//            deleteButton.setEnabled(anyProfilesLeft);
+		//            return;
+		//        }
+		deleteButton.setEnabled(profile != null && !profile.isBuiltIn());
+	}
+
+	private void toggleResetButton()
+	{
+		resetButton.setEnabled(currentProfileIsModified);
+	}
+
+	private void setupDeleteButton()
+	{
+		deleteButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				final String currentProfileName = profile.getName();
+				repository.deleteProfile(profile);
+				profile = repository.getCurrentProfile();
+				currentProfileIsModified = false;
+				profilesDropdown.removeItem(currentProfileName);
+				profilesDropdown.setSelectedItem(profile.getName());
+				toggleDeleteButton();
+				resetButton.setEnabled(false);
+				applyAction.setEnabled(false);
+				rebindMetricsTree();
+			}
+		});
+	}
+
+	private void selectMetric(MetricInstance metricInstance)
+	{
+		selectedMetricInstance = metricInstance;
+		final Metric metric = metricInstance.getMetric();
+		final String url = metric.getHelpURL();
+		final String displayString = metric.getHelpDisplayString();
+		if(url != null)
+		{
+			urlLabel.setText("<html><a href = \'" + url + "\'>" + displayString + "</a></html>");
+		}
+		else
+		{
+			urlLabel.setText("");
+		}
+		final double threshold = metricInstance.getUpperThreshold();
+		final boolean thresholdEnabled = metricInstance.isUpperThresholdEnabled();
+		upperThresholdEnabledCheckbox.setSelected(thresholdEnabled);
+		upperThresholdEnabledCheckbox.setEnabled(true);
+		final String thresholdString = Double.toString(threshold);
+		upperThresholdField.setEnabled(thresholdEnabled);
+		if(thresholdEnabled)
+		{
+			upperThresholdField.setText(thresholdString);
+		}
+		else
+		{
+			upperThresholdField.setText("");
+		}
+		final double lowerThreshold = metricInstance.getLowerThreshold();
+		final boolean lowerThresholdEnabled = metricInstance.isLowerThresholdEnabled();
+		lowerThresholdEnabledCheckbox.setSelected(lowerThresholdEnabled);
+		lowerThresholdEnabledCheckbox.setEnabled(true);
+		final String lowerThresholdString = Double.toString(lowerThreshold);
+		lowerThresholdField.setEnabled(thresholdEnabled);
+		if(thresholdEnabled)
+		{
+			lowerThresholdField.setText(lowerThresholdString);
+		}
+		else
+		{
+			lowerThresholdField.setText("");
+		}
+		@NonNls final String descriptionName = "/metricsDescriptions/" + metric.getID() + ".html";
+		final boolean resourceFound = setDescriptionFromResource(descriptionName, metric);
+		if(!resourceFound)
+		{
+			setDescriptionFromResource("/metricsDescriptions/UnderConstruction.html");
+		}
+	}
+
+	private boolean setDescriptionFromResource(@NonNls String resourceName)
+	{
+		try
+		{
+			final URL resourceURL = getClass().getResource(resourceName);
+			descriptionTextArea.setPage(resourceURL);
+			return true;
+		}
+		catch(IOException ignore)
+		{
+			return false;
+		}
+	}
+
+	private boolean setDescriptionFromResource(String resourceName, Metric metric)
+	{
+		try
+		{
+			final URL resourceURL = metric.getClass().getResource(resourceName);
+			descriptionTextArea.setPage(resourceURL);
+			return true;
+		}
+		catch(IOException ignore)
+		{
+			return false;
+		}
+	}
+
+	private void clearSelection()
+	{
+		selectedMetricInstance = null;
+		lowerThresholdField.setText("");
+		lowerThresholdField.setEnabled(false);
+		lowerThresholdEnabledCheckbox.setEnabled(false);
+		upperThresholdField.setText("");
+		upperThresholdField.setEnabled(false);
+		upperThresholdEnabledCheckbox.setEnabled(false);
+		setDescriptionFromResource("/metricsDescriptions/Blank.html");
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e)
+	{
+		final TreePath selectionPath = e.getPath();
+		final MetricTreeNode lastPathComponent = (MetricTreeNode) selectionPath.getLastPathComponent();
+		final Object userObject = lastPathComponent.getUserObject();
+		if(userObject instanceof MetricInstance)
+		{
+			selectMetric((MetricInstance) userObject);
+		}
+		else
+		{
+			clearSelection();
+		}
+	}
+
+
+	@NotNull
+	@Override
+	public Action[] createActions()
+	{
+		if(SystemInfo.isMac)
+		{
+			return new Action[]{
+					getCancelAction(),
+					applyAction,
+					getOKAction()
+			};
+		}
+		else
+		{
+			return new Action[]{
+					getOKAction(),
+					applyAction,
+					getCancelAction()
+			};
+		}
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return MetricsReloadedBundle.message("metrics.configuration.panel.title");
+	}
+
+	@Override
+	@Nullable
+	protected JComponent createCenterPanel()
+	{
+		return contentPanel;
+	}
+
+	@Override
+	@NonNls
+	protected String getDimensionServiceKey()
+	{
+		return "MetricsReloaded.MetricsConfigurationDialog";
+	}
+
+	private void toggleNode(JTree tree, MetricTreeNode node)
+	{
+		final Object userObject = node.getUserObject();
+		if(userObject instanceof MetricInstance)
+		{
+			final MetricInstance tool = (MetricInstance) userObject;
+			node.enabled = !node.enabled;
+			if(node.enabled)
+			{
+				final MetricTreeNode parent = (MetricTreeNode) node.getParent();
+				if(!parent.equals(tree.getModel().getRoot()))
+				{
+					parent.enabled = true;
+				}
+				tool.setEnabled(true);
+			}
+			else
+			{
+				tool.setEnabled(false);
+			}
+			currentProfileIsModified = true;
+			applyAction.setEnabled(true);
+			resetButton.setEnabled(true);
+		}
+		else
+		{
+			node.enabled = !node.enabled;
+			final Enumeration children = node.children();
+			while(children.hasMoreElements())
+			{
+				final MetricTreeNode child = (MetricTreeNode) children.nextElement();
+				child.enabled = node.enabled;
+				if(child.getUserObject() instanceof MetricInstance)
+				{
+					((MetricInstance) child.getUserObject()).setEnabled(node.enabled);
+				}
+				else
+				{
+					final Enumeration grandchildren = child.children();
+					while(grandchildren.hasMoreElements())
+					{
+						final MetricTreeNode grandChild = (MetricTreeNode) grandchildren.nextElement();
+						grandChild.enabled = node.enabled;
+						if(grandChild.getUserObject() instanceof MetricInstance)
+						{
+							((MetricInstance) grandChild.getUserObject()).setEnabled(node.enabled);
+						}
+					}
+				}
+			}
+		}
+		tree.repaint();
+	}
+
+	public void createUIComponents()
+	{
+		filterComponent = new MyFilterComponent();
+		final AnAction expandActon = new AnAction(MetricsReloadedBundle.message("expand.all.action"), MetricsReloadedBundle.message("expand.all" +
+				".description"), AllIcons.Actions.Expandall)
+		{
+			@Override
+			public void actionPerformed(AnActionEvent anActionEvent)
+			{
+				final MetricTreeNode root = (MetricTreeNode) metricsTree.getModel().getRoot();
+				final TreePath rootPath = new TreePath(root);
+				for(Enumeration e = root.children(); e.hasMoreElements(); )
+				{
+					final MetricTreeNode childNode = (MetricTreeNode) e.nextElement();
+					final TreePath path = rootPath.pathByAddingChild(childNode);
+					metricsTree.expandPath(path);
+				}
+			}
+		};
+		final AnAction collapseAction = new AnAction(MetricsReloadedBundle.message("collapse.all.action"), MetricsReloadedBundle.message("collapse.all" +
+				".description"), AllIcons.Actions.Collapseall)
+		{
+			@Override
+			public void actionPerformed(AnActionEvent anActionEvent)
+			{
+				final MetricTreeNode root = (MetricTreeNode) metricsTree.getModel().getRoot();
+				final TreePath rootPath = new TreePath(root);
+				for(Enumeration e = root.children(); e.hasMoreElements(); )
+				{
+					final MetricTreeNode childNode = (MetricTreeNode) e.nextElement();
+					final TreePath path = rootPath.pathByAddingChild(childNode);
+					metricsTree.collapsePath(path);
+				}
+			}
+		};
+		final ActionManager actionManager = ActionManager.getInstance();
+
+		final DefaultActionGroup expandCollapseGroup = new DefaultActionGroup();
+		expandCollapseGroup.add(expandActon);
+		expandCollapseGroup.add(collapseAction);
+
+		treeToolbar = (ActionToolbarImpl) actionManager.createActionToolbar("EXPAND_COLLAPSE_GROUP", expandCollapseGroup, true);
+	}
+
+	private class MyFilterComponent extends FilterComponent
+	{
+
+		private MyFilterComponent()
+		{
+			super("METRICS_FILTER_HISTORY", 10);
+		}
+
+		@Override
+		public void filter()
+		{
+			populateTree(getFilter());
+		}
+	}
+
+	private static class MyTreeCellRenderer extends JPanel implements TreeCellRenderer
+	{
+
+		private final JLabel myLabel;
+		private final JCheckBox myCheckbox;
+
+		@SuppressWarnings("OverridableMethodCallInConstructor")
+		MyTreeCellRenderer()
+		{
+			super(new BorderLayout());
+			myCheckbox = new JCheckBox();
+			myLabel = new JLabel();
+			add(myCheckbox, BorderLayout.WEST);
+			add(myLabel, BorderLayout.CENTER);
+		}
+
+		@Override
+		@SuppressWarnings("HardCodedStringLiteral")
+		public Component getTreeCellRendererComponent(
+				JTree tree,
+				Object value,
+				boolean selected,
+				boolean expanded,
+				boolean leaf,
+				int row,
+				boolean hasFocus)
+		{
+			final MetricTreeNode node = (MetricTreeNode) value;
+			final Object object = node.getUserObject();
+
+			myCheckbox.setSelected(node.enabled);
+
+			myCheckbox.setBackground(UIManager.getColor("Tree.textBackground"));
+			setBackground(UIManager.getColor(selected ? "Tree.selectionBackground" : "Tree.textBackground"));
+			final Color foreground = UIManager.getColor(selected ? "Tree.selectionForeground" : "Tree.textForeground");
+			setForeground(foreground);
+			myCheckbox.setForeground(foreground);
+			myLabel.setForeground(foreground);
+			myCheckbox.setEnabled(true);
+
+			if(object instanceof MetricInstance)
+			{
+				final MetricInstance tool = (MetricInstance) object;
+				myLabel.setFont(tree.getFont());
+				myLabel.setText(tool.getMetric().getDisplayName());
+			}
+			else
+			{
+				final Font font = tree.getFont();
+				final Font boldFont = new Font(font.getName(), Font.BOLD, font.getSize());
+				myLabel.setFont(boldFont);
+				myLabel.setText((String) object);
+			}
+
+			return this;
+		}
+	}
+
+	private class MetricsTree extends Tree
+	{
+		@Override
+		public Dimension getPreferredScrollableViewportSize()
+		{
+			Dimension size = super.getPreferredScrollableViewportSize();
+			size = new Dimension(size.width + 10, size.height);
+			return size;
+		}
+
+		@Override
+		protected void processMouseEvent(MouseEvent e)
+		{
+			if(e.getID() == MouseEvent.MOUSE_PRESSED)
+			{
+				final int row = getRowForLocation(e.getX(), e.getY());
+				if(row >= 0)
+				{
+					final Rectangle rowBounds = getRowBounds(row);
+					final MyTreeCellRenderer renderer = (MyTreeCellRenderer) getCellRenderer();
+					renderer.setBounds(rowBounds);
+					final Rectangle checkBounds = renderer.myCheckbox.getBounds();
+
+					checkBounds.setLocation(rowBounds.getLocation());
+
+					if(checkBounds.contains(e.getPoint()))
+					{
+						final MetricTreeNode node = (MetricTreeNode) getPathForRow(row).getLastPathComponent();
+						toggleNode(this, node);
+						e.consume();
+						setSelectionRow(row);
+					}
+				}
+			}
+
+			if(!e.isConsumed())
+			{
+				super.processMouseEvent(e);
+			}
+		}
+	}
+
+	private static class MetricTreeNode extends DefaultMutableTreeNode
+	{
+		private boolean enabled;
+
+		private MetricTreeNode(Object userObject, boolean enabled)
+		{
+			super(userObject);
+			this.enabled = enabled;
+		}
+	}
+
+	private static boolean isMetricAccepted(Metric metric, String filter)
+	{
+		final String lowerCaseFilterString = filter.toLowerCase();
+		if(metric.getDisplayName().toLowerCase().indexOf(lowerCaseFilterString) >= 1)
+		{
+			return true;
+		}
+		@NonNls final String descriptionName = "/metricsDescriptions/" + metric.getID() + ".html";
+		try
+		{
+			final InputStream resourceStream = metric.getClass().getResourceAsStream(descriptionName);
+			try
+			{
+				return readStreamContents(resourceStream).toLowerCase().contains(lowerCaseFilterString);
+			}
+			finally
+			{
+				if(resourceStream != null)
+				{
+					resourceStream.close();
+				}
+				else
+				{
+					logger.warn("no description found for " + metric.getID());
+				}
+			}
+		}
+		catch(IOException e)
+		{
+			logger.warn("problem reading metric description", e);
+			return false;
+		}
+	}
+
+	private static String readStreamContents(InputStream resourceStream) throws IOException
+	{
+		if(resourceStream == null)
+		{
+			return "";
+		}
+		final StringBuilder out = new StringBuilder();
+		while(true)
+		{
+			final int c = resourceStream.read();
+			if(c == -1)
+			{
+				break;
+			}
+			out.append((char) c);
+		}
+		return out.toString();
+	}
+
+	private class CopyProfileAction extends AbstractAction
+	{
+
+		private final MetricsProfileRepository repository;
+
+		CopyProfileAction(MetricsProfileRepository repository)
+		{
+			super(MetricsReloadedBundle.message("copy.profile.action"));
+			this.repository = repository;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event)
+		{
+			final String newProfileName = Messages.showInputDialog(saveAsButton, MetricsReloadedBundle.message("enter.new.profile.name"),
+					MetricsReloadedBundle.message("create.new.metrics.profile"), Messages.getQuestionIcon());
+			if(newProfileName == null)
+			{
+				return;
+			}
+			if(repository.profileExists(newProfileName))
+			{
+				Messages.showErrorDialog(MetricsReloadedBundle.message("unable.to.create.profile.dialog.message", newProfileName),
+						MetricsReloadedBundle.message("unable.to.create.profile.dialog.title"));
+			}
+			else
+			{
+				repository.duplicateCurrentProfile(newProfileName);
+				updateSelection(newProfileName);
+			}
+		}
+	}
+
+	private class NewProfileAction extends AbstractAction
+	{
+
+		private final MetricsProfileRepository repository;
+
+		NewProfileAction(MetricsProfileRepository repository)
+		{
+			super(MetricsReloadedBundle.message("new.profile.action"));
+			this.repository = repository;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event)
+		{
+			final String newProfileName = Messages.showInputDialog(saveAsButton, MetricsReloadedBundle.message("enter.new.profile.name"),
+					MetricsReloadedBundle.message("create.new.metrics.profile"), Messages.getQuestionIcon());
+			if(newProfileName == null)
+			{
+				return;
+			}
+			if(repository.profileExists(newProfileName))
+			{
+				Messages.showErrorDialog(MetricsReloadedBundle.message("unable.to.create.profile.dialog.message", newProfileName),
+						MetricsReloadedBundle.message("unable.to.create.profile.dialog.title"));
+			}
+			else
+			{
+				repository.createEmptyProfile(newProfileName);
+				updateSelection(newProfileName);
+			}
+		}
+	}
 }

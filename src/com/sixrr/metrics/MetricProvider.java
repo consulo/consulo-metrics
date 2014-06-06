@@ -16,10 +16,10 @@
 
 package com.sixrr.metrics;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.extensions.ExtensionPointName;
 
 /**
  * To add metrics to IntellIJ IDEA, you first create the Metric classes for them, and then bind them into IDEA using a
@@ -27,22 +27,24 @@ import java.util.List;
  * Additionally, you can specify a list of pre-built metrics profiles, which may make it easier for new users to use your
  * metrics.
  */
-public interface MetricProvider {
+public interface MetricProvider
+{
 
-    ExtensionPointName<MetricProvider> EXTENSION_POINT_NAME = 
-            ExtensionPointName.create("MetricsReloaded.metricProvider");
+	ExtensionPointName<MetricProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("MetricsReloaded.metricProvider");
 
-    /**
-     * Returns the list of metrics classes provided by this provider.
-     * @return the metrics classes for this provider
-     */
-    @NotNull
-    List<Class<? extends Metric>> getMetricClasses();
+	/**
+	 * Returns the list of metrics classes provided by this provider.
+	 *
+	 * @return the metrics classes for this provider
+	 */
+	@NotNull
+	List<Class<? extends Metric>> getMetricClasses();
 
-    /**
-     * Returns the list of prebuilt metrics profiles provided by this provider.
-     * @return the prebuilt metrics profiles for this provider.
-     */
-    @NotNull
-    List<PrebuiltMetricProfile> getPrebuiltProfiles();
+	/**
+	 * Returns the list of prebuilt metrics profiles provided by this provider.
+	 *
+	 * @return the prebuilt metrics profiles for this provider.
+	 */
+	@NotNull
+	List<PrebuiltMetricProfile> getPrebuiltProfiles();
 }

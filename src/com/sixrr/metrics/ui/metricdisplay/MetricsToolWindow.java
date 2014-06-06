@@ -16,40 +16,43 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
+import org.jetbrains.annotations.NonNls;
 import com.intellij.analysis.AnalysisScope;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.metricModel.MetricsRun;
 import com.sixrr.metrics.profile.MetricsProfile;
-import org.jetbrains.annotations.NonNls;
 
-public interface MetricsToolWindow {
+public interface MetricsToolWindow
+{
 
-    @NonNls String TOOL_WINDOW_ICON_PATH = "/images/metricsToolWindow.png";
-    @NonNls String METRICS_TOOL_WINDOW_ID = "Metrics";
+	@NonNls
+	String TOOL_WINDOW_ICON_PATH = "/images/metricsToolWindow.png";
+	@NonNls
+	String METRICS_TOOL_WINDOW_ID = "Metrics";
 
-    void register();
+	void register();
 
-    void show(MetricsRun results, MetricsProfile profile, AnalysisScope scope, boolean showOnlyWarnings);
+	void show(MetricsRun results, MetricsProfile profile, AnalysisScope scope, boolean showOnlyWarnings);
 
-    void update(MetricsRun results);
+	void update(MetricsRun results);
 
-    void updateWithDiff(MetricsRun results);
+	void updateWithDiff(MetricsRun results);
 
-    void reloadAsDiff(MetricsRun prevResults);
+	void reloadAsDiff(MetricsRun prevResults);
 
-    void removeDiffOverlay();
+	void removeDiffOverlay();
 
-    boolean hasDiffOverlay();
+	boolean hasDiffOverlay();
 
-    void close();
+	void close();
 
-    MetricsRun getCurrentRun();
+	MetricsRun getCurrentRun();
 
-    AnalysisScope getCurrentScope();
+	AnalysisScope getCurrentScope();
 
-    void unregister();
+	void unregister();
 
-    MetricsProfile getCurrentProfile();
+	MetricsProfile getCurrentProfile();
 
-    MetricCategory getSelectedCategory();
+	MetricCategory getSelectedCategory();
 }

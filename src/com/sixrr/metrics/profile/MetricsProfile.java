@@ -16,35 +16,38 @@
 
 package com.sixrr.metrics.profile;
 
-import com.sixrr.metrics.Metric;
-import com.sixrr.metrics.metricModel.MetricInstance;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public interface MetricsProfile extends Cloneable {
+import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.Metric;
+import com.sixrr.metrics.metricModel.MetricInstance;
 
-    void copyFrom(List<MetricInstance> metrics);
+public interface MetricsProfile extends Cloneable
+{
 
-    void setName(String newProfileName);
+	void copyFrom(List<MetricInstance> metrics);
 
-    String getName();
+	void setName(String newProfileName);
 
-    List<MetricInstance> getMetrics();
+	String getName();
 
-    void replaceMetrics(List<MetricInstance> newMetrics);
+	List<MetricInstance> getMetrics();
 
-    @Nullable MetricInstance getMetricForClass(Class<? extends Metric> aClass);
+	void replaceMetrics(List<MetricInstance> newMetrics);
 
-    @Nullable MetricInstance getMetricForName(String metricName);
+	@Nullable
+	MetricInstance getMetricForClass(Class<? extends Metric> aClass);
 
-    void writeToFile(File profileFile) throws IOException;
+	@Nullable
+	MetricInstance getMetricForName(String metricName);
 
-    MetricDisplaySpecification getDisplaySpecification();
+	void writeToFile(File profileFile) throws IOException;
 
-    void setBuiltIn(boolean builtIn);
+	MetricDisplaySpecification getDisplaySpecification();
 
-    boolean isBuiltIn();
+	void setBuiltIn(boolean builtIn);
+
+	boolean isBuiltIn();
 }

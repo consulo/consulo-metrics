@@ -16,20 +16,23 @@
 
 package com.sixrr.metrics.metricModel;
 
-import com.sixrr.metrics.Metric;
-
 import java.util.Comparator;
 
-public class MetricAbbreviationComparator implements Comparator<Metric> {
-    public int compare(Metric o1, Metric o2) {
-        final String abbrev1 = o1.getAbbreviation();
-        final String upperAbbrev1 = abbrev1.toUpperCase();
-        final String abbrev2 = o2.getAbbreviation();
-        final String upperAbbrev2 = abbrev2.toUpperCase();
-        final int caseInsensitiveCompare = upperAbbrev1.compareTo(upperAbbrev2);
-        if (caseInsensitiveCompare != 0) {
-            return caseInsensitiveCompare;
-        }
-        return abbrev1.compareTo(abbrev2);
-    }
+import com.sixrr.metrics.Metric;
+
+public class MetricAbbreviationComparator implements Comparator<Metric>
+{
+	public int compare(Metric o1, Metric o2)
+	{
+		final String abbrev1 = o1.getAbbreviation();
+		final String upperAbbrev1 = abbrev1.toUpperCase();
+		final String abbrev2 = o2.getAbbreviation();
+		final String upperAbbrev2 = abbrev2.toUpperCase();
+		final int caseInsensitiveCompare = upperAbbrev1.compareTo(upperAbbrev2);
+		if(caseInsensitiveCompare != 0)
+		{
+			return caseInsensitiveCompare;
+		}
+		return abbrev1.compareTo(abbrev2);
+	}
 }

@@ -21,18 +21,20 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-class CloseMetricsViewAction extends AnAction {
+class CloseMetricsViewAction extends AnAction
+{
 
-    private final MetricsToolWindow toolWindow;
+	private final MetricsToolWindow toolWindow;
 
-    CloseMetricsViewAction(MetricsToolWindow toolWindow) {
-        super(MetricsReloadedBundle.message("close.metrics.action"),
-                MetricsReloadedBundle.message("close.metrics.description"), AllIcons.Actions.Cancel);
-        this.toolWindow = toolWindow;
-    }
+	CloseMetricsViewAction(MetricsToolWindow toolWindow)
+	{
+		super(MetricsReloadedBundle.message("close.metrics.action"), MetricsReloadedBundle.message("close.metrics.description"), AllIcons.Actions.Cancel);
+		this.toolWindow = toolWindow;
+	}
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-        toolWindow.close();
-    }
+	@Override
+	public void actionPerformed(AnActionEvent event)
+	{
+		toolWindow.close();
+	}
 }

@@ -21,26 +21,30 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-class RemoveDiffAction extends AnAction {
-    
-    private final MetricsToolWindow toolWindow;
+class RemoveDiffAction extends AnAction
+{
 
-    RemoveDiffAction(MetricsToolWindow toolWindow) {
-        super(MetricsReloadedBundle.message("hide.comparison.action"),
-                MetricsReloadedBundle.message("hide.comparison.description"), AllIcons.Actions.Reset);
-        this.toolWindow = toolWindow;
-    }
+	private final MetricsToolWindow toolWindow;
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-        toolWindow.removeDiffOverlay();
-    }
+	RemoveDiffAction(MetricsToolWindow toolWindow)
+	{
+		super(MetricsReloadedBundle.message("hide.comparison.action"), MetricsReloadedBundle.message("hide.comparison.description"),
+				AllIcons.Actions.Reset);
+		this.toolWindow = toolWindow;
+	}
 
-    @Override
-    public void update(AnActionEvent event) {
-        super.update(event);
-        final Presentation presentation = event.getPresentation();
-        final boolean hasDiffOverlay = toolWindow.hasDiffOverlay();
-        presentation.setEnabled(hasDiffOverlay);
-    }
+	@Override
+	public void actionPerformed(AnActionEvent event)
+	{
+		toolWindow.removeDiffOverlay();
+	}
+
+	@Override
+	public void update(AnActionEvent event)
+	{
+		super.update(event);
+		final Presentation presentation = event.getPresentation();
+		final boolean hasDiffOverlay = toolWindow.hasDiffOverlay();
+		presentation.setEnabled(hasDiffOverlay);
+	}
 }

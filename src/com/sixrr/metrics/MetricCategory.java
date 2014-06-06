@@ -19,29 +19,30 @@ package com.sixrr.metrics;
 /**
  * The MetricsCategory for a metric determines just what sort of program objects a metric is calculated for.
  */
-public enum MetricCategory {
-    /**
-     *  The metric is calculated for each method.
-     */
-    Method,
-    /**
-     *  The metric is calculated for each concrete or abstract class.
-     */
-    Class,
-    /**
-     *  The metric is calculated for each interface.
-     */
-    Interface,
-    /**
-     *   The metric is calculated for each package.
-     */
-    Package,
-    /**
-     *   The metric is calculated for each module.
-     */
-    Module,
-    /**
-     *  Tbe metric is calculated once for the project as a whole.
-     */
-    Project
+public enum MetricCategory
+{
+	/**
+	 * The metric is calculated for each method.
+	 */
+	Method,
+	/**
+	 * The metric is calculated for each concrete or abstract class.
+	 */
+	Class,
+	/**
+	 * The metric is calculated for each interface.
+	 */
+	Interface,
+	/**
+	 * The metric is calculated for each package.
+	 */
+	Package,
+	/**
+	 * The metric is calculated for each module.
+	 */
+	Module,
+	/**
+	 * Tbe metric is calculated once for the project as a whole.
+	 */
+	Project
 }

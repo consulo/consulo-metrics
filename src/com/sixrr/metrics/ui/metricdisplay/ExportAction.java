@@ -15,6 +15,12 @@
  */
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.Window;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -29,75 +35,79 @@ import com.sixrr.metrics.export.XMLExporter;
 import com.sixrr.metrics.metricModel.MetricsRun;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+class ExportAction extends AnAction
+{
 
-class ExportAction extends AnAction {
+	public static final Logger LOGGER = Logger.getInstance("MetricsReloaded");
 
-    public static final Logger LOGGER = Logger.getInstance("MetricsReloaded");
+	private final MetricsToolWindow toolWindow;
+	private final Project project;
 
-    private final MetricsToolWindow toolWindow;
-    private final Project project;
+	ExportAction(MetricsToolWindow toolWindow, Project project)
+	{
+		super(MetricsReloadedBundle.message("export.action"), MetricsReloadedBundle.message("export.description"), AllIcons.Actions.Export);
+		this.toolWindow = toolWindow;
+		this.project = project;
+	}
 
-    ExportAction(MetricsToolWindow toolWindow, Project project) {
-        super(MetricsReloadedBundle.message("export.action"),
-                MetricsReloadedBundle.message("export.description"), AllIcons.Actions.Export);
-        this.toolWindow = toolWindow;
-        this.project = project;
-    }
+	@Override
+	public void actionPerformed(AnActionEvent event)
+	{
+		final MetricsRun currentResults = toolWindow.getCurrentRun();
+		final JFileChooser chooser = new JFileChooser();
+		final FileTypeFilter xmlFilter = new FileTypeFilter(".xml", MetricsReloadedBundle.message("xml.files"));
+		//        final FileTypeFilter htmlFilter = new FileTypeFilter(".html", "HTML Files");
+		final FileTypeFilter csvFilter = new FileTypeFilter(".csv", MetricsReloadedBundle.message("csv.files"));
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.addChoosableFileFilter(csvFilter);
+		//        chooser.addChoosableFileFilter(htmlFilter);
+		chooser.addChoosableFileFilter(xmlFilter);
+		final WindowManager myWindowManager;
+		final Application application = ApplicationManager.getApplication();
+		if(application != null && application.hasComponent(WindowManager.class))
+		{
+			myWindowManager = WindowManager.getInstance();
+		}
+		else
+		{
+			return;
+		}
+		final Window parent = myWindowManager.suggestParentWindow(project);
+		final int returnVal = chooser.showSaveDialog(parent);
 
-    @Override
-    public void actionPerformed(AnActionEvent event) {
-        final MetricsRun currentResults = toolWindow.getCurrentRun();
-        final JFileChooser chooser = new JFileChooser();
-        final FileTypeFilter xmlFilter =
-                new FileTypeFilter(".xml", MetricsReloadedBundle.message("xml.files"));
-//        final FileTypeFilter htmlFilter = new FileTypeFilter(".html", "HTML Files");
-        final FileTypeFilter csvFilter =
-                new FileTypeFilter(".csv", MetricsReloadedBundle.message("csv.files"));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.addChoosableFileFilter(csvFilter);
-//        chooser.addChoosableFileFilter(htmlFilter);
-        chooser.addChoosableFileFilter(xmlFilter);
-        final WindowManager myWindowManager;
-        final Application application = ApplicationManager.getApplication();
-        if (application != null && application.hasComponent(WindowManager.class)) {
-            myWindowManager = WindowManager.getInstance();
-        } else {
-            return;
-        }
-        final Window parent = myWindowManager.suggestParentWindow(project);
-        final int returnVal = chooser.showSaveDialog(parent);
+		if(returnVal != JFileChooser.APPROVE_OPTION)
+		{
+			return;
+		}
+		final File selectedFile = chooser.getSelectedFile();
+		final FileTypeFilter filter = (FileTypeFilter) chooser.getFileFilter();
+		String fileName = selectedFile.getAbsolutePath();
+		final Exporter exporter;
+		if(filter.equals(csvFilter))
+		{
+			exporter = new CSVExporter(currentResults);
+		}
+		//        else if (filter.equals(htmlFilter))
+		//        {
+		//            exporter = new HTMLExporter(currentResults);
+		//        }
+		else
+		{
+			exporter = new XMLExporter(currentResults);
+		}
+		final String extension = filter.getExtension();
+		if(!fileName.endsWith(extension))
+		{
+			fileName += extension;
+		}
 
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        final File selectedFile = chooser.getSelectedFile();
-        final FileTypeFilter filter = (FileTypeFilter) chooser.getFileFilter();
-        String fileName = selectedFile.getAbsolutePath();
-        final Exporter exporter;
-        if (filter.equals(csvFilter)) {
-            exporter = new CSVExporter(currentResults);
-        }
-//        else if (filter.equals(htmlFilter))
-//        {
-//            exporter = new HTMLExporter(currentResults);
-//        }
-        else {
-            exporter = new XMLExporter(currentResults);
-        }
-        final String extension = filter.getExtension();
-        if (!fileName.endsWith(extension)) {
-            fileName += extension;
-        }
-
-        try {
-            exporter.export(fileName);
-        }
-        catch (IOException ex) {
-            LOGGER.info("Metrics export to file failed", ex);
-        }
-    }
+		try
+		{
+			exporter.export(fileName);
+		}
+		catch(IOException ex)
+		{
+			LOGGER.info("Metrics export to file failed", ex);
+		}
+	}
 }

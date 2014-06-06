@@ -16,6 +16,10 @@
 
 package com.sixrr.metrics.plugin;
 
+import javax.swing.JComponent;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.analysis.BaseAnalysisActionDialog;
@@ -29,48 +33,49 @@ import com.sixrr.metrics.profile.MetricsProfileRepository;
 import com.sixrr.metrics.ui.dialogs.ProfileSelectionPanel;
 import com.sixrr.metrics.ui.metricdisplay.MetricsToolWindow;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+public class ProjectMetricsAction extends BaseAnalysisAction
+{
 
-public class ProjectMetricsAction extends BaseAnalysisAction {
+	public ProjectMetricsAction()
+	{
+		super(MetricsReloadedBundle.message("metrics.calculation"), MetricsReloadedBundle.message("metrics"));
+	}
 
-    public ProjectMetricsAction() {
-        super(MetricsReloadedBundle.message("metrics.calculation"), MetricsReloadedBundle.message("metrics"));
-    }
+	@Override
+	protected void analyze(@NotNull final Project project, final AnalysisScope analysisScope)
+	{
+		final MetricsPlugin plugin = project.getComponent(MetricsPlugin.class);
+		final MetricsProfileRepository repository = plugin.getProfileRepository();
+		final MetricsProfile profile = repository.getCurrentProfile();
+		final MetricsToolWindow toolWindow = plugin.getMetricsToolWindow();
+		final MetricsRunImpl metricsRun = new MetricsRunImpl();
+		new MetricsExecutionContextImpl(project, analysisScope)
+		{
 
-    @Override
-    protected void analyze(@NotNull final Project project, final AnalysisScope analysisScope) {
-        final MetricsPlugin plugin = project.getComponent(MetricsPlugin.class);
-        final MetricsProfileRepository repository = plugin.getProfileRepository();
-        final MetricsProfile profile = repository.getCurrentProfile();
-        final MetricsToolWindow toolWindow = plugin.getMetricsToolWindow();
-        final MetricsRunImpl metricsRun = new MetricsRunImpl();
-        new MetricsExecutionContextImpl(project, analysisScope) {
+			@Override
+			public void onFinish()
+			{
+				final boolean showOnlyWarnings = plugin.getConfiguration().isShowOnlyWarnings();
+				if(!metricsRun.hasWarnings(profile) && showOnlyWarnings)
+				{
+					Messages.showMessageDialog(project, MetricsReloadedBundle.message("no.metrics.warnings.found"), MetricsReloadedBundle.message("no.metrics" +
+							".warnings.found.title"), Messages.getInformationIcon());
+					return;
+				}
+				final String profileName = profile.getName();
+				metricsRun.setProfileName(profileName);
+				metricsRun.setContext(analysisScope);
+				metricsRun.setTimestamp(new TimeStamp());
+				toolWindow.show(metricsRun, profile, analysisScope, showOnlyWarnings);
+			}
+		}.execute(profile, metricsRun);
+	}
 
-            @Override
-            public void onFinish() {
-                final boolean showOnlyWarnings = plugin.getConfiguration().isShowOnlyWarnings();
-                if(!metricsRun.hasWarnings(profile) && showOnlyWarnings) {
-                    Messages.showMessageDialog(project,
-                            MetricsReloadedBundle.message("no.metrics.warnings.found"),
-                            MetricsReloadedBundle.message("no.metrics.warnings.found.title"),
-                            Messages.getInformationIcon());
-                    return;
-                }
-                final String profileName = profile.getName();
-                metricsRun.setProfileName(profileName);
-                metricsRun.setContext(analysisScope);
-                metricsRun.setTimestamp(new TimeStamp());
-                toolWindow.show(metricsRun, profile, analysisScope, showOnlyWarnings);
-            }
-        }.execute(profile, metricsRun);
-    }
-
-    @Override
-    @Nullable
-    protected JComponent getAdditionalActionSettings(Project project, BaseAnalysisActionDialog dialog) {
-        return new ProfileSelectionPanel(project);
-    }
+	@Override
+	@Nullable
+	protected JComponent getAdditionalActionSettings(Project project, BaseAnalysisActionDialog dialog)
+	{
+		return new ProfileSelectionPanel(project);
+	}
 }

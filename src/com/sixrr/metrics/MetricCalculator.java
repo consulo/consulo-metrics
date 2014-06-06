@@ -20,28 +20,31 @@ import com.intellij.psi.PsiFile;
 
 /**
  * The MetricsCalculator interface, which is subclassed for each individual metric in order to implement all of the metrics
- * calculation.  A new MetricsCalculator is instantiated for each metrics calculation run. 
+ * calculation.  A new MetricsCalculator is instantiated for each metrics calculation run.
  */
-public interface MetricCalculator {
+public interface MetricCalculator
+{
 
-    /**
-     * Begin a metrics calculation run.
-     * @param metric   the metric which created this metrics calculator.  This will be needed to report the results.
-     * @param resultsHolder the results holder to report metrics results to.
-     * @param executionContext the metrics execution context, in which intermediate data can be cached for
-     * the duration of the run.
-     */
-    void beginMetricsRun(Metric metric, MetricsResultsHolder resultsHolder, MetricsExecutionContext executionContext);
+	/**
+	 * Begin a metrics calculation run.
+	 *
+	 * @param metric           the metric which created this metrics calculator.  This will be needed to report the results.
+	 * @param resultsHolder    the results holder to report metrics results to.
+	 * @param executionContext the metrics execution context, in which intermediate data can be cached for
+	 *                         the duration of the run.
+	 */
+	void beginMetricsRun(Metric metric, MetricsResultsHolder resultsHolder, MetricsExecutionContext executionContext);
 
-    /**
-     * Process a file.  This method will be called once for each file in the analysis scope.
-     * @param file
-     */
-    void processFile(PsiFile file);
+	/**
+	 * Process a file.  This method will be called once for each file in the analysis scope.
+	 *
+	 * @param file
+	 */
+	void processFile(PsiFile file);
 
-    /**
-     * Complete the metrics run. This is where the calculator should report any final results, and clean up any resources it
-     * has acquired.
-     */
-    void endMetricsRun();
+	/**
+	 * Complete the metrics run. This is where the calculator should report any final results, and clean up any resources it
+	 * has acquired.
+	 */
+	void endMetricsRun();
 }

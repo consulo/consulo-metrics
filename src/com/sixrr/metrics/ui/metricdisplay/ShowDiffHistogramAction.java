@@ -16,6 +16,11 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JTable;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.sixrr.metrics.Metric;
@@ -25,44 +30,45 @@ import com.sixrr.metrics.metricModel.MetricsCategoryNameUtil;
 import com.sixrr.metrics.ui.charts.DiffHistogramDialog;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
+class ShowDiffHistogramAction extends AbstractAction
+{
+	private final Project project;
+	private final JTable table;
+	private final MetricTableModel model;
 
-class ShowDiffHistogramAction extends AbstractAction {
-    private final Project project;
-    private final JTable table;
-    private final MetricTableModel model;
+	ShowDiffHistogramAction(Project project, JTable table)
+	{
+		super(MetricsReloadedBundle.message("show.histogram.action"));
+		this.project = project;
+		this.table = table;
+		model = (MetricTableModel) table.getModel();
+	}
 
-    ShowDiffHistogramAction(Project project, JTable table) {
-        super(MetricsReloadedBundle.message("show.histogram.action"));
-        this.project = project;
-        this.table = table;
-        model = (MetricTableModel) table.getModel();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        int numRows = model.getRowCount();
-        if (numRows > 1) {
-            numRows -= 2;
-        }
-        final Double[] values = new Double[numRows];
-        final Double[] prevValues = new Double[numRows];
-        final int selectedColumn = table.getSelectedColumn();
-        final int modelColumn = table.convertColumnIndexToModel(selectedColumn);
-        for (int i = 0; i < numRows; i++) {
-            final Pair<Double, Double> value = (Pair<Double, Double>) model.getValueAt(i, modelColumn);
-            assert value != null;
-            values[i] = value.getFirst();
-            prevValues[i] = value.getSecond();
-        }
-        final Metric metric = model.getMetricForColumn(modelColumn).getMetric();
-        final String name = metric.getDisplayName();
-        final MetricCategory category = metric.getCategory();
-        final String categoryName = MetricsCategoryNameUtil.getShortNameForCategory(category);
-        final MetricType type = metric.getType();
-        final DiffHistogramDialog histogramDialog = new DiffHistogramDialog(project, categoryName, name, type, values,
-                prevValues);
-        histogramDialog.show();
-    }
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		int numRows = model.getRowCount();
+		if(numRows > 1)
+		{
+			numRows -= 2;
+		}
+		final Double[] values = new Double[numRows];
+		final Double[] prevValues = new Double[numRows];
+		final int selectedColumn = table.getSelectedColumn();
+		final int modelColumn = table.convertColumnIndexToModel(selectedColumn);
+		for(int i = 0; i < numRows; i++)
+		{
+			final Pair<Double, Double> value = (Pair<Double, Double>) model.getValueAt(i, modelColumn);
+			assert value != null;
+			values[i] = value.getFirst();
+			prevValues[i] = value.getSecond();
+		}
+		final Metric metric = model.getMetricForColumn(modelColumn).getMetric();
+		final String name = metric.getDisplayName();
+		final MetricCategory category = metric.getCategory();
+		final String categoryName = MetricsCategoryNameUtil.getShortNameForCategory(category);
+		final MetricType type = metric.getType();
+		final DiffHistogramDialog histogramDialog = new DiffHistogramDialog(project, categoryName, name, type, values, prevValues);
+		histogramDialog.show();
+	}
 }

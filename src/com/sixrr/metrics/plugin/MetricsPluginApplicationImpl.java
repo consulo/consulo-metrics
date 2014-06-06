@@ -16,13 +16,13 @@
 
 package com.sixrr.metrics.plugin;
 
+import java.io.File;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 
 /**
  * Allows for exporting metrics profiles.
@@ -33,43 +33,51 @@ import java.io.File;
  * <p/>
  * The metrics configuration files are located within <code>.IntellijIDEA50/config/metrics/...</code>
  */
-public class MetricsPluginApplicationImpl
-        implements ExportableApplicationComponent, MetricsPluginApplication {
+public class MetricsPluginApplicationImpl implements ExportableApplicationComponent, MetricsPluginApplication
+{
 
-    @NotNull
-    @Override
-    public File[] getExportFiles() {
-        @NonNls final String dirName = PathManager.getConfigPath() + File.separator + "metrics";
-        final File metricsDirectory = new File(dirName);
-        final File[] files = metricsDirectory.listFiles();
-        final File[] out;
-        if (files == null) {
-            out = new File[1];
-        } else {
-            out = new File[files.length + 1];
-            System.arraycopy(files, 0, out, 1, files.length);
-        }
-        out[0] = metricsDirectory;
-        return out;
-    }
+	@NotNull
+	@Override
+	public File[] getExportFiles()
+	{
+		@NonNls final String dirName = PathManager.getConfigPath() + File.separator + "metrics";
+		final File metricsDirectory = new File(dirName);
+		final File[] files = metricsDirectory.listFiles();
+		final File[] out;
+		if(files == null)
+		{
+			out = new File[1];
+		}
+		else
+		{
+			out = new File[files.length + 1];
+			System.arraycopy(files, 0, out, 1, files.length);
+		}
+		out[0] = metricsDirectory;
+		return out;
+	}
 
-    @NotNull
-    @Override
-    public String getPresentableName() {
-        return MetricsReloadedBundle.message("metrics.profiles.configuration.presentable.name");
-    }
+	@NotNull
+	@Override
+	public String getPresentableName()
+	{
+		return MetricsReloadedBundle.message("metrics.profiles.configuration.presentable.name");
+	}
 
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return "MetricsReloaded";
-    }
+	@NotNull
+	@Override
+	public String getComponentName()
+	{
+		return "MetricsReloaded";
+	}
 
-    @Override
-    public void initComponent() {
-    }
+	@Override
+	public void initComponent()
+	{
+	}
 
-    @Override
-    public void disposeComponent() {
-    }
+	@Override
+	public void disposeComponent()
+	{
+	}
 }

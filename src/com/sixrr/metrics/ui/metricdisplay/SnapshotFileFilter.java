@@ -16,22 +16,27 @@
 
 package com.sixrr.metrics.ui.metricdisplay;
 
-import com.sixrr.metrics.utils.MetricsReloadedBundle;
-import org.jetbrains.annotations.NonNls;
-
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
-public class SnapshotFileFilter extends FileFilter {
-    public boolean accept(File f) {
-        if (f.isDirectory()) {
-            return true;
-        }
-        @NonNls final String fileName = f.getName();
-        return fileName.endsWith(".met");
-    }
+import javax.swing.filechooser.FileFilter;
 
-    public String getDescription() {
-        return MetricsReloadedBundle.message("snapshot.files.description");
-    }
+import org.jetbrains.annotations.NonNls;
+import com.sixrr.metrics.utils.MetricsReloadedBundle;
+
+public class SnapshotFileFilter extends FileFilter
+{
+	public boolean accept(File f)
+	{
+		if(f.isDirectory())
+		{
+			return true;
+		}
+		@NonNls final String fileName = f.getName();
+		return fileName.endsWith(".met");
+	}
+
+	public String getDescription()
+	{
+		return MetricsReloadedBundle.message("snapshot.files.description");
+	}
 }

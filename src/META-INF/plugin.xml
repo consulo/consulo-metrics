@@ -1,48 +1,48 @@
 <idea-plugin version="2">
-  <name>MetricsReloaded</name>
-  <id>MetricsReloaded</id>
-  <vendor email="basleijdekkersYour Hat@gmail.com">Bas Leijdekkers (remove 'Your Hat' to mail me;)</vendor>
-  <version>1.0 alpha 3</version>
-  
-  <extensionPoints>
-    <extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
-  </extensionPoints>
+	<name>MetricsReloaded</name>
+	<id>MetricsReloaded</id>
+	<vendor email="basleijdekkersYour Hat@gmail.com">Bas Leijdekkers (remove 'Your Hat' to mail me;)</vendor>
+	<version>1.0 alpha 3</version>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <appStarter implementation="com.sixrr.metrics.offline.MetricsCommandLine"/>
-  </extensions>
-  <extensions defaultExtensionNs="MetricsReloaded">
-    <metricProvider implementation="com.sixrr.stockmetrics.DefaultMetricProvider"/>
-  </extensions>
+	<extensionPoints>
+		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
+	</extensionPoints>
 
-  <application-components>
-    <component>
-      <interface-class>com.sixrr.metrics.plugin.MetricsPluginApplication</interface-class>
-      <implementation-class>com.sixrr.metrics.plugin.MetricsPluginApplicationImpl</implementation-class>
-    </component>
-    <component>
-      <implementation-class>com.sixrr.stockmetrics.DefaultMetricProvider</implementation-class>
-    </component>
-  </application-components>
+	<extensions defaultExtensionNs="com.intellij">
+		<appStarter implementation="com.sixrr.metrics.offline.MetricsCommandLine"/>
+	</extensions>
+	<extensions defaultExtensionNs="MetricsReloaded">
+		<metricProvider implementation="com.sixrr.stockmetrics.DefaultMetricProvider"/>
+	</extensions>
 
-  <project-components>
-    <component>
-      <interface-class>com.sixrr.metrics.plugin.MetricsPlugin</interface-class>
-      <implementation-class>com.sixrr.metrics.plugin.MetricsPluginImpl</implementation-class>
-      <skipForDefaultProject/>
-      <option name="workspace" value="true" />
-    </component>
-  </project-components>
+	<application-components>
+		<component>
+			<interface-class>com.sixrr.metrics.plugin.MetricsPluginApplication</interface-class>
+			<implementation-class>com.sixrr.metrics.plugin.MetricsPluginApplicationImpl</implementation-class>
+		</component>
+		<component>
+			<implementation-class>com.sixrr.stockmetrics.DefaultMetricProvider</implementation-class>
+		</component>
+	</application-components>
 
-  <actions>
-    <group>
-      <action id="Metrics.ProjectMetricsAction" class="com.sixrr.metrics.plugin.ProjectMetricsAction"
-              text="Calculate Metrics..."/>
-      <!--action id="Metrics.ViewOfflineMetricsResults"
-              class="com.sixrr.metrics.offline.ViewOfflineMetricsResultsAction"
-              text="View Offline Metrics Results...">
-      </action-->
-      <add-to-group group-id="InspectCodeGroup" anchor="last"/>
-    </group>
-  </actions>
+	<project-components>
+		<component>
+			<interface-class>com.sixrr.metrics.plugin.MetricsPlugin</interface-class>
+			<implementation-class>com.sixrr.metrics.plugin.MetricsPluginImpl</implementation-class>
+			<skipForDefaultProject/>
+			<option name="workspace" value="true"/>
+		</component>
+	</project-components>
+
+	<actions>
+		<group>
+			<action id="Metrics.ProjectMetricsAction" class="com.sixrr.metrics.plugin.ProjectMetricsAction"
+					text="Calculate Metrics..."/>
+			<!--action id="Metrics.ViewOfflineMetricsResults"
+					  class="com.sixrr.metrics.offline.ViewOfflineMetricsResultsAction"
+					  text="View Offline Metrics Results...">
+			  </action-->
+			<add-to-group group-id="InspectCodeGroup" anchor="last"/>
+		</group>
+	</actions>
 </idea-plugin>
