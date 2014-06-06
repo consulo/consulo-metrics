@@ -1,21 +1,8 @@
-<idea-plugin version="2" url="https://github.com/BasLeijdekkers/MetricsReloaded">
+<idea-plugin version="2">
   <name>MetricsReloaded</name>
   <id>MetricsReloaded</id>
-  <description><![CDATA[
-    More than 250 automated code metrics for IntelliJ IDEA. This version is compatible with
-    IntelliJ IDEA 12 and newer. Follow further development of
-    <a href="https://github.com/BasLeijdekkers/MetricsReloaded">this plugin on GitHub</a> or follow
-    <a href="http://twitter.com/inspectorbas">me on twitter</a> for announcements and other things.
-    ]]></description>
-  <vendor url="https://github.com/BasLeijdekkers/MetricsReloaded"
-          email="basleijdekkersYour Hat@gmail.com">Bas Leijdekkers (remove 'Your Hat' to mail me;)</vendor>
+  <vendor email="basleijdekkersYour Hat@gmail.com">Bas Leijdekkers (remove 'Your Hat' to mail me;)</vendor>
   <version>1.0 alpha 3</version>
-  <change-notes><![CDATA[
-  Moved 'Calculate Metrics...' action up in the Analyze menu.<br>
-  NTP metric fixed.<br>
-  Bug fixes.<br>
-  ]]></change-notes>
-  <idea-version since-build="123.72"/>
   
   <extensionPoints>
     <extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
