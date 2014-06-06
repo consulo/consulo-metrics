@@ -19,20 +19,25 @@ package com.sixrr.stockmetrics.interfaceMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class CouplingBetweenObjectsInterfaceMetric extends InterfaceMetric {
-    public String getDisplayName() {
-        return StockMetricsBundle.message("coupling.between.objects.display.name");
-    }
+public class CouplingBetweenObjectsInterfaceMetric extends InterfaceMetric
+{
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("coupling.between.objects.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("coupling.between.objects.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("coupling.between.objects.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 
-    public boolean requiresDependents() {
-        return true;
-    }
+	public boolean requiresDependents()
+	{
+		return true;
+	}
 }

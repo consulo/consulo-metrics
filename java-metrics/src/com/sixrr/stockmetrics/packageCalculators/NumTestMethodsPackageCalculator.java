@@ -16,56 +16,70 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.*;
+import java.util.Set;
+
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
 
-import java.util.Set;
+public class NumTestMethodsPackageCalculator extends PackageCalculator
+{
 
-public class NumTestMethodsPackageCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numTestMethodsPerPackages = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numTestMethodsPerPackages = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numTestMethodsPerPackages.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int numTestMethods = numTestMethodsPerPackages.getBucketValue(aPackage);
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numTestMethodsPerPackages.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int numTestMethods = numTestMethodsPerPackages.getBucketValue(aPackage);
+			postMetric(aPackage, numTestMethods);
+		}
+	}
 
-            postMetric(aPackage, numTestMethods);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		@Override
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			final PsiPackage aPackage = ClassUtils.findPackage(file);
+			if(aPackage == null)
+			{
+				return;
+			}
+			numTestMethodsPerPackages.createBucket(aPackage);
+		}
 
-        @Override
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            final PsiPackage aPackage = ClassUtils.findPackage(file);
-            if (aPackage == null) {
-                return;
-            }
-            numTestMethodsPerPackages.createBucket(aPackage);
-        }
-
-        @Override
-        public void visitMethod(PsiMethod method) {
-            super.visitMethod(method);
-            final PsiClass aClass = method.getContainingClass();
-            if (!TestUtils.isJUnitTestMethod(method)) {
-                return;
-            }
-            final PsiPackage aPackage = ClassUtils.findPackage(aClass);
-            if (aPackage == null) {
-                return;
-            }
-            numTestMethodsPerPackages.incrementBucketValue(aPackage, 1);
-        }
-    }
+		@Override
+		public void visitMethod(PsiMethod method)
+		{
+			super.visitMethod(method);
+			final PsiClass aClass = method.getContainingClass();
+			if(!TestUtils.isJUnitTestMethod(method))
+			{
+				return;
+			}
+			final PsiPackage aPackage = ClassUtils.findPackage(aClass);
+			if(aPackage == null)
+			{
+				return;
+			}
+			numTestMethodsPerPackages.incrementBucketValue(aPackage, 1);
+		}
+	}
 }

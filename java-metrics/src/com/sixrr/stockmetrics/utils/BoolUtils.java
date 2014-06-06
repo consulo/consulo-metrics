@@ -16,19 +16,23 @@
 
 package com.sixrr.stockmetrics.utils;
 
-import com.intellij.psi.PsiExpression;
 import org.jetbrains.annotations.NonNls;
+import com.intellij.psi.PsiExpression;
 
-class BoolUtils {
-    private BoolUtils() {
-        super();
-    }
+class BoolUtils
+{
+	private BoolUtils()
+	{
+		super();
+	}
 
-    public static boolean isTrue(PsiExpression test) {
-        if (test == null) {
-            return false;
-        }
-        @NonNls final String text = test.getText();
-        return "true".equals(text);
-    }
+	public static boolean isTrue(PsiExpression test)
+	{
+		if(test == null)
+		{
+			return false;
+		}
+		@NonNls final String text = test.getText();
+		return "true".equals(text);
+	}
 }

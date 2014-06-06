@@ -16,38 +16,50 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiBlockStatement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEmptyStatement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiStatement;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class NumStatementsCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private int elementCount = 0;
+public class NumStatementsCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                elementCount = 0;
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, elementCount);
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				elementCount = 0;
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				postMetric(method, elementCount);
+			}
+		}
 
-        public void visitStatement(PsiStatement statement) {
-            super.visitStatement(statement);
-            if (statement instanceof PsiEmptyStatement ||
-                    statement instanceof PsiBlockStatement) {
-                return;
-            }
-            elementCount++;
-        }
-    }
+		public void visitStatement(PsiStatement statement)
+		{
+			super.visitStatement(statement);
+			if(statement instanceof PsiEmptyStatement || statement instanceof PsiBlockStatement)
+			{
+				return;
+			}
+			elementCount++;
+		}
+	}
 }

@@ -16,29 +16,40 @@
 
 package com.sixrr.stockmetrics.interfaceCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiType;
 
-public class NumQueriesInterfaceCalculator extends InterfaceCalculator {
+public class NumQueriesInterfaceCalculator extends InterfaceCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isInterface(aClass)) {
-                final PsiMethod[] methods = aClass.getMethods();
-                int numQueries = 0;
-                for (final PsiMethod method : methods) {
-                    final PsiType returnType = method.getReturnType();
-                    if (!PsiType.VOID.equals(returnType)) {
-                        numQueries++;
-                    }
-                }
-                postMetric(aClass, numQueries);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isInterface(aClass))
+			{
+				final PsiMethod[] methods = aClass.getMethods();
+				int numQueries = 0;
+				for(final PsiMethod method : methods)
+				{
+					final PsiType returnType = method.getReturnType();
+					if(!PsiType.VOID.equals(returnType))
+					{
+						numQueries++;
+					}
+				}
+				postMetric(aClass, numQueries);
+			}
+		}
+	}
 }

@@ -22,21 +22,27 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class PercentClassesJavadocedProjectCalculator extends ElementRatioProjectCalculator {
+public class PercentClassesJavadocedProjectCalculator extends ElementRatioProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitClass(PsiClass aClass) {
-            if (ClassUtils.isAnonymous(aClass)) {
-                return;
-            }
-            if (aClass.getFirstChild()instanceof PsiDocComment) {
-                numerator++;
-            }
-            denominator++;
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitClass(PsiClass aClass)
+		{
+			if(ClassUtils.isAnonymous(aClass))
+			{
+				return;
+			}
+			if(aClass.getFirstChild() instanceof PsiDocComment)
+			{
+				numerator++;
+			}
+			denominator++;
+		}
+	}
 }

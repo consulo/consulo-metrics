@@ -19,8 +19,10 @@ package com.sixrr.stockmetrics.moduleCalculators;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.jsp.JspFile;
 
-public class NumJSPFilesModuleCalculator extends FileCountModuleCalculator {
-    protected boolean satisfies(PsiFile file) {
-        return file instanceof JspFile;
-    }
+public class NumJSPFilesModuleCalculator extends FileCountModuleCalculator
+{
+	protected boolean satisfies(PsiFile file)
+	{
+		return file instanceof JspFile;
+	}
 }

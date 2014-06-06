@@ -15,19 +15,22 @@
  */
 package com.sixrr.stockmetrics.i18n;
 
-import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
+import com.intellij.AbstractBundle;
 
-public class StockMetricsBundle extends AbstractBundle {
+public class StockMetricsBundle extends AbstractBundle
+{
 
-    public static final String BUNDLE = "com.sixrr.stockmetrics.i18n.StockMetricsBundle";
-    private static final StockMetricsBundle INSTANCE = new StockMetricsBundle();
+	public static final String BUNDLE = "com.sixrr.stockmetrics.i18n.StockMetricsBundle";
+	private static final StockMetricsBundle INSTANCE = new StockMetricsBundle();
 
-    private StockMetricsBundle() {
-        super(BUNDLE);
-    }
+	private StockMetricsBundle()
+	{
+		super(BUNDLE);
+	}
 
-    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
-        return INSTANCE.getMessage(key, params);
-    }
+	public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params)
+	{
+		return INSTANCE.getMessage(key, params);
+	}
 }

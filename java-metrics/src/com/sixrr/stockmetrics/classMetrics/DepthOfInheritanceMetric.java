@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.classMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class DepthOfInheritanceMetric extends ClassMetric {
+public class DepthOfInheritanceMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("depth.of.inheritance.tree.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("depth.of.inheritance.tree.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("depth.of.inheritance.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("depth.of.inheritance.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 }

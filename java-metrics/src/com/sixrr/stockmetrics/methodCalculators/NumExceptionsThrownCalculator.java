@@ -16,25 +16,34 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiReferenceList;
 
-public class NumExceptionsThrownCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
+public class NumExceptionsThrownCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                final PsiReferenceList throwsList = method.getThrowsList();
-                final PsiClassType[] thrownExceptions = throwsList.getReferencedTypes();
-                postMetric(method, thrownExceptions.length);
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				final PsiReferenceList throwsList = method.getThrowsList();
+				final PsiClassType[] thrownExceptions = throwsList.getReferencedTypes();
+				postMetric(method, thrownExceptions.length);
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+		}
+	}
 }

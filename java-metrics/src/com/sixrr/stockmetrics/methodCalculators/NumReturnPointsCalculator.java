@@ -16,57 +16,78 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
-import com.sixrr.stockmetrics.utils.ControlFlowUtils;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiCodeBlock;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiReturnStatement;
+import com.intellij.psi.PsiStatement;
+import com.intellij.psi.PsiType;
 import com.sixrr.metrics.utils.MethodUtils;
+import com.sixrr.stockmetrics.utils.ControlFlowUtils;
 
-public class NumReturnPointsCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private int numReturnPoints = 0;
+public class NumReturnPointsCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private int numReturnPoints = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                numReturnPoints = 0;
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				numReturnPoints = 0;
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
 
-                if (mayFallThroughBottom(method)) {
-                    final PsiCodeBlock body = method.getBody();
-                    if (body != null) {
-                        final PsiStatement[] statements = body.getStatements();
-                        if (statements.length == 0) {
-                            numReturnPoints++;
-                        } else {
-                            final PsiStatement lastStatement = statements[statements.length - 1];
-                            if (ControlFlowUtils.statementMayCompleteNormally(lastStatement)) {
-                                numReturnPoints++;
-                            }
-                        }
-                    }
-                }
-                postMetric(method, numReturnPoints);
-            }
-        }
+				if(mayFallThroughBottom(method))
+				{
+					final PsiCodeBlock body = method.getBody();
+					if(body != null)
+					{
+						final PsiStatement[] statements = body.getStatements();
+						if(statements.length == 0)
+						{
+							numReturnPoints++;
+						}
+						else
+						{
+							final PsiStatement lastStatement = statements[statements.length - 1];
+							if(ControlFlowUtils.statementMayCompleteNormally(lastStatement))
+							{
+								numReturnPoints++;
+							}
+						}
+					}
+				}
+				postMetric(method, numReturnPoints);
+			}
+		}
 
-        public void visitReturnStatement(PsiReturnStatement statement) {
-            numReturnPoints++;
-        }
+		public void visitReturnStatement(PsiReturnStatement statement)
+		{
+			numReturnPoints++;
+		}
 
-        private boolean mayFallThroughBottom(PsiMethod method) {
-            if (method.isConstructor()) {
-                return true;
-            }
-            final PsiType returnType = method.getReturnType();
-            return PsiType.VOID.equals(returnType);
-        }
-    }
+		private boolean mayFallThroughBottom(PsiMethod method)
+		{
+			if(method.isConstructor())
+			{
+				return true;
+			}
+			final PsiType returnType = method.getReturnType();
+			return PsiType.VOID.equals(returnType);
+		}
+	}
 }

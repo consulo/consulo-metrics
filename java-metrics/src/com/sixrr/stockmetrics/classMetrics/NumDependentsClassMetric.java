@@ -19,20 +19,25 @@ package com.sixrr.stockmetrics.classMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class NumDependentsClassMetric extends ClassMetric {
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.dependents.display.name");
-    }
+public class NumDependentsClassMetric extends ClassMetric
+{
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.dependents.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.dependents.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.dependents.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 
-    public boolean requiresDependents() {
-        return true;
-    }
+	public boolean requiresDependents()
+	{
+		return true;
+	}
 }

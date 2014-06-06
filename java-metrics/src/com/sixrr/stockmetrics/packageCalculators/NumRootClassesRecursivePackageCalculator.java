@@ -19,10 +19,11 @@ package com.sixrr.stockmetrics.packageCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumRootClassesRecursivePackageCalculator
-        extends ClassCountingRecursivePackageCalculator {
+public class NumRootClassesRecursivePackageCalculator extends ClassCountingRecursivePackageCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return ClassUtils.isRoot(aClass);
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return ClassUtils.isRoot(aClass);
+	}
 }

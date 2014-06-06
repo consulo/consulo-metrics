@@ -16,32 +16,47 @@
 
 package com.sixrr.stockmetrics.interfaceCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiTypeParameter;
+import com.intellij.psi.PsiTypeParameterList;
 
-public class NumTypeParametersInterfaceCalculator extends InterfaceCalculator {
+public class NumTypeParametersInterfaceCalculator extends InterfaceCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!isInterface(aClass)) {
-                return;
-            }
-            final PsiTypeParameterList typeParams = aClass.getTypeParameterList();
-            if (typeParams == null) {
-                postMetric(aClass, 0.0);
-            } else {
-                final PsiTypeParameter[] parameters = typeParams.getTypeParameters();
-                if (parameters == null) {
-                    postMetric(aClass, 0.0);
-                } else {
-                    postMetric(aClass, (double) parameters.length);
-                }
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!isInterface(aClass))
+			{
+				return;
+			}
+			final PsiTypeParameterList typeParams = aClass.getTypeParameterList();
+			if(typeParams == null)
+			{
+				postMetric(aClass, 0.0);
+			}
+			else
+			{
+				final PsiTypeParameter[] parameters = typeParams.getTypeParameters();
+				if(parameters == null)
+				{
+					postMetric(aClass, 0.0);
+				}
+				else
+				{
+					postMetric(aClass, (double) parameters.length);
+				}
+			}
+		}
+	}
 }

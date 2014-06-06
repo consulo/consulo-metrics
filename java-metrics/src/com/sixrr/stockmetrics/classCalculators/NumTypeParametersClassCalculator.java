@@ -16,32 +16,47 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiTypeParameter;
+import com.intellij.psi.PsiTypeParameterList;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumTypeParametersClassCalculator extends ClassCalculator {
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class NumTypeParametersClassCalculator extends ClassCalculator
+{
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (ClassUtils.isAnonymous(aClass) || aClass.isInterface()) {
-                return;
-            }
-            final PsiTypeParameterList typeParams = aClass.getTypeParameterList();
-            if (typeParams == null) {
-                postMetric(aClass, 0);
-            } else {
-                final PsiTypeParameter[] parameters = typeParams.getTypeParameters();
-                if (parameters == null) {
-                    postMetric(aClass, 0);
-                } else {
-                    postMetric(aClass, parameters.length);
-                }
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(ClassUtils.isAnonymous(aClass) || aClass.isInterface())
+			{
+				return;
+			}
+			final PsiTypeParameterList typeParams = aClass.getTypeParameterList();
+			if(typeParams == null)
+			{
+				postMetric(aClass, 0);
+			}
+			else
+			{
+				final PsiTypeParameter[] parameters = typeParams.getTypeParameters();
+				if(parameters == null)
+				{
+					postMetric(aClass, 0);
+				}
+				else
+				{
+					postMetric(aClass, parameters.length);
+				}
+			}
+		}
+	}
 }

@@ -16,31 +16,42 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiModifier;
 
-public class NumAttributesInheritedCalculator extends ClassCalculator {
+public class NumAttributesInheritedCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiField[] allFields = aClass.getAllFields();
-                int numInheritedFields = 0;
-                for (final PsiField field : allFields) {
-                    final PsiClass containingClass = field.getContainingClass();
-                    if (containingClass != null && !containingClass.equals(aClass) &&
-                            !field.hasModifierProperty(PsiModifier.STATIC)) {
-                        numInheritedFields++;
-                    }
-                }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiField[] allFields = aClass.getAllFields();
+				int numInheritedFields = 0;
+				for(final PsiField field : allFields)
+				{
+					final PsiClass containingClass = field.getContainingClass();
+					if(containingClass != null && !containingClass.equals(aClass) &&
+							!field.hasModifierProperty(PsiModifier.STATIC))
+					{
+						numInheritedFields++;
+					}
+				}
 
-                postMetric(aClass, numInheritedFields);
-            }
-        }
-    }
+				postMetric(aClass, numInheritedFields);
+			}
+		}
+	}
 }

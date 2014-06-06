@@ -20,106 +20,136 @@ import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;
 import com.sixrr.metrics.utils.MethodUtils;
 
-abstract class ComplexityCalculator extends MethodCalculator {
-    private int complexity = 1;
-    private int methodNestingDepth = 0;
+abstract class ComplexityCalculator extends MethodCalculator
+{
+	private int complexity = 1;
+	private int methodNestingDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                complexity = 0;
-            }
-            methodNestingDepth++;
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				complexity = 0;
+			}
+			methodNestingDepth++;
 
-            if (!MethodUtils.isAbstract(method)) {
-                complexity++;
-            }
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth <= 0) {
-                if (!MethodUtils.isAbstract(method)) {
-                    postMetric(method, complexity);
-                }
-            }
-        }
+			if(!MethodUtils.isAbstract(method))
+			{
+				complexity++;
+			}
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth <= 0)
+			{
+				if(!MethodUtils.isAbstract(method))
+				{
+					postMetric(method, complexity);
+				}
+			}
+		}
 
-        public void visitForStatement(PsiForStatement statement) {
-            super.visitForStatement(statement);
-            if (!statementIsReducible(statement)) {
-                complexity++;
-            }
-        }
+		public void visitForStatement(PsiForStatement statement)
+		{
+			super.visitForStatement(statement);
+			if(!statementIsReducible(statement))
+			{
+				complexity++;
+			}
+		}
 
-        public void visitForeachStatement(PsiForeachStatement statement) {
-            super.visitForeachStatement(statement);
-            if (!statementIsReducible(statement)) {
-                complexity++;
-            }
-        }
+		public void visitForeachStatement(PsiForeachStatement statement)
+		{
+			super.visitForeachStatement(statement);
+			if(!statementIsReducible(statement))
+			{
+				complexity++;
+			}
+		}
 
-        public void visitIfStatement(PsiIfStatement statement) {
-            super.visitIfStatement(statement);
-            if (!statementIsReducible(statement)) {
-                complexity++;
-            }
-        }
+		public void visitIfStatement(PsiIfStatement statement)
+		{
+			super.visitIfStatement(statement);
+			if(!statementIsReducible(statement))
+			{
+				complexity++;
+			}
+		}
 
-        public void visitDoWhileStatement(PsiDoWhileStatement statement) {
-            super.visitDoWhileStatement(statement);
-            if (!statementIsReducible(statement)) {
-                complexity++;
-            }
-        }
+		public void visitDoWhileStatement(PsiDoWhileStatement statement)
+		{
+			super.visitDoWhileStatement(statement);
+			if(!statementIsReducible(statement))
+			{
+				complexity++;
+			}
+		}
 
-        public void visitSwitchStatement(PsiSwitchStatement statement) {
-            super.visitSwitchStatement(statement);
-            if (!statementIsReducible(statement)) {
-                final PsiCodeBlock body = statement.getBody();
-                if (body == null) {
-                    return;
-                }
-                final PsiStatement[] statements = body.getStatements();
-                boolean pendingLabel = false;
-                for (final PsiStatement child : statements) {
-                    if (child instanceof PsiSwitchLabelStatement) {
-                        if (!pendingLabel) {
-                            complexity++;
-                        }
-                        pendingLabel = true;
-                    } else {
-                        pendingLabel = false;
-                    }
-                }
-            }
-        }
+		public void visitSwitchStatement(PsiSwitchStatement statement)
+		{
+			super.visitSwitchStatement(statement);
+			if(!statementIsReducible(statement))
+			{
+				final PsiCodeBlock body = statement.getBody();
+				if(body == null)
+				{
+					return;
+				}
+				final PsiStatement[] statements = body.getStatements();
+				boolean pendingLabel = false;
+				for(final PsiStatement child : statements)
+				{
+					if(child instanceof PsiSwitchLabelStatement)
+					{
+						if(!pendingLabel)
+						{
+							complexity++;
+						}
+						pendingLabel = true;
+					}
+					else
+					{
+						pendingLabel = false;
+					}
+				}
+			}
+		}
 
-        public void visitWhileStatement(PsiWhileStatement statement) {
-            super.visitWhileStatement(statement);
-            if (!statementIsReducible(statement)) {
-                complexity++;
-            }
-        }
+		public void visitWhileStatement(PsiWhileStatement statement)
+		{
+			super.visitWhileStatement(statement);
+			if(!statementIsReducible(statement))
+			{
+				complexity++;
+			}
+		}
 
-        public void visitBinaryExpression(PsiBinaryExpression expression) {
-            super.visitBinaryExpression(expression);
-            if (countShortCircuitExpressions()) {
-                final PsiJavaToken sign = expression.getOperationSign();
-                final IElementType token = sign.getTokenType();
-                if (token.equals(JavaTokenType.ANDAND) || token.equals(JavaTokenType.OROR)) {
-                    complexity++;
-                }
-            }
-        }
-    }
+		public void visitBinaryExpression(PsiBinaryExpression expression)
+		{
+			super.visitBinaryExpression(expression);
+			if(countShortCircuitExpressions())
+			{
+				final PsiJavaToken sign = expression.getOperationSign();
+				final IElementType token = sign.getTokenType();
+				if(token.equals(JavaTokenType.ANDAND) || token.equals(JavaTokenType.OROR))
+				{
+					complexity++;
+				}
+			}
+		}
+	}
 
-    protected boolean countShortCircuitExpressions() {
-        return false;
-    }
+	protected boolean countShortCircuitExpressions()
+	{
+		return false;
+	}
 
-    protected abstract boolean statementIsReducible(PsiStatement statement);
+	protected abstract boolean statementIsReducible(PsiStatement statement);
 }

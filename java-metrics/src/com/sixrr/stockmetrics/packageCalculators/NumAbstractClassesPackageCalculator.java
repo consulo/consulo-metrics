@@ -19,9 +19,11 @@ package com.sixrr.stockmetrics.packageCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumAbstractClassesPackageCalculator extends ClassCountingPackageCalculator {
+public class NumAbstractClassesPackageCalculator extends ClassCountingPackageCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return ClassUtils.isAbstract(aClass);
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return ClassUtils.isAbstract(aClass);
+	}
 }

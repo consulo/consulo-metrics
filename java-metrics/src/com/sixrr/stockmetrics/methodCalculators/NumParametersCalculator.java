@@ -16,27 +16,36 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
 
-public class NumParametersCalculator extends MethodCalculator {
+public class NumParametersCalculator extends MethodCalculator
+{
 
-    private int methodNestingDepth = 0;
+	private int methodNestingDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                final PsiParameterList parameterList = method.getParameterList();
-                final PsiParameter[] parameters = parameterList.getParameters();
-                postMetric(method, parameters.length);
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-        }
-    }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				final PsiParameterList parameterList = method.getParameterList();
+				final PsiParameter[] parameters = parameterList.getParameters();
+				postMetric(method, parameters.length);
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+		}
+	}
 }

@@ -20,15 +20,19 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 
-public class NumMethodsProjectCalculator extends ElementCountProjectCalculator {
+public class NumMethodsProjectCalculator extends ElementCountProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitMethod(PsiMethod method) {
-            numElements++;
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitMethod(PsiMethod method)
+		{
+			numElements++;
+		}
+	}
 }

@@ -24,30 +24,36 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class JavadocLinesOfCodeModuleCalculator extends ElementCountModuleCalculator {
+public class JavadocLinesOfCodeModuleCalculator extends ElementCountModuleCalculator
+{
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        @Override
-        public void visitFile(PsiFile file) {
-            super.visitFile(file);
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            elementsCountPerModule.createBucket(module);
-        }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			super.visitFile(file);
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			elementsCountPerModule.createBucket(module);
+		}
 
-        @Override
-        public void visitDocComment(PsiDocComment comment) {
-            super.visitDocComment(comment);
-            final int lineCount = LineUtil.countLines(comment);
-            incrementElementCount(comment, lineCount);
-        }
-    }
+		@Override
+		public void visitDocComment(PsiDocComment comment)
+		{
+			super.visitDocComment(comment);
+			final int lineCount = LineUtil.countLines(comment);
+			incrementElementCount(comment, lineCount);
+		}
+	}
 }

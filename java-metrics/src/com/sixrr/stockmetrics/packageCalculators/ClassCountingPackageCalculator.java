@@ -16,50 +16,62 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.*;
+import java.util.Set;
+
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEnumConstantInitializer;
+import com.intellij.psi.PsiTypeParameter;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.Set;
+abstract class ClassCountingPackageCalculator extends PackageCalculator
+{
 
-abstract class ClassCountingPackageCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numClassesPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numClassesPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numClassesPerPackage.getBuckets();
+		for(final PsiPackage packageName : packages)
+		{
+			final int numClasses = numClassesPerPackage.getBucketValue(packageName);
+			postMetric(packageName, numClasses);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numClassesPerPackage.getBuckets();
-        for (final PsiPackage packageName : packages) {
-            final int numClasses = numClassesPerPackage.getBucketValue(packageName);
-            postMetric(packageName, numClasses);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(aClass instanceof PsiTypeParameter || aClass instanceof PsiEnumConstantInitializer)
+			{
+				return;
+			}
+			final PsiPackage aPackage = ClassUtils.findPackage(aClass);
+			if(aPackage == null)
+			{
+				return;
+			}
+			numClassesPerPackage.createBucket(aPackage);
 
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (aClass instanceof PsiTypeParameter ||
-                    aClass instanceof PsiEnumConstantInitializer) {
-                return;
-            }
-            final PsiPackage aPackage = ClassUtils.findPackage(aClass);
-            if (aPackage == null) {
-                return;
-            }
-            numClassesPerPackage.createBucket(aPackage);
+			if(satisfies(aClass))
+			{
+				numClassesPerPackage.incrementBucketValue(aPackage);
+			}
+		}
+	}
 
-            if (satisfies(aClass)) {
-                numClassesPerPackage.incrementBucketValue(aPackage);
-            }
-        }
-    }
-
-    protected abstract boolean satisfies(PsiClass aClass);
+	protected abstract boolean satisfies(PsiClass aClass);
 }

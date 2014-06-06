@@ -16,68 +16,85 @@
 
 package com.sixrr.stockmetrics.moduleCalculators;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Key;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sixrr.stockmetrics.ClassReferenceCache;
-import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.metrics.utils.TestUtils;
-
 import java.util.Collection;
 
-public class EncapsulationRatioModuleCalculator extends ElementRatioModuleCalculator {
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.Key;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.sixrr.metrics.utils.ClassUtils;
+import com.sixrr.metrics.utils.TestUtils;
+import com.sixrr.stockmetrics.ClassReferenceCache;
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class EncapsulationRatioModuleCalculator extends ElementRatioModuleCalculator
+{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!TestUtils.isTest(aClass) && !ClassUtils.isAnonymous(aClass)) {
-                incrementDenominator(aClass, 1);
-                if (isInternal(aClass)) {
-                    incrementNumerator(aClass, 1);
-                }
-            }
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        private boolean isInternal(PsiClass aClass) {
-            final String moduleName = ClassUtils.calculateModuleName(aClass);
-            final Key<ClassReferenceCache> key = new Key<ClassReferenceCache>("ClassReferenceCache");
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!TestUtils.isTest(aClass) && !ClassUtils.isAnonymous(aClass))
+			{
+				incrementDenominator(aClass, 1);
+				if(isInternal(aClass))
+				{
+					incrementNumerator(aClass, 1);
+				}
+			}
+		}
 
-            ClassReferenceCache classReferenceCache = executionContext.getUserData(key);
-            if (classReferenceCache == null) {
-                classReferenceCache = new ClassReferenceCache();
-                executionContext.putUserData(key, classReferenceCache);
-            }
-            final Collection<PsiReference> references =
-                    classReferenceCache.findClassReferences(aClass);
-            for (final PsiReference reference : references) {
-                final PsiElement element = reference.getElement();
-                final PsiClass referencingClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+		private boolean isInternal(PsiClass aClass)
+		{
+			final String moduleName = ClassUtils.calculateModuleName(aClass);
+			final Key<ClassReferenceCache> key = new Key<ClassReferenceCache>("ClassReferenceCache");
 
-                if (referencingClass != null && !TestUtils.isTest(referencingClass)) {
-                    final String referencingModuleName = ClassUtils.calculateModuleName(referencingClass);
-                    if (!moduleName.equals(referencingModuleName)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-    }
+			ClassReferenceCache classReferenceCache = executionContext.getUserData(key);
+			if(classReferenceCache == null)
+			{
+				classReferenceCache = new ClassReferenceCache();
+				executionContext.putUserData(key, classReferenceCache);
+			}
+			final Collection<PsiReference> references = classReferenceCache.findClassReferences(aClass);
+			for(final PsiReference reference : references)
+			{
+				final PsiElement element = reference.getElement();
+				final PsiClass referencingClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
 
-    public void visitFile(PsiFile file) {
-        final Module module = ClassUtils.calculateModule(file);
-        if (module == null) {
-            return;
-        }
-        numeratorPerModule.createBucket(module);
-        denominatorPerModule.createBucket(module);
-    }
+				if(referencingClass != null && !TestUtils.isTest(referencingClass))
+				{
+					final String referencingModuleName = ClassUtils.calculateModuleName(referencingClass);
+					if(!moduleName.equals(referencingModuleName))
+					{
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+	}
+
+	public void visitFile(PsiFile file)
+	{
+		final Module module = ClassUtils.calculateModule(file);
+		if(module == null)
+		{
+			return;
+		}
+		numeratorPerModule.createBucket(module);
+		denominatorPerModule.createBucket(module);
+	}
 }

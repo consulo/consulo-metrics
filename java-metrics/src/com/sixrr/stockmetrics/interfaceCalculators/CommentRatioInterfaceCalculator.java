@@ -16,42 +16,54 @@
 
 package com.sixrr.stockmetrics.interfaceCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class CommentRatioInterfaceCalculator extends InterfaceCalculator {
-    private int commentLines = 0;
+public class CommentRatioInterfaceCalculator extends InterfaceCalculator
+{
+	private int commentLines = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            int prevCommentLines = 0;
-            if (!ClassUtils.isAnonymous(aClass)) {
-                prevCommentLines = commentLines;
-                commentLines = 0;
-            }
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass)) {
-                if (isInterface(aClass)) {
-                    int linesOfCode = LineUtil.countLines(aClass);
-                    final PsiClass[] innerClasses = aClass.getInnerClasses();
-                    for (PsiClass innerClass : innerClasses) {
-                        linesOfCode -= LineUtil.countLines(innerClass);
-                    }
-                    postMetric(aClass, commentLines, linesOfCode);
-                }
-                commentLines = prevCommentLines;
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			int prevCommentLines = 0;
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				prevCommentLines = commentLines;
+				commentLines = 0;
+			}
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				if(isInterface(aClass))
+				{
+					int linesOfCode = LineUtil.countLines(aClass);
+					final PsiClass[] innerClasses = aClass.getInnerClasses();
+					for(PsiClass innerClass : innerClasses)
+					{
+						linesOfCode -= LineUtil.countLines(innerClass);
+					}
+					postMetric(aClass, commentLines, linesOfCode);
+				}
+				commentLines = prevCommentLines;
+			}
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            commentLines += LineUtil.countLines(comment);
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			commentLines += LineUtil.countLines(comment);
+		}
+	}
 }

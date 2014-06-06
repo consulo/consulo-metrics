@@ -16,24 +16,32 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiJavaFile;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class CommentRatioProjectCalculator extends ElementRatioProjectCalculator {
+public class CommentRatioProjectCalculator extends ElementRatioProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            denominator += LineUtil.countLines(file);
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			denominator += LineUtil.countLines(file);
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            numerator += LineUtil.countLines(comment);
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			numerator += LineUtil.countLines(comment);
+		}
+	}
 }

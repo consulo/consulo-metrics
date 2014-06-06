@@ -19,8 +19,10 @@ package com.sixrr.stockmetrics.classMetrics;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.stockmetrics.metricModel.BaseMetric;
 
-abstract class ClassMetric extends BaseMetric {
-    public MetricCategory getCategory() {
-        return MetricCategory.Class;
-    }
+abstract class ClassMetric extends BaseMetric
+{
+	public MetricCategory getCategory()
+	{
+		return MetricCategory.Class;
+	}
 }

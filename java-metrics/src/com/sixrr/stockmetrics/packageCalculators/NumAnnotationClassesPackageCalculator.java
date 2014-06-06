@@ -18,9 +18,11 @@ package com.sixrr.stockmetrics.packageCalculators;
 
 import com.intellij.psi.PsiClass;
 
-public class NumAnnotationClassesPackageCalculator extends ClassCountingPackageCalculator {
+public class NumAnnotationClassesPackageCalculator extends ClassCountingPackageCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return aClass.isAnnotationType();
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return aClass.isAnnotationType();
+	}
 }

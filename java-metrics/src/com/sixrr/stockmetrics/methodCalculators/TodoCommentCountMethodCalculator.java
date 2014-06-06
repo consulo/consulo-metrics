@@ -24,33 +24,41 @@ import com.sixrr.metrics.utils.MethodUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.stockmetrics.utils.TodoUtil;
 
-public class TodoCommentCountMethodCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private int elementCount = 0;
+public class TodoCommentCountMethodCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                elementCount = 0;
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, elementCount);
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				elementCount = 0;
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				postMetric(method, elementCount);
+			}
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            if (TodoUtil.isTodoComment(comment)) {
-                elementCount += LineUtil.countLines(comment);
-            }
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			if(TodoUtil.isTodoComment(comment))
+			{
+				elementCount += LineUtil.countLines(comment);
+			}
+		}
+	}
 }

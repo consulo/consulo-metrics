@@ -23,39 +23,48 @@ import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.MethodUtils;
 import com.sixrr.stockmetrics.utils.ExpressionUtils;
 
-public class NumExpressionsCalculator extends MethodCalculator {
-    private boolean inCompileTimeConstant = false;
-    private int methodNestingDepth = 0;
-    private int elementCount = 0;
+public class NumExpressionsCalculator extends MethodCalculator
+{
+	private boolean inCompileTimeConstant = false;
+	private int methodNestingDepth = 0;
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitExpression(PsiExpression exp) {
-            if (inCompileTimeConstant) {
-                return;
-            }
-            if (ExpressionUtils.isEvaluatedAtCompileTime(exp)) {
-                inCompileTimeConstant = true;
-            }
-            elementCount++;
-            super.visitExpression(exp);
-            inCompileTimeConstant = false;
-        }
+		public void visitExpression(PsiExpression exp)
+		{
+			if(inCompileTimeConstant)
+			{
+				return;
+			}
+			if(ExpressionUtils.isEvaluatedAtCompileTime(exp))
+			{
+				inCompileTimeConstant = true;
+			}
+			elementCount++;
+			super.visitExpression(exp);
+			inCompileTimeConstant = false;
+		}
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                elementCount = 0;
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, elementCount);
-            }
-        }
-    }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				elementCount = 0;
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				postMetric(method, elementCount);
+			}
+		}
+	}
 }

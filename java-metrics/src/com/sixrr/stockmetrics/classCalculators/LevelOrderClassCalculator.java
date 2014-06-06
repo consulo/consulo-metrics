@@ -21,21 +21,26 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 
-public class LevelOrderClassCalculator extends ClassCalculator {
+public class LevelOrderClassCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final DependencyMap dependencyMap = getDependencyMap();
-                final int levelOrder = dependencyMap.calculateLevelOrder(aClass);
-                postMetric(aClass, levelOrder);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final DependencyMap dependencyMap = getDependencyMap();
+				final int levelOrder = dependencyMap.calculateLevelOrder(aClass);
+				postMetric(aClass, levelOrder);
+			}
+		}
+	}
 }

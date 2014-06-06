@@ -20,29 +20,38 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 
-public class DepthOfInheritanceCalculator extends ClassCalculator {
+public class DepthOfInheritanceCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final int depth = getInheritanceDepth(aClass);
-                postMetric(aClass, depth);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final int depth = getInheritanceDepth(aClass);
+				postMetric(aClass, depth);
+			}
+		}
+	}
 
-    private static int getInheritanceDepth(PsiClass aClass) {
-        final PsiClass superClass = aClass.getSuperClass();
-        if (superClass == null) {
-            return 0;
-        } else {
-            return getInheritanceDepth(superClass) + 1;
-        }
-    }
+	private static int getInheritanceDepth(PsiClass aClass)
+	{
+		final PsiClass superClass = aClass.getSuperClass();
+		if(superClass == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return getInheritanceDepth(superClass) + 1;
+		}
+	}
 }

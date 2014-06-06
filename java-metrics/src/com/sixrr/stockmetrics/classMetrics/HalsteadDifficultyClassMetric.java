@@ -16,29 +16,35 @@
 
 package com.sixrr.stockmetrics.classMetrics;
 
+import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
-import com.sixrr.metrics.MetricType;
 
-public class HalsteadDifficultyClassMetric extends ClassMetric {
+public class HalsteadDifficultyClassMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("halstead.difficulty.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("halstead.difficulty.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("halstead.difficulty.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("halstead.difficulty.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.HALSTEAD_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.HALSTEAD_URL;
+	}
 
-    public String getHelpDisplayString() {
-        return HelpURLs.HALSTEAD_DISPLAY_STRING;
-    }
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.HALSTEAD_DISPLAY_STRING;
+	}
 }

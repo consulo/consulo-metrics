@@ -21,17 +21,22 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.sixrr.stockmetrics.utils.TodoUtil;
 
-public class TodoCommentCountProjectCalculator extends ElementCountProjectCalculator {
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class TodoCommentCountProjectCalculator extends ElementCountProjectCalculator
+{
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends PsiRecursiveElementVisitor {
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            if (TodoUtil.isTodoComment(comment)) {
-                numElements++;
-            }
-        }
-    }
+	private class Visitor extends PsiRecursiveElementVisitor
+	{
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			if(TodoUtil.isTodoComment(comment))
+			{
+				numElements++;
+			}
+		}
+	}
 }

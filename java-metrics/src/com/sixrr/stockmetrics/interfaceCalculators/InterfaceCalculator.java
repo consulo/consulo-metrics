@@ -19,20 +19,25 @@ package com.sixrr.stockmetrics.interfaceCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
-abstract class InterfaceCalculator extends BaseMetricsCalculator {
-    void postMetric(PsiClass aClass, int value) {
-        resultsHolder.postInterfaceMetric(metric, aClass, (double) value);
-    }
+abstract class InterfaceCalculator extends BaseMetricsCalculator
+{
+	void postMetric(PsiClass aClass, int value)
+	{
+		resultsHolder.postInterfaceMetric(metric, aClass, (double) value);
+	}
 
-    void postMetric(PsiClass aClass, double value) {
-        resultsHolder.postInterfaceMetric(metric, aClass, value);
-    }
+	void postMetric(PsiClass aClass, double value)
+	{
+		resultsHolder.postInterfaceMetric(metric, aClass, value);
+	}
 
-    void postMetric(PsiClass aClass, int numerator, int denominator) {
-        resultsHolder.postInterfaceMetric(metric, aClass, (double) numerator, (double) denominator);
-    }
+	void postMetric(PsiClass aClass, int numerator, int denominator)
+	{
+		resultsHolder.postInterfaceMetric(metric, aClass, (double) numerator, (double) denominator);
+	}
 
-    protected static boolean isInterface(PsiClass aClass) {
-        return aClass.isInterface() && !aClass.isAnnotationType();
-    }
+	protected static boolean isInterface(PsiClass aClass)
+	{
+		return aClass.isInterface() && !aClass.isAnnotationType();
+	}
 }

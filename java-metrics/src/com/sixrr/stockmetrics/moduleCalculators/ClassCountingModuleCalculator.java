@@ -16,50 +16,62 @@
 
 package com.sixrr.stockmetrics.moduleCalculators;
 
+import java.util.Set;
+
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEnumConstantInitializer;
+import com.intellij.psi.PsiTypeParameter;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.Set;
+abstract class ClassCountingModuleCalculator extends ModuleCalculator
+{
 
-abstract class ClassCountingModuleCalculator extends ModuleCalculator {
+	private final BucketedCount<Module> numClassesPerModule = new BucketedCount<Module>();
 
-    private final BucketedCount<Module> numClassesPerModule = new BucketedCount<Module>();
+	protected abstract boolean satisfies(PsiClass aClass);
 
-    protected abstract boolean satisfies(PsiClass aClass);
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<Module> modules = numClassesPerModule.getBuckets();
+		for(final Module module : modules)
+		{
+			final int numClasses = numClassesPerModule.getBucketValue(module);
+			postMetric(module, numClasses);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<Module> modules = numClassesPerModule.getBuckets();
-        for (final Module module : modules) {
-            final int numClasses = numClassesPerModule.getBucketValue(module);
-            postMetric(module, numClasses);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (aClass instanceof PsiTypeParameter ||
-                    aClass instanceof PsiEnumConstantInitializer) {
-                return;
-            }
-            final Module module = ClassUtils.calculateModule(aClass);
-            if (module == null) {
-                return;
-            }
-            numClassesPerModule.createBucket(module);
-            if (satisfies(aClass)) {
-                numClassesPerModule.incrementBucketValue(module);
-            }
-        }
-    }
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(aClass instanceof PsiTypeParameter || aClass instanceof PsiEnumConstantInitializer)
+			{
+				return;
+			}
+			final Module module = ClassUtils.calculateModule(aClass);
+			if(module == null)
+			{
+				return;
+			}
+			numClassesPerModule.createBucket(module);
+			if(satisfies(aClass))
+			{
+				numClassesPerModule.incrementBucketValue(module);
+			}
+		}
+	}
 }

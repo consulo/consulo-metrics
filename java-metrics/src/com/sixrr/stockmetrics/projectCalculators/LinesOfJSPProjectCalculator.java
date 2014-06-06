@@ -22,16 +22,21 @@ import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.jsp.JspFile;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class LinesOfJSPProjectCalculator extends ElementCountProjectCalculator {
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class LinesOfJSPProjectCalculator extends ElementCountProjectCalculator
+{
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends PsiRecursiveElementVisitor {
-        public void visitFile(PsiFile file) {
-            if (file instanceof JspFile) {
-                numElements += LineUtil.countLines(file);
-            }
-        }
-    }
+	private class Visitor extends PsiRecursiveElementVisitor
+	{
+		public void visitFile(PsiFile file)
+		{
+			if(file instanceof JspFile)
+			{
+				numElements += LineUtil.countLines(file);
+			}
+		}
+	}
 }

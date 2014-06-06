@@ -16,33 +16,43 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEnumConstantInitializer;
+import com.intellij.psi.PsiTypeParameter;
 
-abstract class ClassCountingProjectCalculator extends ProjectCalculator {
+abstract class ClassCountingProjectCalculator extends ProjectCalculator
+{
 
-    private int numElements = 0;
+	private int numElements = 0;
 
-    public void endMetricsRun() {
-        postMetric(numElements);
-    }
+	public void endMetricsRun()
+	{
+		postMetric(numElements);
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (aClass instanceof PsiTypeParameter ||
-                    aClass instanceof PsiEnumConstantInitializer) {
-                return;
-            }
-            if (satisfies(aClass)) {
-                numElements++;
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(aClass instanceof PsiTypeParameter || aClass instanceof PsiEnumConstantInitializer)
+			{
+				return;
+			}
+			if(satisfies(aClass))
+			{
+				numElements++;
+			}
+		}
+	}
 
-    protected abstract boolean satisfies(PsiClass aClass);
+	protected abstract boolean satisfies(PsiClass aClass);
 }

@@ -19,11 +19,11 @@ package com.sixrr.stockmetrics.packageCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumTopLevelClassesPackageCalculator
-        extends ClassCountingPackageCalculator {
+public class NumTopLevelClassesPackageCalculator extends ClassCountingPackageCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return !aClass.isInterface() &&
-                ClassUtils.isTopLevel(aClass);
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return !aClass.isInterface() && ClassUtils.isTopLevel(aClass);
+	}
 }

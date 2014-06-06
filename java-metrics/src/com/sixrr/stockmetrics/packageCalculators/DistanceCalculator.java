@@ -16,80 +16,85 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.*;
+import java.util.Set;
+
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiModifier;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 import com.sixrr.stockmetrics.dependency.DependentsMap;
 
-import java.util.Set;
+public class DistanceCalculator extends PackageCalculator
+{
 
-public class DistanceCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numClassesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiPackage> numAbstractClassesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiPackage> numExternalDependentsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiPackage> numExternalDependenciesPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numClassesPerPackage = new BucketedCount<PsiPackage>();
-    private final BucketedCount<PsiPackage> numAbstractClassesPerPackage = new BucketedCount<PsiPackage>();
-    private final BucketedCount<PsiPackage> numExternalDependentsPerPackage = new BucketedCount<PsiPackage>();
-    private final BucketedCount<PsiPackage> numExternalDependenciesPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numExternalDependentsPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final double numClasses = (double) numClassesPerPackage.getBucketValue(aPackage);
+			final double numAbstractClasses = (double) numAbstractClassesPerPackage.getBucketValue(aPackage);
+			final double numExternalDependents = (double) numExternalDependentsPerPackage.getBucketValue(aPackage);
+			final double numExternalDependencies = (double) numExternalDependenciesPerPackage.getBucketValue(aPackage);
+			final double instability = numExternalDependencies / (numExternalDependencies + numExternalDependents);
+			final double abstractness = numAbstractClasses / numClasses;
+			final double distance = Math.abs(1.0 - instability - abstractness);
+			postMetric(aPackage, distance);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numExternalDependentsPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final double numClasses = (double)
-                    numClassesPerPackage.getBucketValue(aPackage);
-            final double numAbstractClasses = (double)
-                    numAbstractClassesPerPackage.getBucketValue(aPackage);
-            final double numExternalDependents = (double)
-                    numExternalDependentsPerPackage.getBucketValue(aPackage);
-            final double numExternalDependencies = (double)
-                    numExternalDependenciesPerPackage.getBucketValue(aPackage);
-            final double instability =
-                    numExternalDependencies / (numExternalDependencies + numExternalDependents);
-            final double abstractness = numAbstractClasses / numClasses;
-            final double distance = Math.abs(1.0 - instability - abstractness);
-            postMetric(aPackage, distance);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (ClassUtils.isAnonymous(aClass)) {
-                return;
-            }
-            final PsiPackage currentPackage = ClassUtils.findPackage(aClass);
-            if (currentPackage == null) {
-                return;
-            }
-            if (aClass.isInterface() || aClass.hasModifierProperty(PsiModifier.ABSTRACT)) {
-                numAbstractClassesPerPackage.incrementBucketValue(currentPackage);
-            }
-            numClassesPerPackage.incrementBucketValue(currentPackage);
-            numExternalDependentsPerPackage.createBucket(currentPackage);
-            final DependentsMap dependentsMap = getDependentsMap();
-            final Set<PsiPackage> packageDependents =
-                    dependentsMap.calculatePackageDependents(aClass);
-            for (final PsiPackage referencingPackage : packageDependents) {
-                final int strength =
-                        dependentsMap.getStrengthForPackageDependent(aClass, referencingPackage);
-                numExternalDependentsPerPackage.incrementBucketValue(currentPackage, strength);
-            }
-            numExternalDependenciesPerPackage.createBucket(currentPackage);
-            final DependencyMap dependencyMap = getDependencyMap();
-            final Set<PsiPackage> packageDependencies =
-                    dependencyMap.calculatePackageDependencies(aClass);
-            for (final PsiPackage referencedPackage : packageDependencies) {
-                final int strength =
-                        dependencyMap.getStrengthForPackageDependency(aClass, referencedPackage);
-                numExternalDependenciesPerPackage.incrementBucketValue(currentPackage, strength);
-            }
-        }
-    }
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(ClassUtils.isAnonymous(aClass))
+			{
+				return;
+			}
+			final PsiPackage currentPackage = ClassUtils.findPackage(aClass);
+			if(currentPackage == null)
+			{
+				return;
+			}
+			if(aClass.isInterface() || aClass.hasModifierProperty(PsiModifier.ABSTRACT))
+			{
+				numAbstractClassesPerPackage.incrementBucketValue(currentPackage);
+			}
+			numClassesPerPackage.incrementBucketValue(currentPackage);
+			numExternalDependentsPerPackage.createBucket(currentPackage);
+			final DependentsMap dependentsMap = getDependentsMap();
+			final Set<PsiPackage> packageDependents = dependentsMap.calculatePackageDependents(aClass);
+			for(final PsiPackage referencingPackage : packageDependents)
+			{
+				final int strength = dependentsMap.getStrengthForPackageDependent(aClass, referencingPackage);
+				numExternalDependentsPerPackage.incrementBucketValue(currentPackage, strength);
+			}
+			numExternalDependenciesPerPackage.createBucket(currentPackage);
+			final DependencyMap dependencyMap = getDependencyMap();
+			final Set<PsiPackage> packageDependencies = dependencyMap.calculatePackageDependencies(aClass);
+			for(final PsiPackage referencedPackage : packageDependencies)
+			{
+				final int strength = dependencyMap.getStrengthForPackageDependency(aClass, referencedPackage);
+				numExternalDependenciesPerPackage.incrementBucketValue(currentPackage, strength);
+			}
+		}
+	}
 }

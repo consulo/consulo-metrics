@@ -16,34 +16,39 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 
-import java.util.Set;
+public class CouplingFactorProjectCalculator extends ProjectCalculator
+{
+	private int totalCoupling = 0;
+	private int numClasses = 0;
 
-public class CouplingFactorProjectCalculator extends ProjectCalculator {
-    private int totalCoupling = 0;
-    private int numClasses = 0;
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitClass(PsiClass aClass)
+		{
+			numClasses++;
+			final DependencyMap dependencyMap = getDependencyMap();
+			final Set<PsiClass> dependencies = dependencyMap.calculateDependencies(aClass);
+			//TODO: this isn't quite correct, as it includes superclasses
+			totalCoupling += dependencies.size();
+		}
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitClass(PsiClass aClass) {
-            numClasses++;
-            final DependencyMap dependencyMap = getDependencyMap();
-            final Set<PsiClass> dependencies = dependencyMap.calculateDependencies(aClass);
-            //TODO: this isn't quite correct, as it includes superclasses
-            totalCoupling += dependencies.size();
-        }
-    }
-
-    public void endMetricsRun() {
-        final int denominator = (numClasses * (numClasses - 1)) / 2;
-        final int numerator = totalCoupling;
-        postMetric(numerator, denominator);
-    }
+	public void endMetricsRun()
+	{
+		final int denominator = (numClasses * (numClasses - 1)) / 2;
+		final int numerator = totalCoupling;
+		postMetric(numerator, denominator);
+	}
 }

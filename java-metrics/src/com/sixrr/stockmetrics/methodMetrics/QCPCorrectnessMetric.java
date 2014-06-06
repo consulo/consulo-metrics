@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.methodMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class QCPCorrectnessMetric extends MethodMetric {
+public class QCPCorrectnessMetric extends MethodMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("quality.criteria.profile.correctness.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("quality.criteria.profile.correctness.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("quality.criteria.profile.correctness.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("quality.criteria.profile.correctness.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 }

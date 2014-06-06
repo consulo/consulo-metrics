@@ -16,10 +16,12 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-abstract class ElementCountProjectCalculator extends ProjectCalculator {
-    protected int numElements = 0;
+abstract class ElementCountProjectCalculator extends ProjectCalculator
+{
+	protected int numElements = 0;
 
-    public void endMetricsRun() {
-        postMetric(numElements);
-    }
+	public void endMetricsRun()
+	{
+		postMetric(numElements);
+	}
 }

@@ -23,37 +23,46 @@ import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class CommentRatioClassCalculator extends ClassCalculator {
-    private int commentLines = 0;
+public class CommentRatioClassCalculator extends ClassCalculator
+{
+	private int commentLines = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            final int prevCommentLines = commentLines;
-            if (!ClassUtils.isAnonymous(aClass)) {
-                commentLines = 0;
-            }
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass)) {
-                if (!aClass.isInterface()) {
-                    int linesOfCode = LineUtil.countLines(aClass);
-                    final PsiClass[] innerClasses = aClass.getInnerClasses();
-                    for (PsiClass innerClass : innerClasses) {
-                        linesOfCode -= LineUtil.countLines(innerClass);
-                    }
-                    postMetric(aClass, commentLines, linesOfCode);
-                }
-                commentLines = prevCommentLines;
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			final int prevCommentLines = commentLines;
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				commentLines = 0;
+			}
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				if(!aClass.isInterface())
+				{
+					int linesOfCode = LineUtil.countLines(aClass);
+					final PsiClass[] innerClasses = aClass.getInnerClasses();
+					for(PsiClass innerClass : innerClasses)
+					{
+						linesOfCode -= LineUtil.countLines(innerClass);
+					}
+					postMetric(aClass, commentLines, linesOfCode);
+				}
+				commentLines = prevCommentLines;
+			}
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            commentLines += LineUtil.countLines(comment);
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			commentLines += LineUtil.countLines(comment);
+		}
+	}
 }

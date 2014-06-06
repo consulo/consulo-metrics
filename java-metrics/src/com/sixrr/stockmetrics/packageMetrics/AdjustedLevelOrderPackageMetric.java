@@ -16,36 +16,43 @@
 
 package com.sixrr.stockmetrics.packageMetrics;
 
-import com.sixrr.stockmetrics.i18n.HelpURLs;
-import com.sixrr.metrics.MetricType;
-import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.MetricType;
+import com.sixrr.stockmetrics.i18n.HelpURLs;
+import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class AdjustedLevelOrderPackageMetric extends PackageMetric {
+public class AdjustedLevelOrderPackageMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("adjusted.level.order.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("adjusted.level.order.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("adjusted.level.order.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("adjusted.level.order.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 
-    @Nullable
-    public String getHelpURL() {
-        return HelpURLs.LAYERING_URL;
-    }
+	@Nullable
+	public String getHelpURL()
+	{
+		return HelpURLs.LAYERING_URL;
+	}
 
-    @Nullable
-    public String getHelpDisplayString() {
-        return HelpURLs.LAYERING_DISPLAY_STRING;
-    }
+	@Nullable
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.LAYERING_DISPLAY_STRING;
+	}
 
-    public boolean requiresDependents() {
-        return true;
-    }
+	public boolean requiresDependents()
+	{
+		return true;
+	}
 }

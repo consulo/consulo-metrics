@@ -21,15 +21,19 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class CommentLinesOfCodeProjectCalculator extends ElementCountProjectCalculator {
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class CommentLinesOfCodeProjectCalculator extends ElementCountProjectCalculator
+{
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends PsiRecursiveElementVisitor {
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            numElements += LineUtil.countLines(comment);
-        }
-    }
+	private class Visitor extends PsiRecursiveElementVisitor
+	{
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			numElements += LineUtil.countLines(comment);
+		}
+	}
 }

@@ -39,87 +39,99 @@ import com.sixrr.stockmetrics.dependency.DependentsMapImpl;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 import com.sixrr.stockmetrics.metricModel.BaseMetric;
 
-public abstract class BaseMetricsCalculator implements MetricCalculator {
+public abstract class BaseMetricsCalculator implements MetricCalculator
+{
 
-    private static final Key<DependencyMap> dependencyMapKey = new Key<DependencyMap>("dependencyMap");
-    private static final Key<DependentsMap> dependentsMapKey = new Key<DependentsMap>("dependentsMap");
-
-
-    protected Metric metric = null;
-    protected MetricsResultsHolder resultsHolder = null;
-    protected MetricsExecutionContext executionContext = null;
-
-    public void beginMetricsRun(Metric metric, MetricsResultsHolder resultsHolder,
-                                MetricsExecutionContext executionContext) {
-        this.metric = metric;
-        this.resultsHolder = resultsHolder;
-        this.executionContext = executionContext;
-        if (((BaseMetric)metric).requiresDependents() && getDependencyMap() == null) {
-            calculateDependencies();
-        }
-    }
-
-    public void processFile(PsiFile file) {
-        final PsiElementVisitor visitor = createVisitor();
-        file.accept(visitor);
-    }
-
-    protected abstract PsiElementVisitor createVisitor();
-
-    public void endMetricsRun() {
-    }
-
-    public DependencyMap getDependencyMap() {
-        return executionContext.getUserData(dependencyMapKey);
-    }
-
-    public DependentsMap getDependentsMap() {
-        return executionContext.getUserData(dependentsMapKey);
-    }
-
-    public void calculateDependencies() {
-        final DependentsMapImpl dependentsMap = new DependentsMapImpl();
-        final DependencyMapImpl dependencyMap = new DependencyMapImpl();
-        final ProgressManager progressManager = ProgressManager.getInstance();
-        final ProgressIndicator progressIndicator = progressManager.getProgressIndicator();
-
-        final Project project = executionContext.getProject();
-        final GlobalSearchScope scope = GlobalSearchScope.projectScope(project);
-        final Query<PsiClass> query = AllClassesSearch.search(scope, project);
-        final int[] count = {0};
-        query.forEach(new Processor<PsiClass>() {
-            public boolean process(PsiClass aClass) {
-                count[0]++;
-                return true;
-            }
-        });
-        final int allFilesCount = count[0];
-        final PsiElementVisitor visitor = new JavaRecursiveElementVisitor() {
-
-            @Override
-            public void visitClass(PsiClass aClass) {
-                super.visitClass(aClass);
-                dependencyMap.build(aClass);
-                dependentsMap.build(aClass);
-            }
-        };
+	private static final Key<DependencyMap> dependencyMapKey = new Key<DependencyMap>("dependencyMap");
+	private static final Key<DependentsMap> dependentsMapKey = new Key<DependentsMap>("dependentsMap");
 
 
-        query.forEach(new Processor<PsiClass>() {
-            private int dependencyProgress = 0;
+	protected Metric metric = null;
+	protected MetricsResultsHolder resultsHolder = null;
+	protected MetricsExecutionContext executionContext = null;
 
-            public boolean process(PsiClass aClass) {
-                final String fileName = aClass.getName();
-                progressIndicator.setText(
-                        StockMetricsBundle.message("building.dependency.structure.progress.string",
-                                fileName));
-                progressIndicator.setFraction((double) dependencyProgress / (double) allFilesCount);
-                dependencyProgress++;
-                aClass.accept(visitor);
-                return true;
-            }
-        });
-        executionContext.putUserData(dependencyMapKey, dependencyMap);
-        executionContext.putUserData(dependentsMapKey, dependentsMap);
-    }
+	public void beginMetricsRun(
+			Metric metric, MetricsResultsHolder resultsHolder, MetricsExecutionContext executionContext)
+	{
+		this.metric = metric;
+		this.resultsHolder = resultsHolder;
+		this.executionContext = executionContext;
+		if(((BaseMetric) metric).requiresDependents() && getDependencyMap() == null)
+		{
+			calculateDependencies();
+		}
+	}
+
+	public void processFile(PsiFile file)
+	{
+		final PsiElementVisitor visitor = createVisitor();
+		file.accept(visitor);
+	}
+
+	protected abstract PsiElementVisitor createVisitor();
+
+	public void endMetricsRun()
+	{
+	}
+
+	public DependencyMap getDependencyMap()
+	{
+		return executionContext.getUserData(dependencyMapKey);
+	}
+
+	public DependentsMap getDependentsMap()
+	{
+		return executionContext.getUserData(dependentsMapKey);
+	}
+
+	public void calculateDependencies()
+	{
+		final DependentsMapImpl dependentsMap = new DependentsMapImpl();
+		final DependencyMapImpl dependencyMap = new DependencyMapImpl();
+		final ProgressManager progressManager = ProgressManager.getInstance();
+		final ProgressIndicator progressIndicator = progressManager.getProgressIndicator();
+
+		final Project project = executionContext.getProject();
+		final GlobalSearchScope scope = GlobalSearchScope.projectScope(project);
+		final Query<PsiClass> query = AllClassesSearch.search(scope, project);
+		final int[] count = {0};
+		query.forEach(new Processor<PsiClass>()
+		{
+			public boolean process(PsiClass aClass)
+			{
+				count[0]++;
+				return true;
+			}
+		});
+		final int allFilesCount = count[0];
+		final PsiElementVisitor visitor = new JavaRecursiveElementVisitor()
+		{
+
+			@Override
+			public void visitClass(PsiClass aClass)
+			{
+				super.visitClass(aClass);
+				dependencyMap.build(aClass);
+				dependentsMap.build(aClass);
+			}
+		};
+
+
+		query.forEach(new Processor<PsiClass>()
+		{
+			private int dependencyProgress = 0;
+
+			public boolean process(PsiClass aClass)
+			{
+				final String fileName = aClass.getName();
+				progressIndicator.setText(StockMetricsBundle.message("building.dependency.structure.progress.string", fileName));
+				progressIndicator.setFraction((double) dependencyProgress / (double) allFilesCount);
+				dependencyProgress++;
+				aClass.accept(visitor);
+				return true;
+			}
+		});
+		executionContext.putUserData(dependencyMapKey, dependencyMap);
+		executionContext.putUserData(dependentsMapKey, dependentsMap);
+	}
 }

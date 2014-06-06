@@ -23,29 +23,35 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumMethodsModuleCalculator extends ElementCountModuleCalculator {
+public class NumMethodsModuleCalculator extends ElementCountModuleCalculator
+{
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        @Override
-        public void visitMethod(PsiMethod method) {
-            super.visitMethod(method);
-            incrementElementCount(method, 1);
-        }
+		@Override
+		public void visitMethod(PsiMethod method)
+		{
+			super.visitMethod(method);
+			incrementElementCount(method, 1);
+		}
 
-        @Override
-        public void visitFile(PsiFile file) {
-            super.visitFile(file);
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            elementsCountPerModule.createBucket(module);
-        }
-    }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			super.visitFile(file);
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			elementsCountPerModule.createBucket(module);
+		}
+	}
 }

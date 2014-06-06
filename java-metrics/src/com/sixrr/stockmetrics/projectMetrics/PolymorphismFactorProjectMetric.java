@@ -16,29 +16,35 @@
 
 package com.sixrr.stockmetrics.projectMetrics;
 
+import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
-import com.sixrr.metrics.MetricType;
 
-public class PolymorphismFactorProjectMetric extends ProjectMetric {
+public class PolymorphismFactorProjectMetric extends ProjectMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("polymorphism.factor.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("polymorphism.factor.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("polymorphism.factor.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("polymorphism.factor.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Ratio;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Ratio;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.MOOD_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.MOOD_URL;
+	}
 
-    public String getHelpDisplayString() {
-        return HelpURLs.MOOD_DISPLAY_STRING;
-    }
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.MOOD_DISPLAY_STRING;
+	}
 }

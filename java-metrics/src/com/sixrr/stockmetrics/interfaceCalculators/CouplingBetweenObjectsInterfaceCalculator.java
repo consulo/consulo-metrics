@@ -16,37 +16,42 @@
 
 package com.sixrr.stockmetrics.interfaceCalculators;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 import com.sixrr.stockmetrics.dependency.DependentsMap;
 
-import java.util.HashSet;
-import java.util.Set;
+public class CouplingBetweenObjectsInterfaceCalculator extends InterfaceCalculator
+{
 
-public class CouplingBetweenObjectsInterfaceCalculator extends InterfaceCalculator {
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isInterface(aClass)) {
-                final DependencyMap dependencyMap = getDependencyMap();
-                final Set<PsiClass> dependencies = dependencyMap.calculateDependencies(aClass);
-                final DependentsMap dependentsMap = getDependentsMap();
-                final Set<PsiClass> dependents = dependentsMap.calculateDependents(aClass);
-                final Set<PsiClass> union = new HashSet<PsiClass>(dependencies);
-                union.addAll(dependents);
-                final int numCouplings = union.size();
-                postMetric(aClass, numCouplings);
-            }
-        }
-    }
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isInterface(aClass))
+			{
+				final DependencyMap dependencyMap = getDependencyMap();
+				final Set<PsiClass> dependencies = dependencyMap.calculateDependencies(aClass);
+				final DependentsMap dependentsMap = getDependentsMap();
+				final Set<PsiClass> dependents = dependentsMap.calculateDependents(aClass);
+				final Set<PsiClass> union = new HashSet<PsiClass>(dependencies);
+				union.addAll(dependents);
+				final int numCouplings = union.size();
+				postMetric(aClass, numCouplings);
+			}
+		}
+	}
 }

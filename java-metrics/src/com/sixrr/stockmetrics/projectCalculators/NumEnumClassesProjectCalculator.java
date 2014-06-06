@@ -18,10 +18,11 @@ package com.sixrr.stockmetrics.projectCalculators;
 
 import com.intellij.psi.PsiClass;
 
-public class NumEnumClassesProjectCalculator
-        extends ClassCountingProjectCalculator {
+public class NumEnumClassesProjectCalculator extends ClassCountingProjectCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return aClass.isEnum();
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return aClass.isEnum();
+	}
 }

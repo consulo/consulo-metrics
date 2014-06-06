@@ -21,22 +21,28 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.xml.XmlFile;
 
-public class NumHTMLFilesProjectCalculator extends ElementCountProjectCalculator {
+public class NumHTMLFilesProjectCalculator extends ElementCountProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends PsiRecursiveElementVisitor {
-        public void visitFile(PsiFile file) {
-            if (!(file instanceof XmlFile)) {
-                return;
-            }
-            final String fileName = file.getName();
-            //noinspection HardCodedStringLiteral
-            if (fileName.endsWith(".htm") || fileName.endsWith(".html")) {
-                numElements++;
-            }
-        }
-    }
+	private class Visitor extends PsiRecursiveElementVisitor
+	{
+		public void visitFile(PsiFile file)
+		{
+			if(!(file instanceof XmlFile))
+			{
+				return;
+			}
+			final String fileName = file.getName();
+			//noinspection HardCodedStringLiteral
+			if(fileName.endsWith(".htm") || fileName.endsWith(".html"))
+			{
+				numElements++;
+			}
+		}
+	}
 }

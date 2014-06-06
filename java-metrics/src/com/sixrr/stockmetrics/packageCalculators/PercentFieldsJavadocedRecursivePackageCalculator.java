@@ -16,52 +16,64 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.*;
+import java.util.Set;
+
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.Set;
+public class PercentFieldsJavadocedRecursivePackageCalculator extends PackageCalculator
+{
 
-public class PercentFieldsJavadocedRecursivePackageCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numJavadocedFieldsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiPackage> numFieldsPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numJavadocedFieldsPerPackage = new BucketedCount<PsiPackage>();
-    private final BucketedCount<PsiPackage> numFieldsPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numFieldsPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int numFields = numFieldsPerPackage.getBucketValue(aPackage);
+			final int numJavadocedFields = numJavadocedFieldsPerPackage.getBucketValue(aPackage);
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numFieldsPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int numFields = numFieldsPerPackage.getBucketValue(aPackage);
-            final int numJavadocedFields = numJavadocedFieldsPerPackage.getBucketValue(aPackage);
+			postMetric(aPackage, numJavadocedFields, numFields);
+		}
+	}
 
-            postMetric(aPackage, numJavadocedFields, numFields);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		@Override
+		public void visitField(PsiField field)
+		{
+			super.visitField(field);
+			final PsiClass containingClass = field.getContainingClass();
+			if(containingClass == null || ClassUtils.isAnonymous(containingClass))
+			{
+				return;
+			}
 
-        @Override
-        public void visitField(PsiField field) {
-            super.visitField(field);
-            final PsiClass containingClass = field.getContainingClass();
-            if (containingClass == null || ClassUtils.isAnonymous(containingClass)) {
-                return;
-            }
-
-            final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(containingClass);
-            for (final PsiPackage aPackage : packages) {
-                numFieldsPerPackage.createBucket(aPackage);
-                if (field.getFirstChild()instanceof PsiDocComment) {
-                    numJavadocedFieldsPerPackage.incrementBucketValue(aPackage);
-                }
-                numFieldsPerPackage.incrementBucketValue(aPackage);
-            }
-        }
-    }
+			final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(containingClass);
+			for(final PsiPackage aPackage : packages)
+			{
+				numFieldsPerPackage.createBucket(aPackage);
+				if(field.getFirstChild() instanceof PsiDocComment)
+				{
+					numJavadocedFieldsPerPackage.incrementBucketValue(aPackage);
+				}
+				numFieldsPerPackage.incrementBucketValue(aPackage);
+			}
+		}
+	}
 }

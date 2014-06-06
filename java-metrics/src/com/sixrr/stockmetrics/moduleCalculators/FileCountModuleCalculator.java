@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.moduleCalculators;
 
+import java.util.Set;
+
 import com.intellij.openapi.module.Module;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
@@ -23,40 +25,46 @@ import com.intellij.psi.PsiFile;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.Set;
+abstract class FileCountModuleCalculator extends ModuleCalculator
+{
 
-abstract class FileCountModuleCalculator extends ModuleCalculator {
+	private final BucketedCount<Module> numClassesPerModule = new BucketedCount<Module>();
 
-    private final BucketedCount<Module> numClassesPerModule = new BucketedCount<Module>();
+	protected abstract boolean satisfies(PsiFile file);
 
-    protected abstract boolean satisfies(PsiFile file);
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<Module> modules = numClassesPerModule.getBuckets();
+		for(final Module module : modules)
+		{
+			final int numClasses = numClassesPerModule.getBucketValue(module);
+			postMetric(module, numClasses);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<Module> modules = numClassesPerModule.getBuckets();
-        for (final Module module : modules) {
-            final int numClasses = numClassesPerModule.getBucketValue(module);
-            postMetric(module, numClasses);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        @Override
-        public void visitFile(PsiFile file) {
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            numClassesPerModule.createBucket(module);
-            if (satisfies(file)) {
-                numClassesPerModule.incrementBucketValue(module);
-            }
-        }
-    }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			numClassesPerModule.createBucket(module);
+			if(satisfies(file))
+			{
+				numClassesPerModule.incrementBucketValue(module);
+			}
+		}
+	}
 }

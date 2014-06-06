@@ -18,9 +18,11 @@ package com.sixrr.stockmetrics.methodCalculators;
 
 import com.sixrr.stockmetrics.halstead.HalsteadVisitor;
 
-public class HalsteadVocabularyMethodCalculator extends HalsteadMethodCalculator {
+public class HalsteadVocabularyMethodCalculator extends HalsteadMethodCalculator
+{
 
-    protected double getValue(HalsteadVisitor visitor) {
-        return (double) visitor.getVocabulary();
-    }
+	protected double getValue(HalsteadVisitor visitor)
+	{
+		return (double) visitor.getVocabulary();
+	}
 }

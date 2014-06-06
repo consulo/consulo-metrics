@@ -19,8 +19,10 @@ package com.sixrr.stockmetrics.methodMetrics;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.stockmetrics.metricModel.BaseMetric;
 
-abstract class MethodMetric extends BaseMetric {
-    public MetricCategory getCategory() {
-        return MetricCategory.Method;
-    }
+abstract class MethodMetric extends BaseMetric
+{
+	public MetricCategory getCategory()
+	{
+		return MetricCategory.Method;
+	}
 }

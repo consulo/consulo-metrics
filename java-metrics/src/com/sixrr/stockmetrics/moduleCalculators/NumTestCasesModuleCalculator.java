@@ -19,10 +19,11 @@ package com.sixrr.stockmetrics.moduleCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.TestUtils;
 
-public class NumTestCasesModuleCalculator extends
-        ClassCountingModuleCalculator {
+public class NumTestCasesModuleCalculator extends ClassCountingModuleCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return TestUtils.isJUnitTestCase(aClass);
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return TestUtils.isJUnitTestCase(aClass);
+	}
 }

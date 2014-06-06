@@ -18,13 +18,16 @@ package com.sixrr.stockmetrics.projectCalculators;
 
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
-abstract class ProjectCalculator extends BaseMetricsCalculator {
+abstract class ProjectCalculator extends BaseMetricsCalculator
+{
 
-    void postMetric(int numerator, int denominator) {
-        resultsHolder.postProjectMetric(metric, (double) numerator, (double) denominator);
-    }
+	void postMetric(int numerator, int denominator)
+	{
+		resultsHolder.postProjectMetric(metric, (double) numerator, (double) denominator);
+	}
 
-    void postMetric(int value) {
-        resultsHolder.postProjectMetric(metric, (double) value);
-    }
+	void postMetric(int value)
+	{
+		resultsHolder.postProjectMetric(metric, (double) value);
+	}
 }

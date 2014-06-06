@@ -24,31 +24,38 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
 
-public class NumTestAssertsModuleCalculator extends ElementCountModuleCalculator {
+public class NumTestAssertsModuleCalculator extends ElementCountModuleCalculator
+{
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        @Override
-        public void visitMethodCallExpression(PsiMethodCallExpression expression) {
-            super.visitMethodCallExpression(expression);
-            if (TestUtils.isJUnitAssertCall(expression)) {
-                incrementElementCount(expression, 1);
-            }
-        }
+		@Override
+		public void visitMethodCallExpression(PsiMethodCallExpression expression)
+		{
+			super.visitMethodCallExpression(expression);
+			if(TestUtils.isJUnitAssertCall(expression))
+			{
+				incrementElementCount(expression, 1);
+			}
+		}
 
-        @Override
-        public void visitFile(PsiFile file) {
-            super.visitFile(file);
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            elementsCountPerModule.createBucket(module);
-        }
-    }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			super.visitFile(file);
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			elementsCountPerModule.createBucket(module);
+		}
+	}
 }

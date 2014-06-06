@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.packageMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class NumAnnotationClassesPackageMetric extends PackageMetric {
+public class NumAnnotationClassesPackageMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.annotation.interfaces.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.annotation.interfaces.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.annotation.interfaces.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.annotation.interfaces.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 }

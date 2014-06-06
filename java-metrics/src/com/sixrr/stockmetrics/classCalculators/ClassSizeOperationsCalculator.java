@@ -16,32 +16,42 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 
-public class ClassSizeOperationsCalculator extends ClassCalculator {
+public class ClassSizeOperationsCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiMethod[] methods = aClass.getAllMethods();
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiMethod[] methods = aClass.getAllMethods();
 
-                int numOperations = 0;
-                for (final PsiMethod method : methods) {
-                    final PsiClass containingClass = method.getContainingClass();
-                    if (containingClass != null && containingClass.equals(aClass) ||
-                            !method.hasModifierProperty(PsiModifier.STATIC)) {
-                        numOperations++;
-                    }
-                }
+				int numOperations = 0;
+				for(final PsiMethod method : methods)
+				{
+					final PsiClass containingClass = method.getContainingClass();
+					if(containingClass != null && containingClass.equals(aClass) || !method.hasModifierProperty(PsiModifier.STATIC))
+					{
+						numOperations++;
+					}
+				}
 
-                postMetric(aClass, numOperations);
-            }
-        }
-    }
+				postMetric(aClass, numOperations);
+			}
+		}
+	}
 }

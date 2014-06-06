@@ -16,31 +16,43 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiType;
 
-public class NumQueriesClassCalculator extends ClassCalculator {
+public class NumQueriesClassCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiMethod[] methods = aClass.getMethods();
-                int numQueries = 0;
-                for (final PsiMethod method : methods) {
-                    if (!method.isConstructor()) {
-                        final PsiType returnType = method.getReturnType();
-                        if (!PsiType.VOID.equals(returnType)) {
-                            numQueries++;
-                        }
-                    }
-                }
-                postMetric(aClass, numQueries);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiMethod[] methods = aClass.getMethods();
+				int numQueries = 0;
+				for(final PsiMethod method : methods)
+				{
+					if(!method.isConstructor())
+					{
+						final PsiType returnType = method.getReturnType();
+						if(!PsiType.VOID.equals(returnType))
+						{
+							numQueries++;
+						}
+					}
+				}
+				postMetric(aClass, numQueries);
+			}
+		}
+	}
 }

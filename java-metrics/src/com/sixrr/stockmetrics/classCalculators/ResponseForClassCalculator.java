@@ -16,55 +16,70 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.*;
-import com.intellij.psi.search.searches.OverridingMethodsSearch;
-import com.intellij.util.Query;
-import com.sixrr.metrics.utils.ClassUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ResponseForClassCalculator extends ClassCalculator {
-    private final Set<PsiMethod> methodsCalled = new HashSet<PsiMethod>();
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.search.searches.OverridingMethodsSearch;
+import com.intellij.util.Query;
+import com.sixrr.metrics.utils.ClassUtils;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class ResponseForClassCalculator extends ClassCalculator
+{
+	private final Set<PsiMethod> methodsCalled = new HashSet<PsiMethod>();
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-        public void visitClass(PsiClass aClass) {
-            if (ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass)) {
-                methodsCalled.clear();
-                final PsiMethod[] methods = aClass.getMethods();
-                for (PsiMethod method : methods) {
-                    methodsCalled.add(method);
-                }
-            }
-            super.visitClass(aClass);
-            if (ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass)) {
-                final int numMethods = methodsCalled.size();
-                postMetric(aClass, numMethods);
-            }
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethodCallExpression(PsiMethodCallExpression expression) {
-            final PsiMethod referent = expression.resolveMethod();
-            if (referent == null) {
-                return;
-            }
-            final Runnable runnable = new Runnable() {
-                public void run() {
-                    methodsCalled.add(referent);
-                    final Query<PsiMethod> query = OverridingMethodsSearch.search(referent);
-                    final Collection<PsiMethod> overridingMethods = query.findAll();
-                    methodsCalled.addAll(overridingMethods);
-                }
-            };
-            final ProgressManager progressManager = ProgressManager.getInstance();
-            progressManager.runProcess(runnable, null);
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			if(ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass))
+			{
+				methodsCalled.clear();
+				final PsiMethod[] methods = aClass.getMethods();
+				for(PsiMethod method : methods)
+				{
+					methodsCalled.add(method);
+				}
+			}
+			super.visitClass(aClass);
+			if(ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass))
+			{
+				final int numMethods = methodsCalled.size();
+				postMetric(aClass, numMethods);
+			}
+		}
+
+		public void visitMethodCallExpression(PsiMethodCallExpression expression)
+		{
+			final PsiMethod referent = expression.resolveMethod();
+			if(referent == null)
+			{
+				return;
+			}
+			final Runnable runnable = new Runnable()
+			{
+				public void run()
+				{
+					methodsCalled.add(referent);
+					final Query<PsiMethod> query = OverridingMethodsSearch.search(referent);
+					final Collection<PsiMethod> overridingMethods = query.findAll();
+					methodsCalled.addAll(overridingMethods);
+				}
+			};
+			final ProgressManager progressManager = ProgressManager.getInstance();
+			progressManager.runProcess(runnable, null);
+		}
+	}
 }

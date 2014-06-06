@@ -16,33 +16,47 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
 
-public class AverageOperationParametersCalculator extends ClassCalculator {
+public class AverageOperationParametersCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!isConcreteClass(aClass)) {
-                return;
-            }
-            int parameterCount = 0;
-            final PsiMethod[] methods = aClass.getMethods();
-            for (final PsiMethod method : methods) {
-                final PsiParameterList parameterList = method.getParameterList();
-                final PsiParameter[] parameters = parameterList.getParameters();
-                parameterCount += parameters.length;
-            }
-            if (methods.length == 0) {
-                postMetric(aClass, 0);
-            } else {
-                postMetric(aClass, parameterCount, methods.length);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!isConcreteClass(aClass))
+			{
+				return;
+			}
+			int parameterCount = 0;
+			final PsiMethod[] methods = aClass.getMethods();
+			for(final PsiMethod method : methods)
+			{
+				final PsiParameterList parameterList = method.getParameterList();
+				final PsiParameter[] parameters = parameterList.getParameters();
+				parameterCount += parameters.length;
+			}
+			if(methods.length == 0)
+			{
+				postMetric(aClass, 0);
+			}
+			else
+			{
+				postMetric(aClass, parameterCount, methods.length);
+			}
+		}
+	}
 }

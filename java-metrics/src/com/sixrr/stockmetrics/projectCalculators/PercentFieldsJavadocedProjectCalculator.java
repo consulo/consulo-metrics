@@ -23,22 +23,28 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class PercentFieldsJavadocedProjectCalculator extends ElementRatioProjectCalculator {
+public class PercentFieldsJavadocedProjectCalculator extends ElementRatioProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitField(PsiField field) {
-            final PsiClass containingClass = field.getContainingClass();
-            if (containingClass == null || ClassUtils.isAnonymous(containingClass)) {
-                return;
-            }
-            if (field.getFirstChild()instanceof PsiDocComment) {
-                numerator++;
-            }
-            denominator++;
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitField(PsiField field)
+		{
+			final PsiClass containingClass = field.getContainingClass();
+			if(containingClass == null || ClassUtils.isAnonymous(containingClass))
+			{
+				return;
+			}
+			if(field.getFirstChild() instanceof PsiDocComment)
+			{
+				numerator++;
+			}
+			denominator++;
+		}
+	}
 }

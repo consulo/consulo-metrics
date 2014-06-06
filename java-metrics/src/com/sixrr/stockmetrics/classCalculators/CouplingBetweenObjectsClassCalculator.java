@@ -16,35 +16,40 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 import com.sixrr.stockmetrics.dependency.DependentsMap;
 
-import java.util.HashSet;
-import java.util.Set;
+public class CouplingBetweenObjectsClassCalculator extends ClassCalculator
+{
 
-public class CouplingBetweenObjectsClassCalculator extends ClassCalculator {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final DependencyMap dependencyMap = getDependencyMap();
-                final Set<PsiClass> dependencies = dependencyMap.calculateDependencies(aClass);
-                final DependentsMap dependentsMap = getDependentsMap();
-                final Set<PsiClass> dependents = dependentsMap.calculateDependents(aClass);
-                final Set<PsiClass> union = new HashSet<PsiClass>(dependencies);
-                union.addAll(dependents);
-                final int coupling = union.size();
-                postMetric(aClass, coupling);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final DependencyMap dependencyMap = getDependencyMap();
+				final Set<PsiClass> dependencies = dependencyMap.calculateDependencies(aClass);
+				final DependentsMap dependentsMap = getDependentsMap();
+				final Set<PsiClass> dependents = dependentsMap.calculateDependents(aClass);
+				final Set<PsiClass> union = new HashSet<PsiClass>(dependencies);
+				union.addAll(dependents);
+				final int coupling = union.size();
+				postMetric(aClass, coupling);
+			}
+		}
+	}
 }

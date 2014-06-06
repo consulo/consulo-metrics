@@ -22,27 +22,33 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class RelativeLinesOfCodeCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
+public class RelativeLinesOfCodeCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                final int numMethodLines = LineUtil.countLines(method);
-                final PsiClass containingClass = method.getContainingClass();
-                if (containingClass != null) {
-                    final int numClassLines = LineUtil.countLines(containingClass);
-                    postMetric(method, numMethodLines, numClassLines);
-                }
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-        }
-    }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				final int numMethodLines = LineUtil.countLines(method);
+				final PsiClass containingClass = method.getContainingClass();
+				if(containingClass != null)
+				{
+					final int numClassLines = LineUtil.countLines(containingClass);
+					postMetric(method, numMethodLines, numClassLines);
+				}
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+		}
+	}
 }

@@ -19,12 +19,15 @@ package com.sixrr.stockmetrics.moduleCalculators;
 import com.intellij.openapi.module.Module;
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
-abstract class ModuleCalculator extends BaseMetricsCalculator {
-    void postMetric(Module module, int numerator, int denominator) {
-        resultsHolder.postModuleMetric(metric, module, (double) numerator, (double) denominator);
-    }
+abstract class ModuleCalculator extends BaseMetricsCalculator
+{
+	void postMetric(Module module, int numerator, int denominator)
+	{
+		resultsHolder.postModuleMetric(metric, module, (double) numerator, (double) denominator);
+	}
 
-    void postMetric(Module module, int value) {
-        resultsHolder.postModuleMetric(metric, module, (double) value);
-    }
+	void postMetric(Module module, int value)
+	{
+		resultsHolder.postModuleMetric(metric, module, (double) value);
+	}
 }

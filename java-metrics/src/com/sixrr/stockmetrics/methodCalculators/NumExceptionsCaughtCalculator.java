@@ -16,42 +16,55 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
-import com.sixrr.metrics.utils.MethodUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 
-public class NumExceptionsCaughtCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private final Set<String> caughtExceptions = new HashSet<String>();
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiTryStatement;
+import com.intellij.psi.PsiType;
+import com.sixrr.metrics.utils.MethodUtils;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class NumExceptionsCaughtCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private final Set<String> caughtExceptions = new HashSet<String>();
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                caughtExceptions.clear();
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                final int numCaughtExceptions = caughtExceptions.size();
-                postMetric(method, numCaughtExceptions);
-            }
-        }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-        public void visitTryStatement(PsiTryStatement statement) {
-            super.visitTryStatement(statement);
-            final PsiParameter[] catchBlockParameters = statement.getCatchBlockParameters();
-            for (final PsiParameter parameter : catchBlockParameters) {
-                final PsiType parameterType = parameter.getType();
-                final String parameterClassName = parameterType.getCanonicalText();
-                caughtExceptions.add(parameterClassName);
-            }
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				caughtExceptions.clear();
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				final int numCaughtExceptions = caughtExceptions.size();
+				postMetric(method, numCaughtExceptions);
+			}
+		}
+
+		public void visitTryStatement(PsiTryStatement statement)
+		{
+			super.visitTryStatement(statement);
+			final PsiParameter[] catchBlockParameters = statement.getCatchBlockParameters();
+			for(final PsiParameter parameter : catchBlockParameters)
+			{
+				final PsiType parameterType = parameter.getType();
+				final String parameterClassName = parameterType.getCanonicalText();
+				caughtExceptions.add(parameterClassName);
+			}
+		}
+	}
 }

@@ -20,21 +20,26 @@ import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
-abstract class ClassCalculator extends BaseMetricsCalculator {
+abstract class ClassCalculator extends BaseMetricsCalculator
+{
 
-    void postMetric(PsiClass aClass, int numerator, int denominator) {
-        resultsHolder.postClassMetric(metric, aClass, (double) numerator, (double) denominator);
-    }
+	void postMetric(PsiClass aClass, int numerator, int denominator)
+	{
+		resultsHolder.postClassMetric(metric, aClass, (double) numerator, (double) denominator);
+	}
 
-    void postMetric(PsiClass aClass, int value) {
-        resultsHolder.postClassMetric(metric, aClass, (double) value);
-    }
+	void postMetric(PsiClass aClass, int value)
+	{
+		resultsHolder.postClassMetric(metric, aClass, (double) value);
+	}
 
-    void postMetric(PsiClass aClass, double value) {
-        resultsHolder.postClassMetric(metric, aClass, value);
-    }
+	void postMetric(PsiClass aClass, double value)
+	{
+		resultsHolder.postClassMetric(metric, aClass, value);
+	}
 
-    protected static boolean isConcreteClass(PsiClass aClass) {
-        return !(aClass.isInterface() || ClassUtils.isAnonymous(aClass));
-    }
+	protected static boolean isConcreteClass(PsiClass aClass)
+	{
+		return !(aClass.isInterface() || ClassUtils.isAnonymous(aClass));
+	}
 }

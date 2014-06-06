@@ -18,109 +18,145 @@ package com.sixrr.stockmetrics.methodCalculators;
 
 import com.intellij.psi.*;
 
-public class DesignComplexityCalculator extends ComplexityCalculator {
+public class DesignComplexityCalculator extends ComplexityCalculator
+{
 
-    public boolean statementIsReducible(PsiStatement statement) {
-        if (statement == null) {
-            return true;
-        }
-        if (statement instanceof PsiIfStatement) {
-            return ifStatementIsReducible((PsiIfStatement) statement);
-        } else if (statement instanceof PsiWhileStatement) {
-            return whileStatementIsReducible((PsiWhileStatement) statement);
-        } else if (statement instanceof PsiDoWhileStatement) {
-            return doWhileStatementIsReducible((PsiDoWhileStatement) statement);
-        } else if (statement instanceof PsiForStatement) {
-            return forStatementIsReducible((PsiForStatement) statement);
-        } else if (statement instanceof PsiForeachStatement) {
-            return foreachStatementIsReducible((PsiForeachStatement) statement);
-        } else if (statement instanceof PsiSynchronizedStatement) {
-            return synchronizedStatementIsReducible((PsiSynchronizedStatement) statement);
-        } else if (statement instanceof PsiTryStatement) {
-            return tryStatementIsReducible((PsiTryStatement) statement);
-        } else if (statement instanceof PsiSwitchStatement) {
-            return switchStatementIsReducible((PsiSwitchStatement) statement);
-        } else if (statement instanceof PsiBlockStatement) {
-            return blockStatementIsReducible((PsiBlockStatement) statement);
-        }
-        return true;
-    }
+	public boolean statementIsReducible(PsiStatement statement)
+	{
+		if(statement == null)
+		{
+			return true;
+		}
+		if(statement instanceof PsiIfStatement)
+		{
+			return ifStatementIsReducible((PsiIfStatement) statement);
+		}
+		else if(statement instanceof PsiWhileStatement)
+		{
+			return whileStatementIsReducible((PsiWhileStatement) statement);
+		}
+		else if(statement instanceof PsiDoWhileStatement)
+		{
+			return doWhileStatementIsReducible((PsiDoWhileStatement) statement);
+		}
+		else if(statement instanceof PsiForStatement)
+		{
+			return forStatementIsReducible((PsiForStatement) statement);
+		}
+		else if(statement instanceof PsiForeachStatement)
+		{
+			return foreachStatementIsReducible((PsiForeachStatement) statement);
+		}
+		else if(statement instanceof PsiSynchronizedStatement)
+		{
+			return synchronizedStatementIsReducible((PsiSynchronizedStatement) statement);
+		}
+		else if(statement instanceof PsiTryStatement)
+		{
+			return tryStatementIsReducible((PsiTryStatement) statement);
+		}
+		else if(statement instanceof PsiSwitchStatement)
+		{
+			return switchStatementIsReducible((PsiSwitchStatement) statement);
+		}
+		else if(statement instanceof PsiBlockStatement)
+		{
+			return blockStatementIsReducible((PsiBlockStatement) statement);
+		}
+		return true;
+	}
 
-    private static boolean tryStatementIsReducible(PsiTryStatement statement) {
-        final PsiCodeBlock tryBlock = statement.getTryBlock();
-        if (containsMethodCall(tryBlock)) {
-            return false;
-        }
-        final PsiCodeBlock[] catchBlocks = statement.getCatchBlocks();
-        for (final PsiCodeBlock catchBlock : catchBlocks) {
-            if (containsMethodCall(catchBlock)) {
-                return false;
-            }
-        }
-        final PsiCodeBlock finallyBlock = statement.getFinallyBlock();
-        return !containsMethodCall(finallyBlock);
-    }
+	private static boolean tryStatementIsReducible(PsiTryStatement statement)
+	{
+		final PsiCodeBlock tryBlock = statement.getTryBlock();
+		if(containsMethodCall(tryBlock))
+		{
+			return false;
+		}
+		final PsiCodeBlock[] catchBlocks = statement.getCatchBlocks();
+		for(final PsiCodeBlock catchBlock : catchBlocks)
+		{
+			if(containsMethodCall(catchBlock))
+			{
+				return false;
+			}
+		}
+		final PsiCodeBlock finallyBlock = statement.getFinallyBlock();
+		return !containsMethodCall(finallyBlock);
+	}
 
-    private static boolean blockStatementIsReducible(PsiBlockStatement statement) {
-        final PsiCodeBlock codeBlock = statement.getCodeBlock();
-        return !containsMethodCall(codeBlock);
-    }
+	private static boolean blockStatementIsReducible(PsiBlockStatement statement)
+	{
+		final PsiCodeBlock codeBlock = statement.getCodeBlock();
+		return !containsMethodCall(codeBlock);
+	}
 
-    private static boolean switchStatementIsReducible(PsiSwitchStatement statement) {
-        final PsiCodeBlock body = statement.getBody();
-        return !containsMethodCall(body);
-    }
+	private static boolean switchStatementIsReducible(PsiSwitchStatement statement)
+	{
+		final PsiCodeBlock body = statement.getBody();
+		return !containsMethodCall(body);
+	}
 
-    private static boolean synchronizedStatementIsReducible(PsiSynchronizedStatement statement) {
-        final PsiCodeBlock body = statement.getBody();
-        return !containsMethodCall(body);
-    }
+	private static boolean synchronizedStatementIsReducible(PsiSynchronizedStatement statement)
+	{
+		final PsiCodeBlock body = statement.getBody();
+		return !containsMethodCall(body);
+	}
 
-    private static boolean foreachStatementIsReducible(PsiForeachStatement statement) {
-        final PsiStatement body = statement.getBody();
-        return !containsMethodCall(body);
-    }
+	private static boolean foreachStatementIsReducible(PsiForeachStatement statement)
+	{
+		final PsiStatement body = statement.getBody();
+		return !containsMethodCall(body);
+	}
 
-    private static boolean forStatementIsReducible(PsiForStatement statement) {
-        final PsiStatement body = statement.getBody();
-        return !containsMethodCall(body);
-    }
+	private static boolean forStatementIsReducible(PsiForStatement statement)
+	{
+		final PsiStatement body = statement.getBody();
+		return !containsMethodCall(body);
+	}
 
-    private static boolean doWhileStatementIsReducible(PsiDoWhileStatement statement) {
-        final PsiStatement body = statement.getBody();
-        return !containsMethodCall(body);
-    }
+	private static boolean doWhileStatementIsReducible(PsiDoWhileStatement statement)
+	{
+		final PsiStatement body = statement.getBody();
+		return !containsMethodCall(body);
+	}
 
-    private static boolean whileStatementIsReducible(PsiWhileStatement statement) {
-        final PsiStatement body = statement.getBody();
-        return !containsMethodCall(body);
-    }
+	private static boolean whileStatementIsReducible(PsiWhileStatement statement)
+	{
+		final PsiStatement body = statement.getBody();
+		return !containsMethodCall(body);
+	}
 
-    private static boolean ifStatementIsReducible(PsiIfStatement statement) {
-        final PsiStatement elseBranch = statement.getElseBranch();
-        final PsiStatement thenBranch = statement.getThenBranch();
-        return !containsMethodCall(thenBranch) &&
-                !containsMethodCall(elseBranch);
-    }
+	private static boolean ifStatementIsReducible(PsiIfStatement statement)
+	{
+		final PsiStatement elseBranch = statement.getElseBranch();
+		final PsiStatement thenBranch = statement.getThenBranch();
+		return !containsMethodCall(thenBranch) && !containsMethodCall(elseBranch);
+	}
 
-    private static boolean containsMethodCall(PsiElement element) {
-        if (element == null) {
-            return false;
-        }
-        final MethodCallVisitor visitor = new MethodCallVisitor();
-        element.accept(visitor);
-        return visitor.isMethodCalled();
-    }
+	private static boolean containsMethodCall(PsiElement element)
+	{
+		if(element == null)
+		{
+			return false;
+		}
+		final MethodCallVisitor visitor = new MethodCallVisitor();
+		element.accept(visitor);
+		return visitor.isMethodCalled();
+	}
 
-    private static class MethodCallVisitor extends JavaRecursiveElementVisitor {
-        private boolean methodCalled = false;
+	private static class MethodCallVisitor extends JavaRecursiveElementVisitor
+	{
+		private boolean methodCalled = false;
 
-        public void visitMethodCallExpression(PsiMethodCallExpression expression) {
-            methodCalled = true;
-        }
+		public void visitMethodCallExpression(PsiMethodCallExpression expression)
+		{
+			methodCalled = true;
+		}
 
-        private boolean isMethodCalled() {
-            return methodCalled;
-        }
-    }
+		private boolean isMethodCalled()
+		{
+			return methodCalled;
+		}
+	}
 }

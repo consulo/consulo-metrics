@@ -16,36 +16,45 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.*;
-import com.sixrr.stockmetrics.dependency.DependencyMap;
-import com.sixrr.metrics.utils.ClassUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 
-public class AdjustedLevelOrderPackageCalculator extends PackageCalculator {
-    private final Set<PsiPackage> packages = new HashSet<PsiPackage>();
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.sixrr.metrics.utils.ClassUtils;
+import com.sixrr.stockmetrics.dependency.DependencyMap;
 
-    public void endMetricsRun() {
-        for (final PsiPackage packageName : packages) {
-            final DependencyMap dependencyMap = getDependencyMap();
-            final int levelOrder = dependencyMap.calculatePackageAdjustedLevelOrder(packageName);
-            postMetric(packageName, levelOrder);
-        }
-    }
+public class AdjustedLevelOrderPackageCalculator extends PackageCalculator
+{
+	private final Set<PsiPackage> packages = new HashSet<PsiPackage>();
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	public void endMetricsRun()
+	{
+		for(final PsiPackage packageName : packages)
+		{
+			final DependencyMap dependencyMap = getDependencyMap();
+			final int levelOrder = dependencyMap.calculatePackageAdjustedLevelOrder(packageName);
+			postMetric(packageName, levelOrder);
+		}
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass)) {
-                final PsiPackage usedPackage = ClassUtils.findPackage(aClass);
-                packages.add(usedPackage);
-            }
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				final PsiPackage usedPackage = ClassUtils.findPackage(aClass);
+				packages.add(usedPackage);
+			}
+		}
+	}
 }

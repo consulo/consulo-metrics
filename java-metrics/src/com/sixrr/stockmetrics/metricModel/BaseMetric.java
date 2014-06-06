@@ -16,79 +16,98 @@
 
 package com.sixrr.stockmetrics.metricModel;
 
-import com.sixrr.metrics.Metric;
-import com.sixrr.metrics.MetricCalculator;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.Metric;
+import com.sixrr.metrics.MetricCalculator;
 
-public abstract class BaseMetric implements Cloneable, Metric {
+public abstract class BaseMetric implements Cloneable, Metric
+{
 
-    protected BaseMetric() {
-        super();
-        final Class<?> aClass = getClass();
-        final String className = aClass.getName();
-        final int startIndex = className.lastIndexOf((int) '.') + 1;
-        @NonNls final int endIndex = className.length() - "Metric".length();
-        name = className.substring(startIndex, endIndex);
-    }
+	protected BaseMetric()
+	{
+		super();
+		final Class<?> aClass = getClass();
+		final String className = aClass.getName();
+		final int startIndex = className.lastIndexOf((int) '.') + 1;
+		@NonNls final int endIndex = className.length() - "Metric".length();
+		name = className.substring(startIndex, endIndex);
+	}
 
-    private final String name;
+	private final String name;
 
-    public Metric clone() throws CloneNotSupportedException {
-        return (Metric) super.clone();
-    }
+	public Metric clone() throws CloneNotSupportedException
+	{
+		return (Metric) super.clone();
+	}
 
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof BaseMetric)) {
-            return false;
-        }
+	public boolean equals(Object obj)
+	{
+		if(this == obj)
+		{
+			return true;
+		}
+		if(!(obj instanceof BaseMetric))
+		{
+			return false;
+		}
 
-        final BaseMetric baseMetric = (BaseMetric) obj;
+		final BaseMetric baseMetric = (BaseMetric) obj;
 
-        return name.equals(baseMetric.getID());
-    }
+		return name.equals(baseMetric.getID());
+	}
 
-    public int hashCode() {
-        return name.hashCode();
-    }
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
 
-    public String getID() {
-        return name;
-    }
+	public String getID()
+	{
+		return name;
+	}
 
-    @Nullable
-    public MetricCalculator createCalculator() {
-        final String metricClassName = getClass().getName();
-        //noinspection HardCodedStringLiteral
-        final String calculatorClassName = metricClassName.replaceAll("Metric", "Calculator");
-        final MetricCalculator calculator;
-        try {
-            final Class<?> calculatorClass = Class.forName(calculatorClassName);
-            calculator = (MetricCalculator) calculatorClass.newInstance();
-        } catch (ClassNotFoundException e) {
-            return null;
-        } catch (InstantiationException e) {
-            return null;
-        } catch (IllegalAccessException e) {
-            return null;
-        }
-        return calculator;
-    }
+	@Nullable
+	public MetricCalculator createCalculator()
+	{
+		final String metricClassName = getClass().getName();
+		//noinspection HardCodedStringLiteral
+		final String calculatorClassName = metricClassName.replaceAll("Metric", "Calculator");
+		final MetricCalculator calculator;
+		try
+		{
+			final Class<?> calculatorClass = Class.forName(calculatorClassName);
+			calculator = (MetricCalculator) calculatorClass.newInstance();
+		}
+		catch(ClassNotFoundException e)
+		{
+			return null;
+		}
+		catch(InstantiationException e)
+		{
+			return null;
+		}
+		catch(IllegalAccessException e)
+		{
+			return null;
+		}
+		return calculator;
+	}
 
-    @Nullable
-    public String getHelpURL() {
-        return null;
-    }
+	@Nullable
+	public String getHelpURL()
+	{
+		return null;
+	}
 
-    @Nullable
-    public String getHelpDisplayString() {
-        return null;
-    }
+	@Nullable
+	public String getHelpDisplayString()
+	{
+		return null;
+	}
 
-    public boolean requiresDependents() {
-        return false;
-    }
+	public boolean requiresDependents()
+	{
+		return false;
+	}
 }

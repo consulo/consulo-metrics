@@ -19,30 +19,35 @@ package com.sixrr.stockmetrics.methodCalculators;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
-import com.sixrr.stockmetrics.halstead.HalsteadVisitor;
 import com.sixrr.metrics.utils.MethodUtils;
+import com.sixrr.stockmetrics.halstead.HalsteadVisitor;
 
-public abstract class HalsteadMethodCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
+public abstract class HalsteadMethodCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                final HalsteadVisitor visitor = new HalsteadVisitor(executionContext);
-                method.accept(visitor);
-                final double value = getValue(visitor);
-                postMetric(method, value);
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-        }
-    }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				final HalsteadVisitor visitor = new HalsteadVisitor(executionContext);
+				method.accept(visitor);
+				final double value = getValue(visitor);
+				postMetric(method, value);
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+		}
+	}
 
-    protected abstract double getValue(HalsteadVisitor visitor);
+	protected abstract double getValue(HalsteadVisitor visitor);
 }

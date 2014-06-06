@@ -16,43 +16,59 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiBreakStatement;
+import com.intellij.psi.PsiContinueStatement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiSwitchStatement;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class NumBranchStatementsCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private int elementCount = 0;
+public class NumBranchStatementsCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                elementCount = 0;
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, elementCount);
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				elementCount = 0;
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				postMetric(method, elementCount);
+			}
+		}
 
-        public void visitContinueStatement(PsiContinueStatement statement) {
-            super.visitContinueStatement(statement);
-            elementCount++;
-        }
+		public void visitContinueStatement(PsiContinueStatement statement)
+		{
+			super.visitContinueStatement(statement);
+			elementCount++;
+		}
 
-        public void visitBreakStatement(PsiBreakStatement statement) {
-            super.visitBreakStatement(statement);
-            if (statement.getLabelIdentifier() != null) {
-                elementCount++;
-            } else if (!(statement.findExitedStatement()instanceof PsiSwitchStatement)) {
-                elementCount++;
-            }
-        }
-    }
+		public void visitBreakStatement(PsiBreakStatement statement)
+		{
+			super.visitBreakStatement(statement);
+			if(statement.getLabelIdentifier() != null)
+			{
+				elementCount++;
+			}
+			else if(!(statement.findExitedStatement() instanceof PsiSwitchStatement))
+			{
+				elementCount++;
+			}
+		}
+	}
 }

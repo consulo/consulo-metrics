@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.packageMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class NumLeafClassesRecursivePackageMetric extends PackageMetric {
+public class NumLeafClassesRecursivePackageMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.leaf.classes.recursive.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.leaf.classes.recursive.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.leaf.classes.recursive.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.leaf.classes.recursive.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.RecursiveCount;
-    }
+	public MetricType getType()
+	{
+		return MetricType.RecursiveCount;
+	}
 }

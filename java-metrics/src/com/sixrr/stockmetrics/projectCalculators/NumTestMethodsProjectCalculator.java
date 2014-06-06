@@ -21,18 +21,23 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.TestUtils;
 
-public class NumTestMethodsProjectCalculator extends ElementCountProjectCalculator {
+public class NumTestMethodsProjectCalculator extends ElementCountProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitMethod(PsiMethod method) {
-            super.visitMethod(method);
-            if (TestUtils.isJUnitTestMethod(method)) {
-                numElements++;
-            }
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitMethod(PsiMethod method)
+		{
+			super.visitMethod(method);
+			if(TestUtils.isJUnitTestMethod(method))
+			{
+				numElements++;
+			}
+		}
+	}
 }

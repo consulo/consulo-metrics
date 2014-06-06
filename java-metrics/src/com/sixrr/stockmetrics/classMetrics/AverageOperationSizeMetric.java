@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.classMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class AverageOperationSizeMetric extends ClassMetric {
+public class AverageOperationSizeMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("average.operation.size.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("average.operation.size.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("average.operation.size.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("average.operation.size.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Average;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Average;
+	}
 }

@@ -20,20 +20,25 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 
-public class NumInnerClassesCalculator extends ClassCalculator {
+public class NumInnerClassesCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiClass[] innerClasses = aClass.getInnerClasses();
-                postMetric(aClass, innerClasses.length);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiClass[] innerClasses = aClass.getInnerClasses();
+				postMetric(aClass, innerClasses.length);
+			}
+		}
+	}
 }

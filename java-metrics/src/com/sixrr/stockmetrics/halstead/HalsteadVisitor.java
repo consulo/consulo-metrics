@@ -16,163 +16,196 @@
 
 package com.sixrr.stockmetrics.halstead;
 
-import com.intellij.psi.*;
-import com.sixrr.metrics.MetricsExecutionContext;
-import com.sixrr.stockmetrics.utils.ExpressionUtils;
-import com.sixrr.metrics.utils.MethodUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 
-public class HalsteadVisitor extends JavaRecursiveElementVisitor {
-    private int numOperands = 0;
-    private int numOperators = 0;
-    private final Set<String> operators = new HashSet<String>(32);
-    private final Set<String> operands = new HashSet<String>(32);
-    private final MetricsExecutionContext context;
-    private boolean inCompileTimeConstant = false;
+import com.intellij.psi.*;
+import com.sixrr.metrics.MetricsExecutionContext;
+import com.sixrr.metrics.utils.MethodUtils;
+import com.sixrr.stockmetrics.utils.ExpressionUtils;
 
-    public HalsteadVisitor(MetricsExecutionContext context) {
-        super();
-        this.context = context;
-    }
+public class HalsteadVisitor extends JavaRecursiveElementVisitor
+{
+	private int numOperands = 0;
+	private int numOperators = 0;
+	private final Set<String> operators = new HashSet<String>(32);
+	private final Set<String> operands = new HashSet<String>(32);
+	private final MetricsExecutionContext context;
+	private boolean inCompileTimeConstant = false;
 
-    public void visitReferenceExpression(PsiReferenceExpression expression) {
-        super.visitReferenceExpression(expression);
+	public HalsteadVisitor(MetricsExecutionContext context)
+	{
+		super();
+		this.context = context;
+	}
 
-        final PsiElement element = expression.resolve();
-        if (element != null && element instanceof PsiVariable) {
-            final String expressionText = expression.getText();
-            registerOperand(expressionText);
-        }
-    }
+	public void visitReferenceExpression(PsiReferenceExpression expression)
+	{
+		super.visitReferenceExpression(expression);
 
-    private int getNumDistinctOperands() {
-        return operands.size();
-    }
+		final PsiElement element = expression.resolve();
+		if(element != null && element instanceof PsiVariable)
+		{
+			final String expressionText = expression.getText();
+			registerOperand(expressionText);
+		}
+	}
 
-    private int getNumDistinctOperators() {
-        return operators.size();
-    }
+	private int getNumDistinctOperands()
+	{
+		return operands.size();
+	}
 
-    public int getLength() {
-        return numOperands + numOperators;
-    }
+	private int getNumDistinctOperators()
+	{
+		return operators.size();
+	}
 
-    public int getVocabulary() {
-        return operands.size() + operators.size();
-    }
+	public int getLength()
+	{
+		return numOperands + numOperators;
+	}
 
-    public double getDifficulty() {
-        final int N2 = numOperands;
-        final int n1 = getNumDistinctOperators();
-        final int n2 = getNumDistinctOperands();
-        if (n2 == 0) {
-            return 0.0;
-        } else {
-            return ((double) n1 / 2.0) * ((double) N2 / (double) n2);
-        }
-    }
+	public int getVocabulary()
+	{
+		return operands.size() + operators.size();
+	}
 
-    public double getVolume() {
-        final double vocabulary = (double) getVocabulary();
-        return (double) getLength() * Math.log(vocabulary) / Math.log(2.0);
-    }
+	public double getDifficulty()
+	{
+		final int N2 = numOperands;
+		final int n1 = getNumDistinctOperators();
+		final int n2 = getNumDistinctOperands();
+		if(n2 == 0)
+		{
+			return 0.0;
+		}
+		else
+		{
+			return ((double) n1 / 2.0) * ((double) N2 / (double) n2);
+		}
+	}
 
-    public double getEffort() {
-        return getDifficulty() * getVolume();
-    }
+	public double getVolume()
+	{
+		final double vocabulary = (double) getVocabulary();
+		return (double) getLength() * Math.log(vocabulary) / Math.log(2.0);
+	}
 
-    public double getBugs() {
-        final double effort = getEffort();
-        return Math.pow(effort, 2.0 / 3.0) / 3000.0;
-    }
+	public double getEffort()
+	{
+		return getDifficulty() * getVolume();
+	}
 
-    public void visitLiteralExpression(PsiLiteralExpression expression) {
-        if (inCompileTimeConstant) {
-            return;
-        }
-        if (ExpressionUtils.isEvaluatedAtCompileTime(expression)) {
-            inCompileTimeConstant = true;
-        }
-        super.visitLiteralExpression(expression);
-        final String text = expression.getText();
-        registerOperand(text);
-        inCompileTimeConstant = false;
-    }
+	public double getBugs()
+	{
+		final double effort = getEffort();
+		return Math.pow(effort, 2.0 / 3.0) / 3000.0;
+	}
 
-    public void visitBinaryExpression(PsiBinaryExpression expression) {
-        if (inCompileTimeConstant) {
-            return;
-        }
-        if (ExpressionUtils.isEvaluatedAtCompileTime(expression)) {
-            inCompileTimeConstant = true;
-            final String text = expression.getText();
-            registerOperand(text);
-        }
-        super.visitBinaryExpression(expression);
-        final PsiJavaToken sign = expression.getOperationSign();
-        registerSign(sign);
-        inCompileTimeConstant = false;
-    }
+	public void visitLiteralExpression(PsiLiteralExpression expression)
+	{
+		if(inCompileTimeConstant)
+		{
+			return;
+		}
+		if(ExpressionUtils.isEvaluatedAtCompileTime(expression))
+		{
+			inCompileTimeConstant = true;
+		}
+		super.visitLiteralExpression(expression);
+		final String text = expression.getText();
+		registerOperand(text);
+		inCompileTimeConstant = false;
+	}
 
-    public void visitPrefixExpression(PsiPrefixExpression expression) {
-        if (inCompileTimeConstant) {
-            return;
-        }
-        if (ExpressionUtils.isEvaluatedAtCompileTime(expression)) {
-            inCompileTimeConstant = true;
-            final String text = expression.getText();
-            registerOperand(text);
-        }
-        super.visitPrefixExpression(expression);
-        final PsiJavaToken sign = expression.getOperationSign();
+	public void visitBinaryExpression(PsiBinaryExpression expression)
+	{
+		if(inCompileTimeConstant)
+		{
+			return;
+		}
+		if(ExpressionUtils.isEvaluatedAtCompileTime(expression))
+		{
+			inCompileTimeConstant = true;
+			final String text = expression.getText();
+			registerOperand(text);
+		}
+		super.visitBinaryExpression(expression);
+		final PsiJavaToken sign = expression.getOperationSign();
+		registerSign(sign);
+		inCompileTimeConstant = false;
+	}
 
-        registerSign(sign);
-        inCompileTimeConstant = false;
-    }
+	public void visitPrefixExpression(PsiPrefixExpression expression)
+	{
+		if(inCompileTimeConstant)
+		{
+			return;
+		}
+		if(ExpressionUtils.isEvaluatedAtCompileTime(expression))
+		{
+			inCompileTimeConstant = true;
+			final String text = expression.getText();
+			registerOperand(text);
+		}
+		super.visitPrefixExpression(expression);
+		final PsiJavaToken sign = expression.getOperationSign();
 
-    public void visitPostfixExpression(PsiPostfixExpression expression) {
-        if (inCompileTimeConstant) {
-            return;
-        }
-        if (ExpressionUtils.isEvaluatedAtCompileTime(expression)) {
-            inCompileTimeConstant = true;
-            final String text = expression.getText();
-            registerOperand(text);
-        }
-        super.visitPostfixExpression(expression);
-        final PsiJavaToken sign = expression.getOperationSign();
-        registerSign(sign);
-        inCompileTimeConstant = false;
-    }
+		registerSign(sign);
+		inCompileTimeConstant = false;
+	}
 
-    public void visitKeyword(PsiKeyword psiKeyword) {
-        super.visitKeyword(psiKeyword);
-        registerSign(psiKeyword);
-    }
+	public void visitPostfixExpression(PsiPostfixExpression expression)
+	{
+		if(inCompileTimeConstant)
+		{
+			return;
+		}
+		if(ExpressionUtils.isEvaluatedAtCompileTime(expression))
+		{
+			inCompileTimeConstant = true;
+			final String text = expression.getText();
+			registerOperand(text);
+		}
+		super.visitPostfixExpression(expression);
+		final PsiJavaToken sign = expression.getOperationSign();
+		registerSign(sign);
+		inCompileTimeConstant = false;
+	}
 
-    public void visitMethodCallExpression(PsiMethodCallExpression callExpression) {
-        super.visitMethodCallExpression(callExpression);
-        final PsiMethod method = callExpression.resolveMethod();
-        if (method != null) {
-            final String signature = MethodUtils.calculateSignature(method);
-            registerOperator(signature);
-        }
-    }
+	public void visitKeyword(PsiKeyword psiKeyword)
+	{
+		super.visitKeyword(psiKeyword);
+		registerSign(psiKeyword);
+	}
 
-    private void registerSign(PsiJavaToken sign) {
-        final String text = sign.getText();
-        registerOperator(text);
-    }
+	public void visitMethodCallExpression(PsiMethodCallExpression callExpression)
+	{
+		super.visitMethodCallExpression(callExpression);
+		final PsiMethod method = callExpression.resolveMethod();
+		if(method != null)
+		{
+			final String signature = MethodUtils.calculateSignature(method);
+			registerOperator(signature);
+		}
+	}
 
-    private void registerOperator(String operator) {
-        numOperators++;
-        operators.add(operator);
-    }
+	private void registerSign(PsiJavaToken sign)
+	{
+		final String text = sign.getText();
+		registerOperator(text);
+	}
 
-    private void registerOperand(String operand) {
-        numOperands++;
-        operands.add(operand);
-    }
+	private void registerOperator(String operator)
+	{
+		numOperators++;
+		operators.add(operator);
+	}
+
+	private void registerOperand(String operand)
+	{
+		numOperands++;
+		operands.add(operand);
+	}
 }

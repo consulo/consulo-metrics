@@ -18,9 +18,11 @@ package com.sixrr.stockmetrics.methodCalculators;
 
 import com.intellij.psi.PsiStatement;
 
-public class CyclomaticComplexityCalculator extends ComplexityCalculator {
+public class CyclomaticComplexityCalculator extends ComplexityCalculator
+{
 
-    public boolean statementIsReducible(PsiStatement statement) {
-        return false;
-    }
+	public boolean statementIsReducible(PsiStatement statement)
+	{
+		return false;
+	}
 }

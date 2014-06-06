@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.methodMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class QCPMaintainabilityMetric extends MethodMetric {
+public class QCPMaintainabilityMetric extends MethodMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("quality.criteria.profile.maintainability.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("quality.criteria.profile.maintainability.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("quality.criteria.profile.maintainability.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("quality.criteria.profile.maintainability.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 }

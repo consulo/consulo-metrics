@@ -23,33 +23,42 @@ import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
 
-public class NumTestMethodsClassCalculator extends ClassCalculator {
-    private int elementCount = 0;
+public class NumTestMethodsClassCalculator extends ClassCalculator
+{
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            final int prevElementCount = elementCount;
-            if (!ClassUtils.isAnonymous(aClass)) {
-                elementCount = 0;
-            }
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass)) {
-                if (!aClass.isInterface()) {
-                    postMetric(aClass, elementCount);
-                }
-                elementCount = prevElementCount;
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			final int prevElementCount = elementCount;
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				elementCount = 0;
+			}
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				if(!aClass.isInterface())
+				{
+					postMetric(aClass, elementCount);
+				}
+				elementCount = prevElementCount;
+			}
+		}
+	}
 
-    public void visitMethod(PsiMethod method) {
-        if (TestUtils.isJUnitTestMethod(method)) {
-            elementCount++;
-        }
-    }
+	public void visitMethod(PsiMethod method)
+	{
+		if(TestUtils.isJUnitTestMethod(method))
+		{
+			elementCount++;
+		}
+	}
 }

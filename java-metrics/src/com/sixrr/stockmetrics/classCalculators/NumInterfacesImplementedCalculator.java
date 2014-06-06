@@ -16,39 +16,47 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 
-import java.util.HashSet;
-import java.util.Set;
+public class NumInterfacesImplementedCalculator extends ClassCalculator
+{
 
-public class NumInterfacesImplementedCalculator extends ClassCalculator {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final Set<PsiClass> implementedInterfaces = new HashSet<PsiClass>(8);
+				accumulateInterfaces(aClass, implementedInterfaces);
+				final int numInterfaces = implementedInterfaces.size();
+				postMetric(aClass, numInterfaces);
+			}
+		}
+	}
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final Set<PsiClass> implementedInterfaces = new HashSet<PsiClass>(8);
-                accumulateInterfaces(aClass, implementedInterfaces);
-                final int numInterfaces = implementedInterfaces.size();
-                postMetric(aClass, numInterfaces);
-            }
-        }
-    }
-
-    private static void accumulateInterfaces(PsiClass aClass, Set<PsiClass> implementedInterfaces) {
-        if (aClass.isInterface()) {
-            implementedInterfaces.add(aClass);
-        }
-        final PsiClass[] supers = aClass.getSupers();
-        for (final PsiClass aSuper : supers) {
-            accumulateInterfaces(aSuper, implementedInterfaces);
-        }
-    }
+	private static void accumulateInterfaces(PsiClass aClass, Set<PsiClass> implementedInterfaces)
+	{
+		if(aClass.isInterface())
+		{
+			implementedInterfaces.add(aClass);
+		}
+		final PsiClass[] supers = aClass.getSupers();
+		for(final PsiClass aSuper : supers)
+		{
+			accumulateInterfaces(aSuper, implementedInterfaces);
+		}
+	}
 }

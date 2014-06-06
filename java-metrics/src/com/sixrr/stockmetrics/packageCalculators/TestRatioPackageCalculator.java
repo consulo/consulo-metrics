@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
@@ -25,42 +27,48 @@ import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-import java.util.Set;
+public class TestRatioPackageCalculator extends PackageCalculator
+{
 
-public class TestRatioPackageCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numLinesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiPackage> numTestLinesPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numLinesPerPackage = new BucketedCount<PsiPackage>();
-    private final BucketedCount<PsiPackage> numTestLinesPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numLinesPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int numLines = numLinesPerPackage.getBucketValue(aPackage);
+			final int numTestLines = numTestLinesPerPackage.getBucketValue(aPackage);
+			postMetric(aPackage, numTestLines, numLines);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numLinesPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int numLines = numLinesPerPackage.getBucketValue(aPackage);
-            final int numTestLines = numTestLinesPerPackage.getBucketValue(aPackage);
-            postMetric(aPackage, numTestLines, numLines);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        
-        @Override
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            final PsiPackage aPackage = ClassUtils.findPackage(file);
-            if (aPackage == null) {
-                return;
-            }
-            final int lineCount = LineUtil.countLines(file);
-            numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
-            if (TestUtils.isTest(file)) {
-                numTestLinesPerPackage.incrementBucketValue(aPackage, lineCount);
-            }
-        }
-    }
+		@Override
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			final PsiPackage aPackage = ClassUtils.findPackage(file);
+			if(aPackage == null)
+			{
+				return;
+			}
+			final int lineCount = LineUtil.countLines(file);
+			numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
+			if(TestUtils.isTest(file))
+			{
+				numTestLinesPerPackage.incrementBucketValue(aPackage, lineCount);
+			}
+		}
+	}
 }

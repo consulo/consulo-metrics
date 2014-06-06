@@ -17,31 +17,41 @@
 package com.sixrr.stockmetrics.moduleCalculators;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.metrics.utils.TestUtils;
+import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class LinesOfProductCodeModuleCalculator extends ElementCountModuleCalculator {
+public class LinesOfProductCodeModuleCalculator extends ElementCountModuleCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitFile(file);
-            if (TestUtils.isProduction(file)) {
-                final int lineCount = LineUtil.countLines(file);
-                incrementElementCount(file, lineCount);
-            }
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitFile(file);
+			if(TestUtils.isProduction(file))
+			{
+				final int lineCount = LineUtil.countLines(file);
+				incrementElementCount(file, lineCount);
+			}
+		}
 
-        public void visitFile(PsiFile file) {
-            final Module module = ClassUtils.calculateModule(file);
-            if (module != null) {
-                elementsCountPerModule.createBucket(module);
-            }
-        }
-    }
+		public void visitFile(PsiFile file)
+		{
+			final Module module = ClassUtils.calculateModule(file);
+			if(module != null)
+			{
+				elementsCountPerModule.createBucket(module);
+			}
+		}
+	}
 }

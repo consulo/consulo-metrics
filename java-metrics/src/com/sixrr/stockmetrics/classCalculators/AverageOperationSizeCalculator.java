@@ -16,48 +16,64 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiBlockStatement;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEmptyStatement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiStatement;
 
-public class AverageOperationSizeCalculator extends ClassCalculator {
-    private int numStatements = 0;
-    private int numMethods = 0;
+public class AverageOperationSizeCalculator extends ClassCalculator
+{
+	private int numStatements = 0;
+	private int numMethods = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            final int prevNumMethods = numMethods;
-            final int prevNumStatements = numStatements;
-            if (isConcreteClass(aClass)) {
-                numStatements = 0;
-                numMethods = 0;
-            }
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                if (numMethods != 0) {
-                    postMetric(aClass, numStatements, numMethods);
-                }
-                numStatements = prevNumStatements;
-                numMethods = prevNumMethods;
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			final int prevNumMethods = numMethods;
+			final int prevNumStatements = numStatements;
+			if(isConcreteClass(aClass))
+			{
+				numStatements = 0;
+				numMethods = 0;
+			}
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				if(numMethods != 0)
+				{
+					postMetric(aClass, numStatements, numMethods);
+				}
+				numStatements = prevNumStatements;
+				numMethods = prevNumMethods;
+			}
+		}
 
-        public void visitMethod(PsiMethod method) {
-            super.visitMethod(method);
-            if (method.getBody() != null) {
-                numMethods++;
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			super.visitMethod(method);
+			if(method.getBody() != null)
+			{
+				numMethods++;
+			}
+		}
 
-        public void visitStatement(PsiStatement statement) {
-            super.visitStatement(statement);
-            if (!(statement instanceof PsiEmptyStatement) &&
-                    !(statement instanceof PsiBlockStatement)) {
-                numStatements++;
-            }
-        }
-    }
+		public void visitStatement(PsiStatement statement)
+		{
+			super.visitStatement(statement);
+			if(!(statement instanceof PsiEmptyStatement) && !(statement instanceof PsiBlockStatement))
+			{
+				numStatements++;
+			}
+		}
+	}
 }

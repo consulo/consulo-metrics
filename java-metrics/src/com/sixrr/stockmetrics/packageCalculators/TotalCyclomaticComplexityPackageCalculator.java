@@ -16,113 +16,137 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
+import java.util.Set;
+
 import com.intellij.psi.*;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.Set;
+public class TotalCyclomaticComplexityPackageCalculator extends PackageCalculator
+{
 
-public class TotalCyclomaticComplexityPackageCalculator extends PackageCalculator {
+	private int methodNestingDepth = 0;
+	private int complexity = 0;
+	private final BucketedCount<PsiPackage> totalComplexityPerPackage = new BucketedCount<PsiPackage>();
 
-    private int methodNestingDepth = 0;
-    private int complexity = 0;
-    private final BucketedCount<PsiPackage> totalComplexityPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = totalComplexityPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int complexityPerPackage = totalComplexityPerPackage.getBucketValue(aPackage);
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = totalComplexityPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int complexityPerPackage = totalComplexityPerPackage.getBucketValue(aPackage);
+			postMetric(aPackage, complexityPerPackage);
+		}
+	}
 
-            postMetric(aPackage, complexityPerPackage);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		@Override
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				if(method.getBody() != null)
+				{
+					complexity = 1;
+				}
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0)
+			{
+				final PsiClass containingClass = method.getContainingClass();
+				if(containingClass == null)
+				{
+					return;
+				}
+				final PsiPackage aPackage = ClassUtils.findPackage(containingClass);
+				if(aPackage == null)
+				{
+					return;
+				}
+				totalComplexityPerPackage.incrementBucketValue(aPackage, complexity);
+			}
+		}
 
-        @Override
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                if (method.getBody() != null) {
-                    complexity = 1;
-                }
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0) {
-                final PsiClass containingClass = method.getContainingClass();
-                if (containingClass == null) {
-                    return;
-                }
-                final PsiPackage aPackage = ClassUtils.findPackage(containingClass);
-                if (aPackage == null) {
-                    return;
-                }
-                totalComplexityPerPackage.incrementBucketValue(aPackage, complexity);
-            }
-        }
+		@Override
+		public void visitForStatement(PsiForStatement statement)
+		{
+			super.visitForStatement(statement);
+			complexity++;
+		}
 
-        @Override
-        public void visitForStatement(PsiForStatement statement) {
-            super.visitForStatement(statement);
-            complexity++;
-        }
+		@Override
+		public void visitForeachStatement(PsiForeachStatement statement)
+		{
+			super.visitForeachStatement(statement);
+			complexity++;
+		}
 
-        @Override
-        public void visitForeachStatement(PsiForeachStatement statement) {
-            super.visitForeachStatement(statement);
-            complexity++;
-        }
+		@Override
+		public void visitIfStatement(PsiIfStatement statement)
+		{
+			super.visitIfStatement(statement);
+			complexity++;
+		}
 
-        @Override
-        public void visitIfStatement(PsiIfStatement statement) {
-            super.visitIfStatement(statement);
-            complexity++;
-        }
+		@Override
+		public void visitDoWhileStatement(PsiDoWhileStatement statement)
+		{
+			super.visitDoWhileStatement(statement);
+			complexity++;
+		}
 
-        @Override
-        public void visitDoWhileStatement(PsiDoWhileStatement statement) {
-            super.visitDoWhileStatement(statement);
-            complexity++;
-        }
+		@Override
+		public void visitConditionalExpression(PsiConditionalExpression expression)
+		{
+			super.visitConditionalExpression(expression);
+			complexity++;
+		}
 
-        @Override
-        public void visitConditionalExpression(PsiConditionalExpression expression) {
-            super.visitConditionalExpression(expression);
-            complexity++;
-        }
+		@Override
+		public void visitSwitchStatement(PsiSwitchStatement statement)
+		{
+			super.visitSwitchStatement(statement);
+			final PsiCodeBlock body = statement.getBody();
+			if(body == null)
+			{
+				return;
+			}
+			final PsiStatement[] statements = body.getStatements();
+			boolean pendingLabel = false;
+			for(final PsiStatement child : statements)
+			{
+				if(child instanceof PsiSwitchLabelStatement)
+				{
+					if(!pendingLabel)
+					{
+						complexity++;
+					}
+					pendingLabel = true;
+				}
+				else
+				{
+					pendingLabel = false;
+				}
+			}
+		}
 
-        @Override
-        public void visitSwitchStatement(PsiSwitchStatement statement) {
-            super.visitSwitchStatement(statement);
-            final PsiCodeBlock body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            final PsiStatement[] statements = body.getStatements();
-            boolean pendingLabel = false;
-            for (final PsiStatement child : statements) {
-                if (child instanceof PsiSwitchLabelStatement) {
-                    if (!pendingLabel) {
-                        complexity++;
-                    }
-                    pendingLabel = true;
-                } else {
-                    pendingLabel = false;
-                }
-            }
-        }
-
-        @Override
-        public void visitWhileStatement(PsiWhileStatement statement) {
-            super.visitWhileStatement(statement);
-            complexity++;
-        }
-    }
+		@Override
+		public void visitWhileStatement(PsiWhileStatement statement)
+		{
+			super.visitWhileStatement(statement);
+			complexity++;
+		}
+	}
 }

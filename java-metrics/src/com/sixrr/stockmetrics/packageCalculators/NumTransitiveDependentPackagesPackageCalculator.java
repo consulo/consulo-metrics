@@ -16,39 +16,46 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiPackage;
-import com.sixrr.stockmetrics.dependency.DependentsMap;
 import com.sixrr.metrics.utils.ClassUtils;
+import com.sixrr.stockmetrics.dependency.DependentsMap;
 
-import java.util.HashSet;
-import java.util.Set;
+public class NumTransitiveDependentPackagesPackageCalculator extends PackageCalculator
+{
+	private final Set<PsiPackage> packages = new HashSet<PsiPackage>();
 
-public class NumTransitiveDependentPackagesPackageCalculator extends PackageCalculator {
-    private final Set<PsiPackage> packages = new HashSet<PsiPackage>();
+	public void endMetricsRun()
+	{
+		for(final PsiPackage aPackage : packages)
+		{
+			final DependentsMap dependencyMap = getDependentsMap();
+			final Set<PsiPackage> dependentPackages = dependencyMap.calculateTransitivePackageDependents(aPackage);
+			final int numDependencies = dependentPackages.size();
+			postMetric(aPackage, (double) numDependencies);
+		}
+	}
 
-    public void endMetricsRun() {
-        for (final PsiPackage aPackage : packages) {
-            final DependentsMap dependencyMap = getDependentsMap();
-            final Set<PsiPackage> dependentPackages = dependencyMap.calculateTransitivePackageDependents(aPackage);
-            final int numDependencies = dependentPackages.size();
-            postMetric(aPackage, (double) numDependencies);
-        }
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
-
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass)) {
-                final PsiPackage usedPackage = ClassUtils.findPackage(aClass);
-                packages.add(usedPackage);
-            }
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				final PsiPackage usedPackage = ClassUtils.findPackage(aClass);
+				packages.add(usedPackage);
+			}
+		}
+	}
 }

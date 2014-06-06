@@ -16,39 +16,51 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 
-public class ClassSizeOperationsAttributesCalculator extends ClassCalculator {
+public class ClassSizeOperationsAttributesCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiMethod[] methods = aClass.getAllMethods();
-                final PsiField[] fields = aClass.getAllFields();
-                int numOperations = 0;
-                for (final PsiMethod method : methods) {
-                    final PsiClass containingClass = method.getContainingClass();
-                    if (containingClass != null && containingClass.equals(aClass) ||
-                            !method.hasModifierProperty(PsiModifier.STATIC)) {
-                        numOperations++;
-                    }
-                }
-                int numAttributes = 0;
-                for (final PsiField field : fields) {
-                    final PsiClass containingClass = field.getContainingClass();
-                    if (containingClass != null && containingClass
-                            .equals(aClass) || !field.hasModifierProperty(PsiModifier.STATIC)) {
-                        numAttributes++;
-                    }
-                }
-                postMetric(aClass, numOperations + numAttributes);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiMethod[] methods = aClass.getAllMethods();
+				final PsiField[] fields = aClass.getAllFields();
+				int numOperations = 0;
+				for(final PsiMethod method : methods)
+				{
+					final PsiClass containingClass = method.getContainingClass();
+					if(containingClass != null && containingClass.equals(aClass) || !method.hasModifierProperty(PsiModifier.STATIC))
+					{
+						numOperations++;
+					}
+				}
+				int numAttributes = 0;
+				for(final PsiField field : fields)
+				{
+					final PsiClass containingClass = field.getContainingClass();
+					if(containingClass != null && containingClass.equals(aClass) || !field.hasModifierProperty(PsiModifier.STATIC))
+					{
+						numAttributes++;
+					}
+				}
+				postMetric(aClass, numOperations + numAttributes);
+			}
+		}
+	}
 }

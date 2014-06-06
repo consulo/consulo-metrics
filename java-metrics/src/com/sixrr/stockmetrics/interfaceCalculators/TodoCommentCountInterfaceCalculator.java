@@ -24,35 +24,44 @@ import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.stockmetrics.utils.TodoUtil;
 
-public class TodoCommentCountInterfaceCalculator extends InterfaceCalculator {
-    private int elementCount = 0;
+public class TodoCommentCountInterfaceCalculator extends InterfaceCalculator
+{
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            int prevElementCount = 0;
-            if (!ClassUtils.isAnonymous(aClass)) {
-                prevElementCount = elementCount;
-                elementCount = 0;
-            }
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass)) {
-                if (isInterface(aClass)) {
-                    postMetric(aClass, (double) elementCount);
-                }
-                elementCount = prevElementCount;
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			int prevElementCount = 0;
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				prevElementCount = elementCount;
+				elementCount = 0;
+			}
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass))
+			{
+				if(isInterface(aClass))
+				{
+					postMetric(aClass, (double) elementCount);
+				}
+				elementCount = prevElementCount;
+			}
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            if (TodoUtil.isTodoComment(comment)) {
-                elementCount += LineUtil.countLines(comment);
-            }
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			if(TodoUtil.isTodoComment(comment))
+			{
+				elementCount += LineUtil.countLines(comment);
+			}
+		}
+	}
 }

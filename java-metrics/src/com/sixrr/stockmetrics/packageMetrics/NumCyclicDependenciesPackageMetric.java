@@ -19,21 +19,26 @@ package com.sixrr.stockmetrics.packageMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class NumCyclicDependenciesPackageMetric extends PackageMetric {
+public class NumCyclicDependenciesPackageMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.cyclic.package.dependencies.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.cyclic.package.dependencies.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.cyclic.dependencies.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.cyclic.dependencies.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 
-    public boolean requiresDependents() {
-        return true;
-    }
+	public boolean requiresDependents()
+	{
+		return true;
+	}
 }

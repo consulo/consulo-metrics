@@ -22,28 +22,35 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class MessagePassingCouplingClassCalculator extends ClassCalculator {
-    private int numCalls = 0;
+public class MessagePassingCouplingClassCalculator extends ClassCalculator
+{
+	private int numCalls = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            if (ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass)) {
-                numCalls = 0;
-            }
-            super.visitClass(aClass);
-            if (ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass)) {
-                postMetric(aClass, numCalls);
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			if(ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass))
+			{
+				numCalls = 0;
+			}
+			super.visitClass(aClass);
+			if(ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass))
+			{
+				postMetric(aClass, numCalls);
+			}
+		}
 
-        public void visitMethodCallExpression(PsiMethodCallExpression expression) {
-            super.visitMethodCallExpression(expression);
-            numCalls++;
-        }
-    }
+		public void visitMethodCallExpression(PsiMethodCallExpression expression)
+		{
+			super.visitMethodCallExpression(expression);
+			numCalls++;
+		}
+	}
 }

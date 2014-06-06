@@ -22,22 +22,27 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class TrueCommentRatioProjectCalculator extends ElementRatioProjectCalculator {
+public class TrueCommentRatioProjectCalculator extends ElementRatioProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            denominator += LineUtil.countLines(file);
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			denominator += LineUtil.countLines(file);
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            numerator += LineUtil.countLines(comment);
-            denominator -= LineUtil.countCommentOnlyLines(comment);
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			numerator += LineUtil.countLines(comment);
+			denominator -= LineUtil.countCommentOnlyLines(comment);
+		}
+	}
 }

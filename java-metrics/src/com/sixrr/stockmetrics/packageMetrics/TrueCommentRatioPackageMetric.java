@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.packageMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class TrueCommentRatioPackageMetric extends PackageMetric {
+public class TrueCommentRatioPackageMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("true.comment.ratio.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("true.comment.ratio.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("true.comment.ration.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("true.comment.ration.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Ratio;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Ratio;
+	}
 }

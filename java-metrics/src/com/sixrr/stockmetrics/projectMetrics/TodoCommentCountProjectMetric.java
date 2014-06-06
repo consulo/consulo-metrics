@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.projectMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class TodoCommentCountProjectMetric extends ProjectMetric {
+public class TodoCommentCountProjectMetric extends ProjectMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.todo.comments.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.todo.comments.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.todo.comments.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.todo.comments.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 }

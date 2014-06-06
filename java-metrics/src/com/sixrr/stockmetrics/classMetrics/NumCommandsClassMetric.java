@@ -16,29 +16,35 @@
 
 package com.sixrr.stockmetrics.classMetrics;
 
+import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
-import com.sixrr.metrics.MetricType;
 
-public class NumCommandsClassMetric extends ClassMetric {
+public class NumCommandsClassMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.commands.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.commands.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("numer.of.commands.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("numer.of.commands.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.MEYER_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.MEYER_URL;
+	}
 
-    public String getHelpDisplayString() {
-        return HelpURLs.MEYER_DISPLAY_STRING;
-    }
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.MEYER_DISPLAY_STRING;
+	}
 }

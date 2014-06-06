@@ -26,38 +26,45 @@ import com.intellij.psi.search.searches.OverridingMethodsSearch;
 import com.intellij.util.Query;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class NumImplementationsMethodCalculator extends MethodCalculator {
+public class NumImplementationsMethodCalculator extends MethodCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(final PsiMethod method) {
-            super.visitMethod(method);
-            final Runnable runnable = new Runnable() {
-                public void run() {
-                    if (MethodUtils.isAbstract(method)) {
+		public void visitMethod(final PsiMethod method)
+		{
+			super.visitMethod(method);
+			final Runnable runnable = new Runnable()
+			{
+				public void run()
+				{
+					if(MethodUtils.isAbstract(method))
+					{
 
-                        int numImplementations = 0;
-                        final Project project = executionContext.getProject();
-                        final GlobalSearchScope globalScope = GlobalSearchScope.projectScope(project);
-                        final Query<PsiMethod> query =
-                                OverridingMethodsSearch.search(method,
-                                        globalScope, true);
-                        for (final PsiMethod overridingMethod : query) {
-                            if (!MethodUtils.isAbstract(overridingMethod)) {
-                                numImplementations++;
-                            }
-                        }
+						int numImplementations = 0;
+						final Project project = executionContext.getProject();
+						final GlobalSearchScope globalScope = GlobalSearchScope.projectScope(project);
+						final Query<PsiMethod> query = OverridingMethodsSearch.search(method, globalScope, true);
+						for(final PsiMethod overridingMethod : query)
+						{
+							if(!MethodUtils.isAbstract(overridingMethod))
+							{
+								numImplementations++;
+							}
+						}
 
-                        postMetric(method, numImplementations);
-                    }
-                }
-            };
-            final ProgressManager progressManager = ProgressManager.getInstance();
-            progressManager.runProcess(runnable, null);
-        }
-    }
+						postMetric(method, numImplementations);
+					}
+				}
+			};
+			final ProgressManager progressManager = ProgressManager.getInstance();
+			progressManager.runProcess(runnable, null);
+		}
+	}
 }

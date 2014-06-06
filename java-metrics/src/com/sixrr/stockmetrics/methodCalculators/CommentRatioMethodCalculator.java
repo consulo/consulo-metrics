@@ -22,39 +22,49 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class CommentRatioMethodCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private int numerator = 0;
-    private int denominator = 0;
+public class CommentRatioMethodCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private int numerator = 0;
+	private int denominator = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                numerator = 0;
-                denominator = 0;
-            }
-            denominator = LineUtil.countLines(method);
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				numerator = 0;
+				denominator = 0;
+			}
+			denominator = LineUtil.countLines(method);
 
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0) {
-                if (denominator == 0) {
-                    postMetric(method, 0);
-                } else {
-                    postMetric(method, numerator, denominator);
-                }
-            }
-        }
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0)
+			{
+				if(denominator == 0)
+				{
+					postMetric(method, 0);
+				}
+				else
+				{
+					postMetric(method, numerator, denominator);
+				}
+			}
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            numerator += LineUtil.countLines(comment);
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			numerator += LineUtil.countLines(comment);
+		}
+	}
 }

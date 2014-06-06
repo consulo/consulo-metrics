@@ -19,14 +19,17 @@ package com.sixrr.stockmetrics.moduleCalculators;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlFile;
 
-public class NumXMLFilesModuleCalculator extends FileCountModuleCalculator {
+public class NumXMLFilesModuleCalculator extends FileCountModuleCalculator
+{
 
-    protected boolean satisfies(PsiFile file) {
-        if (!(file instanceof XmlFile)) {
-            return false;
-        }
-        final String fileName = file.getName();
-        //noinspection HardCodedStringLiteral
-        return !fileName.endsWith(".html") && !fileName.endsWith(".htm");
-    }
+	protected boolean satisfies(PsiFile file)
+	{
+		if(!(file instanceof XmlFile))
+		{
+			return false;
+		}
+		final String fileName = file.getName();
+		//noinspection HardCodedStringLiteral
+		return !fileName.endsWith(".html") && !fileName.endsWith(".htm");
+	}
 }

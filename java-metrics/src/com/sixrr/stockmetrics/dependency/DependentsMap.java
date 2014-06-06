@@ -16,23 +16,24 @@
 
 package com.sixrr.stockmetrics.dependency;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
-
 import java.util.Set;
 
-public interface DependentsMap {
-    Set<PsiClass> calculateDependents(PsiClass aClass);
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiJavaPackage;
 
-    int getStrengthForDependent(PsiClass aClass, PsiClass dependentClass);
+public interface DependentsMap
+{
+	Set<PsiClass> calculateDependents(PsiClass aClass);
 
-    Set<PsiPackage> calculatePackageDependents(PsiClass aClass);
+	int getStrengthForDependent(PsiClass aClass, PsiClass dependentClass);
 
-    Set<PsiPackage> calculatePackageToPackageDependents(PsiPackage packageName);
+	Set<PsiJavaPackage> calculatePackageDependents(PsiClass aClass);
 
-    int getStrengthForPackageDependent(PsiClass aClass, PsiPackage dependentPackage);
+	Set<PsiJavaPackage> calculatePackageToPackageDependents(PsiJavaPackage packageName);
 
-    Set<PsiClass> calculateTransitiveDependents(PsiClass aClass);
+	int getStrengthForPackageDependent(PsiClass aClass, PsiJavaPackage dependentPackage);
 
-    Set<PsiPackage> calculateTransitivePackageDependents(PsiPackage packageName);
+	Set<PsiClass> calculateTransitiveDependents(PsiClass aClass);
+
+	Set<PsiJavaPackage> calculateTransitivePackageDependents(PsiJavaPackage packageName);
 }

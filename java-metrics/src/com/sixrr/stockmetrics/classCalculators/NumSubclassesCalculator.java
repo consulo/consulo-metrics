@@ -26,36 +26,43 @@ import com.intellij.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.util.Query;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumSubclassesCalculator extends ClassCalculator {
+public class NumSubclassesCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(final PsiClass aClass) {
-            super.visitClass(aClass);
-            final Runnable runnable = new Runnable() {
-                public void run() {
-                    if (!aClass.isInterface() && !ClassUtils.isAnonymous(aClass)) {
-                        final Project project = executionContext.getProject();
-                        final GlobalSearchScope globalScope = GlobalSearchScope.allScope(project);
-                        final Query<PsiClass> query =
-                                ClassInheritorsSearch.search(aClass,
-                                        globalScope, true, true, true);
-                        int numSubclasses = 0;
-                        for (final PsiClass inheritor : query) {
-                            if (!inheritor.isInterface()) {
-                                numSubclasses++;
-                            }
-                        }
-                        postMetric(aClass, numSubclasses);
-                    }
-                }
-            };
-            final ProgressManager progressManager = ProgressManager.getInstance();
-            progressManager.runProcess(runnable, null);
-        }
-    }
+		public void visitClass(final PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			final Runnable runnable = new Runnable()
+			{
+				public void run()
+				{
+					if(!aClass.isInterface() && !ClassUtils.isAnonymous(aClass))
+					{
+						final Project project = executionContext.getProject();
+						final GlobalSearchScope globalScope = GlobalSearchScope.allScope(project);
+						final Query<PsiClass> query = ClassInheritorsSearch.search(aClass, globalScope, true, true, true);
+						int numSubclasses = 0;
+						for(final PsiClass inheritor : query)
+						{
+							if(!inheritor.isInterface())
+							{
+								numSubclasses++;
+							}
+						}
+						postMetric(aClass, numSubclasses);
+					}
+				}
+			};
+			final ProgressManager progressManager = ProgressManager.getInstance();
+			progressManager.runProcess(runnable, null);
+		}
+	}
 }

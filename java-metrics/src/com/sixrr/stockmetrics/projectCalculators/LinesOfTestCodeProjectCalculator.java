@@ -19,21 +19,26 @@ package com.sixrr.stockmetrics.projectCalculators;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
-import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.metrics.utils.TestUtils;
+import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class LinesOfTestCodeProjectCalculator extends ElementCountProjectCalculator {
+public class LinesOfTestCodeProjectCalculator extends ElementCountProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitJavaFile(PsiJavaFile file) {
-            if (TestUtils.isTest(file)) {
-                numElements += LineUtil.countLines(file);
-            }
-        }
-    }
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			if(TestUtils.isTest(file))
+			{
+				numElements += LineUtil.countLines(file);
+			}
+		}
+	}
 }

@@ -21,16 +21,21 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.jsp.JspFile;
 
-public class NumJSPFilesProjectCalculator extends ElementCountProjectCalculator {
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class NumJSPFilesProjectCalculator extends ElementCountProjectCalculator
+{
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends PsiRecursiveElementVisitor {
-        public void visitFile(PsiFile file) {
-            if (file instanceof JspFile) {
-                numElements++;
-            }
-        }
-    }
+	private class Visitor extends PsiRecursiveElementVisitor
+	{
+		public void visitFile(PsiFile file)
+		{
+			if(file instanceof JspFile)
+			{
+				numElements++;
+			}
+		}
+	}
 }

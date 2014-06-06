@@ -19,8 +19,10 @@ package com.sixrr.stockmetrics.moduleCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumRootClassesModuleCalculator extends ClassCountingModuleCalculator {
-    public boolean satisfies(PsiClass aClass) {
-        return ClassUtils.isRoot(aClass);
-    }
+public class NumRootClassesModuleCalculator extends ClassCountingModuleCalculator
+{
+	public boolean satisfies(PsiClass aClass)
+	{
+		return ClassUtils.isRoot(aClass);
+	}
 }

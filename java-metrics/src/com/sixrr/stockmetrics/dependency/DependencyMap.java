@@ -16,35 +16,36 @@
 
 package com.sixrr.stockmetrics.dependency;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
-
 import java.util.Set;
 
-public interface DependencyMap {
-    Set<PsiClass> calculateDependencies(PsiClass aClass);
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiJavaPackage;
 
-    Set<PsiClass> calculateTransitiveDependencies(PsiClass aClass);
+public interface DependencyMap
+{
+	Set<PsiClass> calculateDependencies(PsiClass aClass);
 
-    Set<PsiClass> calculateStronglyConnectedComponents(PsiClass aClass);
+	Set<PsiClass> calculateTransitiveDependencies(PsiClass aClass);
 
-    int calculateLevelOrder(PsiClass aClass);
+	Set<PsiClass> calculateStronglyConnectedComponents(PsiClass aClass);
 
-    int calculateAdjustedLevelOrder(PsiClass aClass);
+	int calculateLevelOrder(PsiClass aClass);
 
-    Set<PsiPackage> calculatePackageDependencies(PsiClass aClass);
+	int calculateAdjustedLevelOrder(PsiClass aClass);
 
-    Set<PsiPackage> calculateTransitivePackageDependencies(PsiPackage packageName);
+	Set<PsiJavaPackage> calculatePackageDependencies(PsiClass aClass);
 
-    Set<PsiPackage> calculateStronglyConnectedPackageComponents(PsiPackage name);
+	Set<PsiJavaPackage> calculateTransitivePackageDependencies(PsiJavaPackage packageName);
 
-    int calculatePackageLevelOrder(PsiPackage packageName);
+	Set<PsiJavaPackage> calculateStronglyConnectedPackageComponents(PsiJavaPackage name);
 
-    int calculatePackageAdjustedLevelOrder(PsiPackage aPackage);
+	int calculatePackageLevelOrder(PsiJavaPackage packageName);
 
-    int getStrengthForDependency(PsiClass aClass, PsiClass dependencyClass);
+	int calculatePackageAdjustedLevelOrder(PsiJavaPackage aPackage);
 
-    int getStrengthForPackageDependency(PsiClass aClass, PsiPackage dependencyPackage);
+	int getStrengthForDependency(PsiClass aClass, PsiClass dependencyClass);
 
-    Set<PsiPackage> calculatePackageToPackageDependencies(PsiPackage packageName);
+	int getStrengthForPackageDependency(PsiClass aClass, PsiJavaPackage dependencyPackage);
+
+	Set<PsiJavaPackage> calculatePackageToPackageDependencies(PsiJavaPackage packageName);
 }

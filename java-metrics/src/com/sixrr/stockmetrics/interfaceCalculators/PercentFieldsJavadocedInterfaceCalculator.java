@@ -16,34 +16,46 @@
 
 package com.sixrr.stockmetrics.interfaceCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.javadoc.PsiDocComment;
 
-public class PercentFieldsJavadocedInterfaceCalculator extends InterfaceCalculator {
+public class PercentFieldsJavadocedInterfaceCalculator extends InterfaceCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!isInterface(aClass)) {
-                return;
-            }
-            int numFields = 0;
-            int numJavadocedFields = 0;
-            final PsiField[] fields = aClass.getFields();
-            for (final PsiField field : fields) {
-                if (!field.hasModifierProperty(PsiModifier.PRIVATE)) {
-                    numFields++;
-                    if (field.getFirstChild()instanceof PsiDocComment) {
-                        numJavadocedFields++;
-                    }
-                }
-            }
-            postMetric(aClass, numJavadocedFields, numFields);
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!isInterface(aClass))
+			{
+				return;
+			}
+			int numFields = 0;
+			int numJavadocedFields = 0;
+			final PsiField[] fields = aClass.getFields();
+			for(final PsiField field : fields)
+			{
+				if(!field.hasModifierProperty(PsiModifier.PRIVATE))
+				{
+					numFields++;
+					if(field.getFirstChild() instanceof PsiDocComment)
+					{
+						numJavadocedFields++;
+					}
+				}
+			}
+			postMetric(aClass, numJavadocedFields, numFields);
+		}
+	}
 }

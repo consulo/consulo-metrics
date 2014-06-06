@@ -16,29 +16,35 @@
 
 package com.sixrr.stockmetrics.methodMetrics;
 
-import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.metrics.MetricType;
+import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class EssentialCyclomaticComplexityMetric extends MethodMetric {
+public class EssentialCyclomaticComplexityMetric extends MethodMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("essential.cyclomatic.complexity.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("essential.cyclomatic.complexity.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("essential.cyclomatic.complexity.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("essential.cyclomatic.complexity.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.COMPLEXITY_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.COMPLEXITY_URL;
+	}
 
-    public String getHelpDisplayString() {
-        return HelpURLs.COMPLEXITY_DISPLAY_STRING;
-    }
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.COMPLEXITY_DISPLAY_STRING;
+	}
 }

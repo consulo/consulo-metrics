@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.methodMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class ControlDensityMetric extends MethodMetric {
+public class ControlDensityMetric extends MethodMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("control.density.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("control.density.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("control.density.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("control.density.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Ratio;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Ratio;
+	}
 }

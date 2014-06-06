@@ -16,30 +16,35 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiPackage;
 import com.sixrr.stockmetrics.dependency.DependentsMap;
 
-import java.util.Set;
+public class NumPackageDependentsClassCalculator extends ClassCalculator
+{
 
-public class NumPackageDependentsClassCalculator extends ClassCalculator {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final DependentsMap map = getDependentsMap();
-                final Set<PsiPackage> dependents = map.calculatePackageDependents(aClass);
-                final int numDependents = dependents.size();
-                postMetric(aClass, numDependents);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final DependentsMap map = getDependentsMap();
+				final Set<PsiPackage> dependents = map.calculatePackageDependents(aClass);
+				final int numDependents = dependents.size();
+				postMetric(aClass, numDependents);
+			}
+		}
+	}
 }

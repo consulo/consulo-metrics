@@ -16,11 +16,13 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-abstract class ElementRatioProjectCalculator extends ProjectCalculator {
-    protected int denominator = 0;
-    protected int numerator = 0;
+abstract class ElementRatioProjectCalculator extends ProjectCalculator
+{
+	protected int denominator = 0;
+	protected int numerator = 0;
 
-    public void endMetricsRun() {
-        postMetric(numerator, denominator);
-    }
+	public void endMetricsRun()
+	{
+		postMetric(numerator, denominator);
+	}
 }

@@ -16,29 +16,35 @@
 
 package com.sixrr.stockmetrics.classMetrics;
 
-import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.metrics.MetricType;
+import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class AverageOperationComplexityMetric extends ClassMetric {
+public class AverageOperationComplexityMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("average.operation.complexity.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("average.operation.complexity.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("average.operation.complexity.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("average.operation.complexity.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Average;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Average;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.COMPLEXITY_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.COMPLEXITY_URL;
+	}
 
-    public String getHelpDisplayString() {
-        return HelpURLs.COMPLEXITY_DISPLAY_STRING;
-    }
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.COMPLEXITY_DISPLAY_STRING;
+	}
 }

@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
@@ -24,48 +26,52 @@ import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 
-import java.util.Set;
+public class EfferentCouplingCalculator extends PackageCalculator
+{
 
-public class EfferentCouplingCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numExternalDependenciesPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numExternalDependenciesPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numExternalDependenciesPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int numExternalDependencies = numExternalDependenciesPerPackage.getBucketValue(aPackage);
+			postMetric(aPackage, numExternalDependencies);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numExternalDependenciesPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int numExternalDependencies =
-                    numExternalDependenciesPerPackage.getBucketValue(aPackage);
-            postMetric(aPackage, numExternalDependencies);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (ClassUtils.isAnonymous(aClass)) {
-                return;
-            }
-            final PsiPackage referencingPackage = ClassUtils.findPackage(aClass);
-            if (referencingPackage == null) {
-                return;
-            }
-            numExternalDependenciesPerPackage.createBucket(referencingPackage);
-            final DependencyMap dependencyMap = getDependencyMap();
-            final Set<PsiPackage> packageDependencies =
-                    dependencyMap.calculatePackageDependencies(aClass);
-            for (final PsiPackage referencedPackage : packageDependencies) {
-                final int strength =
-                        dependencyMap.getStrengthForPackageDependency(aClass, referencedPackage);
-                numExternalDependenciesPerPackage.incrementBucketValue(referencingPackage, strength);
-            }
-        }
-    }
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(ClassUtils.isAnonymous(aClass))
+			{
+				return;
+			}
+			final PsiPackage referencingPackage = ClassUtils.findPackage(aClass);
+			if(referencingPackage == null)
+			{
+				return;
+			}
+			numExternalDependenciesPerPackage.createBucket(referencingPackage);
+			final DependencyMap dependencyMap = getDependencyMap();
+			final Set<PsiPackage> packageDependencies = dependencyMap.calculatePackageDependencies(aClass);
+			for(final PsiPackage referencedPackage : packageDependencies)
+			{
+				final int strength = dependencyMap.getStrengthForPackageDependency(aClass, referencedPackage);
+				numExternalDependenciesPerPackage.incrementBucketValue(referencingPackage, strength);
+			}
+		}
+	}
 }

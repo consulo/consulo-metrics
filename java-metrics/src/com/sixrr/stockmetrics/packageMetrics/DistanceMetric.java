@@ -16,35 +16,42 @@
 
 package com.sixrr.stockmetrics.packageMetrics;
 
-import com.sixrr.stockmetrics.i18n.HelpURLs;
-import com.sixrr.metrics.MetricType;
-import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.MetricType;
+import com.sixrr.stockmetrics.i18n.HelpURLs;
+import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class DistanceMetric extends PackageMetric {
+public class DistanceMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("distance.to.main.sequence.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("distance.to.main.sequence.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("distance.to.main.sequence.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("distance.to.main.sequence.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Average;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Average;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.MARTIN_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.MARTIN_URL;
+	}
 
-    @Nullable
-    public String getHelpDisplayString() {
-        return HelpURLs.MARTIN_DISPLAY_STRING;
-    }
+	@Nullable
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.MARTIN_DISPLAY_STRING;
+	}
 
-    public boolean requiresDependents() {
-        return true;
-    }
+	public boolean requiresDependents()
+	{
+		return true;
+	}
 }

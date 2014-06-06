@@ -16,48 +16,56 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiPackage;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.metrics.utils.TestUtils;
+import com.sixrr.stockmetrics.utils.LineUtil;
 
-import java.util.Set;
+public class LinesOfProductCodeRecursivePackageCalculator extends PackageCalculator
+{
 
-public class LinesOfProductCodeRecursivePackageCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numLinesPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numLinesPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numLinesPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int numLines = numLinesPerPackage.getBucketValue(aPackage);
+			postMetric(aPackage, (double) numLines);
+		}
+	}
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numLinesPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int numLines = numLinesPerPackage.getBucketValue(aPackage);
-            postMetric(aPackage, (double) numLines);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        @Override
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
-            for (final PsiPackage aPackage : packages) {
-                numLinesPerPackage.createBucket(aPackage);
-                if (TestUtils.isProduction(file)) {
-                    final int lineCount = LineUtil.countLines(file);
-                    numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
-                }
-            }
-        }
-    }
+		@Override
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
+			for(final PsiPackage aPackage : packages)
+			{
+				numLinesPerPackage.createBucket(aPackage);
+				if(TestUtils.isProduction(file))
+				{
+					final int lineCount = LineUtil.countLines(file);
+					numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
+				}
+			}
+		}
+	}
 }

@@ -21,19 +21,24 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 
-public class NumAttributesAddedCalculator extends ClassCalculator {
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+public class NumAttributesAddedCalculator extends ClassCalculator
+{
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiField[] fields = aClass.getFields();
-                postMetric(aClass, fields.length);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiField[] fields = aClass.getFields();
+				postMetric(aClass, fields.length);
+			}
+		}
+	}
 }

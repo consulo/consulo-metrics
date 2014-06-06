@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.classMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class WeightedMethodComplexityMetric extends ClassMetric {
+public class WeightedMethodComplexityMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("weighted.method.complexity.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("weighted.method.complexity.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("weighted.method.complexity.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("weighted.method.complexity.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 }

@@ -18,10 +18,11 @@ package com.sixrr.stockmetrics.packageCalculators;
 
 import com.intellij.psi.PsiClass;
 
-public class NumEnumClassesRecursivePackageCalculator
-        extends ClassCountingRecursivePackageCalculator {
+public class NumEnumClassesRecursivePackageCalculator extends ClassCountingRecursivePackageCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return aClass.isEnum();
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return aClass.isEnum();
+	}
 }

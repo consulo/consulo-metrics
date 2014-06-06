@@ -18,10 +18,11 @@ package com.sixrr.stockmetrics.packageCalculators;
 
 import com.intellij.psi.PsiClass;
 
-public class NumAnnotationClassesRecursivePackageCalculator
-        extends ClassCountingRecursivePackageCalculator {
+public class NumAnnotationClassesRecursivePackageCalculator extends ClassCountingRecursivePackageCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return aClass.isAnnotationType();
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return aClass.isAnnotationType();
+	}
 }

@@ -16,31 +16,37 @@
 
 package com.sixrr.stockmetrics.packageMetrics;
 
+import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
-import com.sixrr.metrics.MetricType;
-import org.jetbrains.annotations.Nullable;
 
-public class NumTestCasesRecursivePackageMetric extends PackageMetric {
+public class NumTestCasesRecursivePackageMetric extends PackageMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.junit.test.cases.recursive.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.junit.test.cases.recursive.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.junit.test.cases.recursive.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.junit.test.cases.recursive.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.RecursiveCount;
-    }
+	public MetricType getType()
+	{
+		return MetricType.RecursiveCount;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.JUNIT_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.JUNIT_URL;
+	}
 
-    @Nullable
-    public String getHelpDisplayString() {
-        return HelpURLs.JUNIT_DISPLAY_STRING;
-    }
+	@Nullable
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.JUNIT_DISPLAY_STRING;
+	}
 }

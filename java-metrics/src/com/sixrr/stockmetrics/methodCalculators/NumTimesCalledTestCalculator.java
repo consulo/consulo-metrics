@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
+import java.util.Set;
+
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
@@ -24,33 +26,37 @@ import com.intellij.psi.PsiReference;
 import com.sixrr.stockmetrics.MethodCallMap;
 import com.sixrr.stockmetrics.MethodCallMapImpl;
 
-import java.util.Set;
+public class NumTimesCalledTestCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
 
-public class NumTimesCalledTestCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				final Key<MethodCallMap> key = new Key<MethodCallMap>("MethodCallMap");
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                final Key<MethodCallMap> key = new Key<MethodCallMap>("MethodCallMap");
-
-                MethodCallMap methodCallMap = executionContext.getUserData(key);
-                if (methodCallMap == null) {
-                    methodCallMap = new MethodCallMapImpl();
-                    executionContext.putUserData(key, methodCallMap);
-                }
-                final Set<PsiReference> methodCalls = methodCallMap.calculateTestMethodCallPoints(method);
-                final int calls = methodCalls.size();
-                postMetric(method, calls);
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-        }
-    }
+				MethodCallMap methodCallMap = executionContext.getUserData(key);
+				if(methodCallMap == null)
+				{
+					methodCallMap = new MethodCallMapImpl();
+					executionContext.putUserData(key, methodCallMap);
+				}
+				final Set<PsiReference> methodCalls = methodCallMap.calculateTestMethodCallPoints(method);
+				final int calls = methodCalls.size();
+				postMetric(method, calls);
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+		}
+	}
 }

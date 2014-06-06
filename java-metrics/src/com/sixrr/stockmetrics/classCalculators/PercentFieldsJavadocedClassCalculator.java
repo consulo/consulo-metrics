@@ -23,28 +23,35 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class PercentFieldsJavadocedClassCalculator extends ClassCalculator {
+public class PercentFieldsJavadocedClassCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!ClassUtils.isAnonymous(aClass) && !aClass.isInterface()) {
-                int numFields = 0;
-                int numJavadocedFields = 0;
-                final PsiField[] fields = aClass.getFields();
-                for (final PsiField field : fields) {
-                    numFields++;
-                    if (field.getFirstChild()instanceof PsiDocComment) {
-                        numJavadocedFields++;
-                    }
-                }
-                postMetric(aClass, numJavadocedFields, numFields);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!ClassUtils.isAnonymous(aClass) && !aClass.isInterface())
+			{
+				int numFields = 0;
+				int numJavadocedFields = 0;
+				final PsiField[] fields = aClass.getFields();
+				for(final PsiField field : fields)
+				{
+					numFields++;
+					if(field.getFirstChild() instanceof PsiDocComment)
+					{
+						numJavadocedFields++;
+					}
+				}
+				postMetric(aClass, numJavadocedFields, numFields);
+			}
+		}
+	}
 }

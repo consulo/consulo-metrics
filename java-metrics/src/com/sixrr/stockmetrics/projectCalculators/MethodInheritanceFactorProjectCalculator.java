@@ -16,79 +16,106 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashSet;
 import java.util.Set;
 
-public class MethodInheritanceFactorProjectCalculator extends ProjectCalculator {
+import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 
-    private int availableMethods = 0;
-    private int inheritedMethods = 0;
+public class MethodInheritanceFactorProjectCalculator extends ProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private int availableMethods = 0;
+	private int inheritedMethods = 0;
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            final PsiMethod[] allMethods = aClass.getAllMethods();
-            final Set<PsiMethod> nonOverriddenMethods = new HashSet<PsiMethod>();
-            for (PsiMethod method : allMethods) {
-                boolean overrideFound = false;
-                for (PsiMethod testMethod : allMethods) {
-                    if (overrides(testMethod, method)) {
-                        overrideFound = true;
-                        break;
-                    }
-                }
-                if (!overrideFound) {
-                    nonOverriddenMethods.add(method);
-                }
-            }
-            for (PsiMethod method : nonOverriddenMethods) {
-                final PsiClass containingClass = method.getContainingClass();
-                if (containingClass != null) {
-                    if (containingClass.equals(aClass)) {
-                        availableMethods++;
-                    } else if (classIsInLibrary(containingClass)) {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-                    } else if (!method.hasModifierProperty(PsiModifier.PRIVATE)) {
-                        availableMethods++;
-                        inheritedMethods++;
-                    }
-                }
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			final PsiMethod[] allMethods = aClass.getAllMethods();
+			final Set<PsiMethod> nonOverriddenMethods = new HashSet<PsiMethod>();
+			for(PsiMethod method : allMethods)
+			{
+				boolean overrideFound = false;
+				for(PsiMethod testMethod : allMethods)
+				{
+					if(overrides(testMethod, method))
+					{
+						overrideFound = true;
+						break;
+					}
+				}
+				if(!overrideFound)
+				{
+					nonOverriddenMethods.add(method);
+				}
+			}
+			for(PsiMethod method : nonOverriddenMethods)
+			{
+				final PsiClass containingClass = method.getContainingClass();
+				if(containingClass != null)
+				{
+					if(containingClass.equals(aClass))
+					{
+						availableMethods++;
+					}
+					else if(classIsInLibrary(containingClass))
+					{
 
-        private boolean overrides(PsiMethod testMethod, PsiMethod method) {
-            if (testMethod.equals(method)) {
-                return false;
-            }
-            final PsiMethod[] superMethods = testMethod.findSuperMethods();
-            for (PsiMethod superMethod : superMethods) {
-                if (superMethod.equals(method)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+					}
+					else if(!method.hasModifierProperty(PsiModifier.PRIVATE))
+					{
+						availableMethods++;
+						inheritedMethods++;
+					}
+				}
+			}
+		}
 
-    public void endMetricsRun() {
-        postMetric(inheritedMethods, availableMethods);
-    }
+		private boolean overrides(PsiMethod testMethod, PsiMethod method)
+		{
+			if(testMethod.equals(method))
+			{
+				return false;
+			}
+			final PsiMethod[] superMethods = testMethod.findSuperMethods();
+			for(PsiMethod superMethod : superMethods)
+			{
+				if(superMethod.equals(method))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
-    public static boolean classIsInLibrary(@NotNull PsiClass aClass) {
-        final PsiFile file = aClass.getContainingFile();
-        if (file == null) {
-            return false;
-        }
-        final String fileName = file.getName();
-        //noinspection HardCodedStringLiteral
-        return !fileName.endsWith(".java");
-    }
+	public void endMetricsRun()
+	{
+		postMetric(inheritedMethods, availableMethods);
+	}
+
+	public static boolean classIsInLibrary(@NotNull PsiClass aClass)
+	{
+		final PsiFile file = aClass.getContainingFile();
+		if(file == null)
+		{
+			return false;
+		}
+		final String fileName = file.getName();
+		//noinspection HardCodedStringLiteral
+		return !fileName.endsWith(".java");
+	}
 }

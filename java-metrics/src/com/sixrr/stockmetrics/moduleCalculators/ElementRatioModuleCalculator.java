@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.moduleCalculators;
 
+import java.util.Set;
+
 import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -23,48 +25,58 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.Set;
+abstract class ElementRatioModuleCalculator extends ModuleCalculator
+{
+	protected final BucketedCount<Module> numeratorPerModule = new BucketedCount<Module>();
+	protected final BucketedCount<Module> denominatorPerModule = new BucketedCount<Module>();
 
-abstract class ElementRatioModuleCalculator extends ModuleCalculator {
-    protected final BucketedCount<Module> numeratorPerModule = new BucketedCount<Module>();
-    protected final BucketedCount<Module> denominatorPerModule = new BucketedCount<Module>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<Module> modules = numeratorPerModule.getBuckets();
+		for(final Module module : modules)
+		{
+			final int numerator = numeratorPerModule.getBucketValue(module);
+			final int denominator = denominatorPerModule.getBucketValue(module);
 
-    @Override
-    public void endMetricsRun() {
-        final Set<Module> modules = numeratorPerModule.getBuckets();
-        for (final Module module : modules) {
-            final int numerator = numeratorPerModule.getBucketValue(module);
-            final int denominator = denominatorPerModule.getBucketValue(module);
+			if(denominator == 0)
+			{
+				postMetric(module, 0);
+			}
+			else
+			{
+				postMetric(module, numerator, denominator);
+			}
+		}
+	}
 
-            if (denominator == 0) {
-                postMetric(module, 0);
-            } else {
-                postMetric(module, numerator, denominator);
-            }
-        }
-    }
+	protected void incrementNumerator(PsiElement element, int count)
+	{
+		final PsiFile file = PsiTreeUtil.getParentOfType(element, PsiFile.class, false);
+		if(file == null)
+		{
+			return;
+		}
+		final Module module = ClassUtils.calculateModule(file);
+		if(module == null)
+		{
+			return;
+		}
+		numeratorPerModule.incrementBucketValue(module, count);
+	}
 
-    protected void incrementNumerator(PsiElement element, int count) {
-        final PsiFile file = PsiTreeUtil.getParentOfType(element, PsiFile.class, false);
-        if (file == null) {
-            return;
-        }
-        final Module module = ClassUtils.calculateModule(file);
-        if (module == null) {
-            return;
-        }
-        numeratorPerModule.incrementBucketValue(module, count);
-    }
-
-    protected void incrementDenominator(PsiElement element, int count) {
-        final PsiFile file = PsiTreeUtil.getParentOfType(element, PsiFile.class, false);
-        if (file == null) {
-            return;
-        }
-        final Module module = ClassUtils.calculateModule(file);
-        if (module == null) {
-            return;
-        }
-        denominatorPerModule.incrementBucketValue(module, count);
-    }
+	protected void incrementDenominator(PsiElement element, int count)
+	{
+		final PsiFile file = PsiTreeUtil.getParentOfType(element, PsiFile.class, false);
+		if(file == null)
+		{
+			return;
+		}
+		final Module module = ClassUtils.calculateModule(file);
+		if(module == null)
+		{
+			return;
+		}
+		denominatorPerModule.incrementBucketValue(module, count);
+	}
 }

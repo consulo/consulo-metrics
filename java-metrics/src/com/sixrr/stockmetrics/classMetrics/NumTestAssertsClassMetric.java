@@ -16,31 +16,37 @@
 
 package com.sixrr.stockmetrics.classMetrics;
 
+import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
-import com.sixrr.metrics.MetricType;
-import org.jetbrains.annotations.Nullable;
 
-public class NumTestAssertsClassMetric extends ClassMetric {
+public class NumTestAssertsClassMetric extends ClassMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.junit.test.assertions.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.junit.test.assertions.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.junit.test.assertions.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.junit.test.assertions.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 
-    public String getHelpURL() {
-        return HelpURLs.JUNIT_URL;
-    }
+	public String getHelpURL()
+	{
+		return HelpURLs.JUNIT_URL;
+	}
 
-    @Nullable
-    public String getHelpDisplayString() {
-        return HelpURLs.JUNIT_DISPLAY_STRING;
-    }
+	@Nullable
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.JUNIT_DISPLAY_STRING;
+	}
 }

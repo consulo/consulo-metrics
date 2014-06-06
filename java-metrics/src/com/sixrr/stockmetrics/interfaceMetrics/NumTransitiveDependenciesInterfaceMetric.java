@@ -16,35 +16,42 @@
 
 package com.sixrr.stockmetrics.interfaceMetrics;
 
+import org.jetbrains.annotations.Nullable;
+import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.HelpURLs;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
-import com.sixrr.metrics.MetricType;
-import org.jetbrains.annotations.Nullable;
 
-public class NumTransitiveDependenciesInterfaceMetric extends InterfaceMetric {
-    public String getDisplayName() {
-        return StockMetricsBundle.message("number.of.transitive.dependencies.display.name");
-    }
+public class NumTransitiveDependenciesInterfaceMetric extends InterfaceMetric
+{
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("number.of.transitive.dependencies.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("number.of.transitive.dependencies.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("number.of.transitive.dependencies.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 
-    @Nullable
-    public String getHelpURL() {
-        return HelpURLs.LAYERING_URL;
-    }
+	@Nullable
+	public String getHelpURL()
+	{
+		return HelpURLs.LAYERING_URL;
+	}
 
-    @Nullable
-    public String getHelpDisplayString() {
-        return HelpURLs.LAYERING_DISPLAY_STRING;
-    }
+	@Nullable
+	public String getHelpDisplayString()
+	{
+		return HelpURLs.LAYERING_DISPLAY_STRING;
+	}
 
-    public boolean requiresDependents() {
-        return true;
-    }
+	public boolean requiresDependents()
+	{
+		return true;
+	}
 }

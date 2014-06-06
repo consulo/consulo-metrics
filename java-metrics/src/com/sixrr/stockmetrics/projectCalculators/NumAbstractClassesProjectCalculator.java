@@ -19,10 +19,11 @@ package com.sixrr.stockmetrics.projectCalculators;
 import com.intellij.psi.PsiClass;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class NumAbstractClassesProjectCalculator
-        extends ClassCountingProjectCalculator {
+public class NumAbstractClassesProjectCalculator extends ClassCountingProjectCalculator
+{
 
-    public boolean satisfies(PsiClass aClass) {
-        return ClassUtils.isAbstract(aClass);
-    }
+	public boolean satisfies(PsiClass aClass)
+	{
+		return ClassUtils.isAbstract(aClass);
+	}
 }

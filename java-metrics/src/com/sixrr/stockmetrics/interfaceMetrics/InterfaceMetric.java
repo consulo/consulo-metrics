@@ -19,8 +19,10 @@ package com.sixrr.stockmetrics.interfaceMetrics;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.stockmetrics.metricModel.BaseMetric;
 
-abstract class InterfaceMetric extends BaseMetric {
-    public MetricCategory getCategory() {
-        return MetricCategory.Interface;
-    }
+abstract class InterfaceMetric extends BaseMetric
+{
+	public MetricCategory getCategory()
+	{
+		return MetricCategory.Interface;
+	}
 }

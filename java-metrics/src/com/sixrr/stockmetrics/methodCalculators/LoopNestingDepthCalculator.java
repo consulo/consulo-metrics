@@ -16,66 +16,85 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiDoWhileStatement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiForStatement;
+import com.intellij.psi.PsiForeachStatement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiWhileStatement;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class LoopNestingDepthCalculator extends MethodCalculator {
-    private int methodNestingCount = 0;
-    private int maximumDepth = 0;
-    private int currentDepth = 0;
+public class LoopNestingDepthCalculator extends MethodCalculator
+{
+	private int methodNestingCount = 0;
+	private int maximumDepth = 0;
+	private int currentDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingCount == 0) {
-                maximumDepth = 0;
-                currentDepth = 0;
-            }
-            methodNestingCount++;
-            super.visitMethod(method);
-            methodNestingCount--;
-            if (methodNestingCount == 0) {
-                if (!MethodUtils.isAbstract(method)) {
-                    postMetric(method, maximumDepth);
-                }
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingCount == 0)
+			{
+				maximumDepth = 0;
+				currentDepth = 0;
+			}
+			methodNestingCount++;
+			super.visitMethod(method);
+			methodNestingCount--;
+			if(methodNestingCount == 0)
+			{
+				if(!MethodUtils.isAbstract(method))
+				{
+					postMetric(method, maximumDepth);
+				}
+			}
+		}
 
-        public void visitDoWhileStatement(PsiDoWhileStatement statement) {
-            enterScope();
-            super.visitDoWhileStatement(statement);
-            exitScope();
-        }
+		public void visitDoWhileStatement(PsiDoWhileStatement statement)
+		{
+			enterScope();
+			super.visitDoWhileStatement(statement);
+			exitScope();
+		}
 
-        public void visitWhileStatement(PsiWhileStatement statement) {
-            enterScope();
-            super.visitWhileStatement(statement);
-            exitScope();
-        }
+		public void visitWhileStatement(PsiWhileStatement statement)
+		{
+			enterScope();
+			super.visitWhileStatement(statement);
+			exitScope();
+		}
 
-        public void visitForStatement(PsiForStatement statement) {
-            enterScope();
-            super.visitForStatement(statement);
-            exitScope();
-        }
+		public void visitForStatement(PsiForStatement statement)
+		{
+			enterScope();
+			super.visitForStatement(statement);
+			exitScope();
+		}
 
-        public void visitForeachStatement(PsiForeachStatement statement) {
-            enterScope();
-            super.visitForeachStatement(statement);
-            exitScope();
-        }
+		public void visitForeachStatement(PsiForeachStatement statement)
+		{
+			enterScope();
+			super.visitForeachStatement(statement);
+			exitScope();
+		}
 
-        private void enterScope() {
-            currentDepth++;
-            maximumDepth = Math.max(maximumDepth, currentDepth);
-        }
+		private void enterScope()
+		{
+			currentDepth++;
+			maximumDepth = Math.max(maximumDepth, currentDepth);
+		}
 
-        private void exitScope() {
-            currentDepth--;
-        }
-    }
+		private void exitScope()
+		{
+			currentDepth--;
+		}
+	}
 }

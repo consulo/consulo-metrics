@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.moduleMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class TotalCyclomaticComplexityModuleMetric extends ModuleMetric {
+public class TotalCyclomaticComplexityModuleMetric extends ModuleMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("total.cyclomatic.complexity");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("total.cyclomatic.complexity");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("cctot");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("cctot");
+	}
 
-    public MetricType getType() {
-        return MetricType.Count;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Count;
+	}
 }

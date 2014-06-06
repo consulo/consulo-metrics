@@ -22,38 +22,45 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.metrics.utils.TestUtils;
+import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class TestRatioModuleCalculator extends ElementRatioModuleCalculator {
+public class TestRatioModuleCalculator extends ElementRatioModuleCalculator
+{
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        @Override
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitFile(file);
+		@Override
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitFile(file);
 
-            final int lineCount = LineUtil.countLines(file);
-            incrementDenominator(file, lineCount);
-            if (TestUtils.isTest(file)) {
-                incrementNumerator(file, lineCount);
-            }
-        }
+			final int lineCount = LineUtil.countLines(file);
+			incrementDenominator(file, lineCount);
+			if(TestUtils.isTest(file))
+			{
+				incrementNumerator(file, lineCount);
+			}
+		}
 
-        @Override
-        public void visitFile(PsiFile file) {
-            super.visitFile(file);
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            numeratorPerModule.createBucket(module);
-            denominatorPerModule.createBucket(module);
-        }
-    }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			super.visitFile(file);
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			numeratorPerModule.createBucket(module);
+			denominatorPerModule.createBucket(module);
+		}
+	}
 }

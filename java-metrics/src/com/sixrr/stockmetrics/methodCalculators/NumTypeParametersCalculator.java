@@ -16,34 +16,49 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiTypeParameter;
+import com.intellij.psi.PsiTypeParameterList;
 
-public class NumTypeParametersCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
+public class NumTypeParametersCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                final PsiTypeParameterList parameterList = method.getTypeParameterList();
-                if (parameterList == null) {
-                    postMetric(method, 0);
-                } else {
-                    final PsiTypeParameter[] parameters = parameterList.getTypeParameters();
-                    if (parameters == null) {
-                        postMetric(method, 0);
-                    } else {
-                        postMetric(method, parameters.length);
-                    }
-                }
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-        }
-    }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				final PsiTypeParameterList parameterList = method.getTypeParameterList();
+				if(parameterList == null)
+				{
+					postMetric(method, 0);
+				}
+				else
+				{
+					final PsiTypeParameter[] parameters = parameterList.getTypeParameters();
+					if(parameters == null)
+					{
+						postMetric(method, 0);
+					}
+					else
+					{
+						postMetric(method, parameters.length);
+					}
+				}
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+		}
+	}
 }

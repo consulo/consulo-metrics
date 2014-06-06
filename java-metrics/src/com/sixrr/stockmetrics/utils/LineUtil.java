@@ -21,101 +21,131 @@ import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 
-public class LineUtil {
-    private LineUtil() {
-        super();
-    }
+public class LineUtil
+{
+	private LineUtil()
+	{
+		super();
+	}
 
-    public static int countLines(PsiElement element) {
-        if (element instanceof PsiCompiledElement) {
-            return 0;
-        }
-        final String text = element.getText();
-        return countLines(text);
-    }
+	public static int countLines(PsiElement element)
+	{
+		if(element instanceof PsiCompiledElement)
+		{
+			return 0;
+		}
+		final String text = element.getText();
+		return countLines(text);
+	}
 
-    private static int countLines(String text) {
-        int lines = 1;
-        boolean onEmptyLine = false;
-        final char[] chars = text.toCharArray();
-        for (final char aChar : chars) {
-            if (aChar == '\n' || aChar == '\r') {
-                if (!onEmptyLine) {
-                    lines++;
-                    onEmptyLine = true;
-                }
-            } else if (aChar == ' ' || aChar == '\t') {
-                //don't do anything
-            } else {
-                onEmptyLine = false;
-            }
-        }
-        return lines;
-    }
+	private static int countLines(String text)
+	{
+		int lines = 1;
+		boolean onEmptyLine = false;
+		final char[] chars = text.toCharArray();
+		for(final char aChar : chars)
+		{
+			if(aChar == '\n' || aChar == '\r')
+			{
+				if(!onEmptyLine)
+				{
+					lines++;
+					onEmptyLine = true;
+				}
+			}
+			else if(aChar == ' ' || aChar == '\t')
+			{
+				//don't do anything
+			}
+			else
+			{
+				onEmptyLine = false;
+			}
+		}
+		return lines;
+	}
 
-    public static int countCommentOnlyLines(PsiComment comment) {
-        final String text = comment.getText();
-        int totalLines = countLines(text);
-        boolean isOnSameLineBeforeCode = false;
-        if (!endsInLineBreak(comment)) {
-            PsiElement nextSibling = comment.getNextSibling();
+	public static int countCommentOnlyLines(PsiComment comment)
+	{
+		final String text = comment.getText();
+		int totalLines = countLines(text);
+		boolean isOnSameLineBeforeCode = false;
+		if(!endsInLineBreak(comment))
+		{
+			PsiElement nextSibling = comment.getNextSibling();
 
-            while (nextSibling != null) {
-                if (nextSibling instanceof PsiComment ||
-                        nextSibling instanceof PsiWhiteSpace) {
-                    if (containsLineBreak(nextSibling)) {
-                        break;
-                    }
-                } else {
-                    isOnSameLineBeforeCode = true;
-                }
-                nextSibling = nextSibling.getNextSibling();
-            }
-        }
-        boolean isOnSameLineAfterCode = false;
-        PsiElement prevSibling = comment.getPrevSibling();
-        while (prevSibling != null) {
-            if (prevSibling instanceof PsiComment ||
-                    prevSibling instanceof PsiWhiteSpace) {
-                if (containsLineBreak(prevSibling)) {
-                    break;
-                }
-            } else {
-                isOnSameLineAfterCode = true;
-            }
-            prevSibling = prevSibling.getPrevSibling();
-        }
+			while(nextSibling != null)
+			{
+				if(nextSibling instanceof PsiComment || nextSibling instanceof PsiWhiteSpace)
+				{
+					if(containsLineBreak(nextSibling))
+					{
+						break;
+					}
+				}
+				else
+				{
+					isOnSameLineBeforeCode = true;
+				}
+				nextSibling = nextSibling.getNextSibling();
+			}
+		}
+		boolean isOnSameLineAfterCode = false;
+		PsiElement prevSibling = comment.getPrevSibling();
+		while(prevSibling != null)
+		{
+			if(prevSibling instanceof PsiComment || prevSibling instanceof PsiWhiteSpace)
+			{
+				if(containsLineBreak(prevSibling))
+				{
+					break;
+				}
+			}
+			else
+			{
+				isOnSameLineAfterCode = true;
+			}
+			prevSibling = prevSibling.getPrevSibling();
+		}
 
-        if (isOnSameLineAfterCode) {
-            totalLines = Math.max(totalLines - 1, 0);
-        }
-        if (isOnSameLineBeforeCode) {
-            totalLines = Math.max(totalLines - 1, 0);
-        }
+		if(isOnSameLineAfterCode)
+		{
+			totalLines = Math.max(totalLines - 1, 0);
+		}
+		if(isOnSameLineBeforeCode)
+		{
+			totalLines = Math.max(totalLines - 1, 0);
+		}
 
-        return totalLines;
-    }
+		return totalLines;
+	}
 
-    private static boolean endsInLineBreak(PsiComment element) {
-        if (element == null) {
-            return false;
-        }
-        final String text = element.getText();
-        if (text == null) {
-            return false;
-        }
-        final char endChar = text.charAt(text.length() - 1);
-        return endChar == '\n' || endChar == '\r';
-    }
+	private static boolean endsInLineBreak(PsiComment element)
+	{
+		if(element == null)
+		{
+			return false;
+		}
+		final String text = element.getText();
+		if(text == null)
+		{
+			return false;
+		}
+		final char endChar = text.charAt(text.length() - 1);
+		return endChar == '\n' || endChar == '\r';
+	}
 
-    private static boolean containsLineBreak(PsiElement element) {
-        if (element == null) {
-            return false;
-        }
-        final String text = element.getText();
-        if (text == null) {
-            return false;
-        }
-        return text.indexOf("\n") >= 0 || text.indexOf("\r") >= 0;
-    }
+	private static boolean containsLineBreak(PsiElement element)
+	{
+		if(element == null)
+		{
+			return false;
+		}
+		final String text = element.getText();
+		if(text == null)
+		{
+			return false;
+		}
+		return text.indexOf("\n") >= 0 || text.indexOf("\r") >= 0;
+	}
 }

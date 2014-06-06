@@ -19,16 +19,20 @@ package com.sixrr.stockmetrics.classMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class LackOfCohesionOfMethodsClassMetric extends ClassMetric {
-    public String getDisplayName() {
-        return StockMetricsBundle.message("lack.of.cohesion.of.methods.display.name");
-    }
+public class LackOfCohesionOfMethodsClassMetric extends ClassMetric
+{
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("lack.of.cohesion.of.methods.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("lack.of.cohesion.of.methods.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("lack.of.cohesion.of.methods.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Score;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Score;
+	}
 }

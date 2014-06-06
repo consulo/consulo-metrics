@@ -16,56 +16,68 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.*;
+import java.util.Set;
+
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-import java.util.Set;
+public class JavadocLinesOfCodePackageCalculator extends PackageCalculator
+{
 
-public class JavadocLinesOfCodePackageCalculator extends PackageCalculator {
+	private final BucketedCount<PsiPackage> numCommentLinesPerPackage = new BucketedCount<PsiPackage>();
 
-    private final BucketedCount<PsiPackage> numCommentLinesPerPackage = new BucketedCount<PsiPackage>();
+	@Override
+	public void endMetricsRun()
+	{
+		final Set<PsiPackage> packages = numCommentLinesPerPackage.getBuckets();
+		for(final PsiPackage aPackage : packages)
+		{
+			final int numCommentLines = numCommentLinesPerPackage.getBucketValue(aPackage);
 
-    @Override
-    public void endMetricsRun() {
-        final Set<PsiPackage> packages = numCommentLinesPerPackage.getBuckets();
-        for (final PsiPackage aPackage : packages) {
-            final int numCommentLines = numCommentLinesPerPackage.getBucketValue(aPackage);
+			postMetric(aPackage, numCommentLines);
+		}
+	}
 
-            postMetric(aPackage, numCommentLines);
-        }
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+		@Override
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			final PsiPackage aPackage = ClassUtils.findPackage(file);
+			if(aPackage == null)
+			{
+				return;
+			}
+			numCommentLinesPerPackage.createBucket(aPackage);
+		}
 
-        @Override
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            final PsiPackage aPackage = ClassUtils.findPackage(file);
-            if (aPackage == null) {
-                return;
-            }
-            numCommentLinesPerPackage.createBucket(aPackage);
-        }
-
-        @Override
-        public void visitDocComment(PsiDocComment comment) {
-            super.visitDocComment(comment);
-            final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
-            final PsiPackage aPackage = ClassUtils.findPackage(aClass);
-            if (aPackage == null) {
-                return;
-            }
-            final int lineCount = LineUtil.countLines(comment);
-            numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
-        }
-    }
+		@Override
+		public void visitDocComment(PsiDocComment comment)
+		{
+			super.visitDocComment(comment);
+			final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
+			final PsiPackage aPackage = ClassUtils.findPackage(aClass);
+			if(aPackage == null)
+			{
+				return;
+			}
+			final int lineCount = LineUtil.countLines(comment);
+			numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
+		}
+	}
 }

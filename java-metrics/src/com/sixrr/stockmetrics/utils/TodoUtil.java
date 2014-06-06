@@ -22,20 +22,26 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoItem;
 
-public class TodoUtil {
-    private TodoUtil() {}
+public class TodoUtil
+{
+	private TodoUtil()
+	{
+	}
 
-    public static boolean isTodoComment(PsiComment comment) {
-        final PsiFile file = comment.getContainingFile();
-        final PsiTodoSearchHelper searchHelper = PsiTodoSearchHelper.SERVICE.getInstance(comment.getProject());
-        final TodoItem[] todoItems = searchHelper.findTodoItems(file);
-        for (final TodoItem todoItem : todoItems) {
-            final TextRange commentTextRange = comment.getTextRange();
-            final TextRange todoTextRange = todoItem.getTextRange();
-            if (commentTextRange.contains(todoTextRange)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	public static boolean isTodoComment(PsiComment comment)
+	{
+		final PsiFile file = comment.getContainingFile();
+		final PsiTodoSearchHelper searchHelper = PsiTodoSearchHelper.SERVICE.getInstance(comment.getProject());
+		final TodoItem[] todoItems = searchHelper.findTodoItems(file);
+		for(final TodoItem todoItem : todoItems)
+		{
+			final TextRange commentTextRange = comment.getTextRange();
+			final TextRange todoTextRange = todoItem.getTextRange();
+			if(commentTextRange.contains(todoTextRange))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

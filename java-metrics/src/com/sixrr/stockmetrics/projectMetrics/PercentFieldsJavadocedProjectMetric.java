@@ -19,17 +19,21 @@ package com.sixrr.stockmetrics.projectMetrics;
 import com.sixrr.metrics.MetricType;
 import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
-public class PercentFieldsJavadocedProjectMetric extends ProjectMetric {
+public class PercentFieldsJavadocedProjectMetric extends ProjectMetric
+{
 
-    public String getDisplayName() {
-        return StockMetricsBundle.message("javadoc.field.coverage.display.name");
-    }
+	public String getDisplayName()
+	{
+		return StockMetricsBundle.message("javadoc.field.coverage.display.name");
+	}
 
-    public String getAbbreviation() {
-        return StockMetricsBundle.message("javadoc.field.coverage.abbreviation");
-    }
+	public String getAbbreviation()
+	{
+		return StockMetricsBundle.message("javadoc.field.coverage.abbreviation");
+	}
 
-    public MetricType getType() {
-        return MetricType.Ratio;
-    }
+	public MetricType getType()
+	{
+		return MetricType.Ratio;
+	}
 }

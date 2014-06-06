@@ -19,81 +19,98 @@ package com.sixrr.stockmetrics.methodCalculators;
 import com.intellij.psi.*;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class NumControlStatementsCalculator extends MethodCalculator {
-    private int methodNestingDepth = 0;
-    private int elementCount = 0;
+public class NumControlStatementsCalculator extends MethodCalculator
+{
+	private int methodNestingDepth = 0;
+	private int elementCount = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingDepth == 0) {
-                elementCount = 0;
-            }
-            methodNestingDepth++;
-            super.visitMethod(method);
-            methodNestingDepth--;
-            if (methodNestingDepth == 0 && !MethodUtils.isAbstract(method)) {
-                postMetric(method, elementCount);
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingDepth == 0)
+			{
+				elementCount = 0;
+			}
+			methodNestingDepth++;
+			super.visitMethod(method);
+			methodNestingDepth--;
+			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))
+			{
+				postMetric(method, elementCount);
+			}
+		}
 
-        public void visitIfStatement(PsiIfStatement statement) {
-            super.visitIfStatement(statement);
-            elementCount++;
-        }
+		public void visitIfStatement(PsiIfStatement statement)
+		{
+			super.visitIfStatement(statement);
+			elementCount++;
+		}
 
-        public void visitDoWhileStatement(PsiDoWhileStatement statement) {
-            super.visitDoWhileStatement(statement);
-            elementCount++;
-        }
+		public void visitDoWhileStatement(PsiDoWhileStatement statement)
+		{
+			super.visitDoWhileStatement(statement);
+			elementCount++;
+		}
 
-        public void visitContinueStatement(PsiContinueStatement statement) {
-            super.visitContinueStatement(statement);
-            elementCount++;
-        }
+		public void visitContinueStatement(PsiContinueStatement statement)
+		{
+			super.visitContinueStatement(statement);
+			elementCount++;
+		}
 
-        public void visitBreakStatement(PsiBreakStatement statement) {
-            super.visitBreakStatement(statement);
-            elementCount++;
-        }
+		public void visitBreakStatement(PsiBreakStatement statement)
+		{
+			super.visitBreakStatement(statement);
+			elementCount++;
+		}
 
-        public void visitForStatement(PsiForStatement statement) {
-            super.visitForStatement(statement);
-            elementCount++;
-        }
+		public void visitForStatement(PsiForStatement statement)
+		{
+			super.visitForStatement(statement);
+			elementCount++;
+		}
 
-        public void visitForeachStatement(PsiForeachStatement statement) {
-            super.visitForeachStatement(statement);
-            elementCount++;
-        }
+		public void visitForeachStatement(PsiForeachStatement statement)
+		{
+			super.visitForeachStatement(statement);
+			elementCount++;
+		}
 
-        public void visitSwitchLabelStatement(PsiSwitchLabelStatement statement) {
-            super.visitSwitchLabelStatement(statement);
-            elementCount++;
-        }
+		public void visitSwitchLabelStatement(PsiSwitchLabelStatement statement)
+		{
+			super.visitSwitchLabelStatement(statement);
+			elementCount++;
+		}
 
-        public void visitSwitchStatement(PsiSwitchStatement statement) {
-            super.visitSwitchStatement(statement);
-            elementCount++;
-        }
+		public void visitSwitchStatement(PsiSwitchStatement statement)
+		{
+			super.visitSwitchStatement(statement);
+			elementCount++;
+		}
 
-        public void visitSynchronizedStatement(PsiSynchronizedStatement statement) {
-            super.visitSynchronizedStatement(statement);
-            elementCount++;
-        }
+		public void visitSynchronizedStatement(PsiSynchronizedStatement statement)
+		{
+			super.visitSynchronizedStatement(statement);
+			elementCount++;
+		}
 
-        public void visitTryStatement(PsiTryStatement statement) {
-            super.visitTryStatement(statement);
-            elementCount++;
-        }
+		public void visitTryStatement(PsiTryStatement statement)
+		{
+			super.visitTryStatement(statement);
+			elementCount++;
+		}
 
-        public void visitWhileStatement(PsiWhileStatement statement) {
-            super.visitWhileStatement(statement);
-            elementCount++;
-        }
-    }
+		public void visitWhileStatement(PsiWhileStatement statement)
+		{
+			super.visitWhileStatement(statement);
+			elementCount++;
+		}
+	}
 }

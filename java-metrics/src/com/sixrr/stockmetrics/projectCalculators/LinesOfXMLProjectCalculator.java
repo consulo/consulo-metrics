@@ -22,23 +22,29 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlFile;
 import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class LinesOfXMLProjectCalculator extends ElementCountProjectCalculator {
+public class LinesOfXMLProjectCalculator extends ElementCountProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitFile(PsiFile file) {
-            if (!(file instanceof XmlFile)) {
-                return;
-            }
-            final String fileName = file.getName();
-            //noinspection HardCodedStringLiteral
-            if (!fileName.endsWith(".htm") && !fileName.endsWith(".html")) {
-                numElements += LineUtil.countLines(file);
-            }
-        }
-    }
+		public void visitFile(PsiFile file)
+		{
+			if(!(file instanceof XmlFile))
+			{
+				return;
+			}
+			final String fileName = file.getName();
+			//noinspection HardCodedStringLiteral
+			if(!fileName.endsWith(".htm") && !fileName.endsWith(".html"))
+			{
+				numElements += LineUtil.countLines(file);
+			}
+		}
+	}
 }

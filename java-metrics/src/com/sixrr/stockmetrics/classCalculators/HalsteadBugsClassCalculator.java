@@ -18,9 +18,11 @@ package com.sixrr.stockmetrics.classCalculators;
 
 import com.sixrr.stockmetrics.halstead.HalsteadVisitor;
 
-public class HalsteadBugsClassCalculator extends HalsteadClassCalculator {
+public class HalsteadBugsClassCalculator extends HalsteadClassCalculator
+{
 
-    protected double calculateValue(HalsteadVisitor visitor) {
-        return visitor.getBugs();
-    }
+	protected double calculateValue(HalsteadVisitor visitor)
+	{
+		return visitor.getBugs();
+	}
 }

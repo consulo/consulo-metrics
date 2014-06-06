@@ -24,36 +24,44 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
 
-public class PercentClassesJavadocedModuleCalculator extends ElementRatioModuleCalculator {
+public class PercentClassesJavadocedModuleCalculator extends ElementRatioModuleCalculator
+{
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        @Override
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (ClassUtils.isAnonymous(aClass)) {
-                return;
-            }
-            if (aClass.getFirstChild()instanceof PsiDocComment) {
-                incrementNumerator(aClass, 1);
-            }
-            incrementDenominator(aClass, 1);
-        }
+		@Override
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(ClassUtils.isAnonymous(aClass))
+			{
+				return;
+			}
+			if(aClass.getFirstChild() instanceof PsiDocComment)
+			{
+				incrementNumerator(aClass, 1);
+			}
+			incrementDenominator(aClass, 1);
+		}
 
-        @Override
-        public void visitFile(PsiFile file) {
-            super.visitFile(file);
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            numeratorPerModule.createBucket(module);
-            denominatorPerModule.createBucket(module);
-        }
-    }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			super.visitFile(file);
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			numeratorPerModule.createBucket(module);
+			denominatorPerModule.createBucket(module);
+		}
+	}
 }

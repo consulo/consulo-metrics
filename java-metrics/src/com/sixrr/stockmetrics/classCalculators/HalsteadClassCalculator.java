@@ -21,23 +21,28 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.stockmetrics.halstead.HalsteadVisitor;
 
-public abstract class HalsteadClassCalculator extends ClassCalculator {
-    protected abstract double calculateValue(HalsteadVisitor visitor);
+public abstract class HalsteadClassCalculator extends ClassCalculator
+{
+	protected abstract double calculateValue(HalsteadVisitor visitor);
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final HalsteadVisitor visitor = new HalsteadVisitor(executionContext);
-                aClass.accept(visitor);
-                final double value = calculateValue(visitor);
-                postMetric(aClass, value);
-            }
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final HalsteadVisitor visitor = new HalsteadVisitor(executionContext);
+				aClass.accept(visitor);
+				final double value = calculateValue(visitor);
+				postMetric(aClass, value);
+			}
+		}
+	}
 }

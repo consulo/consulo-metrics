@@ -16,60 +16,78 @@
 
 package com.sixrr.stockmetrics.methodCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiIfStatement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiStatement;
 import com.sixrr.metrics.utils.MethodUtils;
 
-public class ConditionalNestingDepthCalculator extends MethodCalculator {
-    private int methodNestingCount = 0;
-    private int maximumDepth = 0;
-    private int currentDepth = 0;
+public class ConditionalNestingDepthCalculator extends MethodCalculator
+{
+	private int methodNestingCount = 0;
+	private int maximumDepth = 0;
+	private int currentDepth = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitMethod(PsiMethod method) {
-            if (methodNestingCount == 0) {
-                maximumDepth = 0;
-                currentDepth = 0;
-            }
-            methodNestingCount++;
-            super.visitMethod(method);
-            methodNestingCount--;
-            if (methodNestingCount == 0) {
-                if (!MethodUtils.isAbstract(method)) {
-                    postMetric(method, maximumDepth);
-                }
-            }
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitMethod(PsiMethod method)
+		{
+			if(methodNestingCount == 0)
+			{
+				maximumDepth = 0;
+				currentDepth = 0;
+			}
+			methodNestingCount++;
+			super.visitMethod(method);
+			methodNestingCount--;
+			if(methodNestingCount == 0)
+			{
+				if(!MethodUtils.isAbstract(method))
+				{
+					postMetric(method, maximumDepth);
+				}
+			}
+		}
 
-        public void visitIfStatement(PsiIfStatement statement) {
-            boolean isAlreadyCounted = false;
-            if (statement.getParent()instanceof PsiIfStatement) {
-                final PsiIfStatement parent = (PsiIfStatement) statement.getParent();
-                final PsiStatement elseBranch = parent.getElseBranch();
-                if (statement.equals(elseBranch)) {
-                    isAlreadyCounted = true;
-                }
-            }
-            if (!isAlreadyCounted) {
-                enterScope();
-            }
-            super.visitIfStatement(statement);
+		public void visitIfStatement(PsiIfStatement statement)
+		{
+			boolean isAlreadyCounted = false;
+			if(statement.getParent() instanceof PsiIfStatement)
+			{
+				final PsiIfStatement parent = (PsiIfStatement) statement.getParent();
+				final PsiStatement elseBranch = parent.getElseBranch();
+				if(statement.equals(elseBranch))
+				{
+					isAlreadyCounted = true;
+				}
+			}
+			if(!isAlreadyCounted)
+			{
+				enterScope();
+			}
+			super.visitIfStatement(statement);
 
-            if (!isAlreadyCounted) {
-                exitScope();
-            }
-        }
+			if(!isAlreadyCounted)
+			{
+				exitScope();
+			}
+		}
 
-        private void enterScope() {
-            currentDepth++;
-            maximumDepth = Math.max(maximumDepth, currentDepth);
-        }
+		private void enterScope()
+		{
+			currentDepth++;
+			maximumDepth = Math.max(maximumDepth, currentDepth);
+		}
 
-        private void exitScope() {
-            currentDepth--;
-        }
-    }
+		private void exitScope()
+		{
+			currentDepth--;
+		}
+	}
 }

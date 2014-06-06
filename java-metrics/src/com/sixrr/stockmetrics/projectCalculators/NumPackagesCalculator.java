@@ -16,31 +16,36 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+public class NumPackagesCalculator extends ProjectCalculator
+{
 
-public class NumPackagesCalculator extends ProjectCalculator {
+	private final Set<String> packages = new HashSet<String>(20);
 
-    private final Set<String> packages = new HashSet<String>(20);
+	public void endMetricsRun()
+	{
+		final int numPackages = packages.size();
+		postMetric(numPackages);
+	}
 
-    public void endMetricsRun() {
-        final int numPackages = packages.size();
-        postMetric(numPackages);
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
-
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitClass(PsiClass aClass) {
-            final String packageName = ClassUtils.calculatePackageName(aClass);
-            packages.add(packageName);
-        }
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitClass(PsiClass aClass)
+		{
+			final String packageName = ClassUtils.calculatePackageName(aClass);
+			packages.add(packageName);
+		}
+	}
 }

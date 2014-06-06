@@ -24,31 +24,38 @@ import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.TodoUtil;
 
-public class TodoCommentCountModuleCalculator extends ElementCountModuleCalculator {
+public class TodoCommentCountModuleCalculator extends ElementCountModuleCalculator
+{
 
-    @Override
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	@Override
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends PsiRecursiveElementVisitor {
+	private class Visitor extends PsiRecursiveElementVisitor
+	{
 
-        @Override
-        public void visitFile(PsiFile file) {
-            super.visitFile(file);
-            final Module module = ClassUtils.calculateModule(file);
-            if (module == null) {
-                return;
-            }
-            elementsCountPerModule.createBucket(module);
-        }
+		@Override
+		public void visitFile(PsiFile file)
+		{
+			super.visitFile(file);
+			final Module module = ClassUtils.calculateModule(file);
+			if(module == null)
+			{
+				return;
+			}
+			elementsCountPerModule.createBucket(module);
+		}
 
-        @Override
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            if (TodoUtil.isTodoComment(comment)) {
-                incrementElementCount(comment, 1);
-            }
-        }
-    }
+		@Override
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			if(TodoUtil.isTodoComment(comment))
+			{
+				incrementElementCount(comment, 1);
+			}
+		}
+	}
 }

@@ -16,39 +16,55 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiModifier;
 
-public class AttributeInheritanceFactorProjectCalculator extends ProjectCalculator {
-    private int availableFields = 0;
-    private int inheritedFields = 0;
+public class AttributeInheritanceFactorProjectCalculator extends ProjectCalculator
+{
+	private int availableFields = 0;
+	private int inheritedFields = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            final PsiField[] allFields = aClass.getAllFields();
-            for (PsiField field : allFields) {
-                final PsiClass containingClass = field.getContainingClass();
-                if (containingClass == null) {
-                    continue;
-                }
-                final String className = containingClass.getName();
-                if (containingClass.equals(aClass)) {
-                    availableFields++;
-                } else if ("java.lang.Object".equals(className)) {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			final PsiField[] allFields = aClass.getAllFields();
+			for(PsiField field : allFields)
+			{
+				final PsiClass containingClass = field.getContainingClass();
+				if(containingClass == null)
+				{
+					continue;
+				}
+				final String className = containingClass.getName();
+				if(containingClass.equals(aClass))
+				{
+					availableFields++;
+				}
+				else if("java.lang.Object".equals(className))
+				{
 
-                } else if (!field.hasModifierProperty(PsiModifier.PRIVATE)) {
-                    availableFields++;
-                    inheritedFields++;
-                }
-            }
-        }
-    }
+				}
+				else if(!field.hasModifierProperty(PsiModifier.PRIVATE))
+				{
+					availableFields++;
+					inheritedFields++;
+				}
+			}
+		}
+	}
 
-    public void endMetricsRun() {
-        postMetric(inheritedFields, availableFields);
-    }
+	public void endMetricsRun()
+	{
+		postMetric(inheritedFields, availableFields);
+	}
 }

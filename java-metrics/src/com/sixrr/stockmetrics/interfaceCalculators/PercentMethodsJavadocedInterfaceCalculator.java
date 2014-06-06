@@ -22,29 +22,36 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.javadoc.PsiDocComment;
 
-public class PercentMethodsJavadocedInterfaceCalculator extends InterfaceCalculator {
+public class PercentMethodsJavadocedInterfaceCalculator extends InterfaceCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (!isInterface(aClass)) {
-                return;
-            }
-            int numMethods = 0;
-            int numJavadocedMethods = 0;
-            final PsiMethod[] methods = aClass.getMethods();
-            for (final PsiMethod method : methods) {
-                numMethods++;
-                if (method.getFirstChild()instanceof PsiDocComment) {
-                    numJavadocedMethods++;
-                }
-            }
-            postMetric(aClass, numJavadocedMethods, numMethods);
-        }
-    }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(!isInterface(aClass))
+			{
+				return;
+			}
+			int numMethods = 0;
+			int numJavadocedMethods = 0;
+			final PsiMethod[] methods = aClass.getMethods();
+			for(final PsiMethod method : methods)
+			{
+				numMethods++;
+				if(method.getFirstChild() instanceof PsiDocComment)
+				{
+					numJavadocedMethods++;
+				}
+			}
+			postMetric(aClass, numJavadocedMethods, numMethods);
+		}
+	}
 }

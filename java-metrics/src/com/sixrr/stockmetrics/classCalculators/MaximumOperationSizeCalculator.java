@@ -16,58 +16,76 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiBlockStatement;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEmptyStatement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiStatement;
 
-public class MaximumOperationSizeCalculator extends ClassCalculator {
-    private int numStatements = 0;
-    private int maxNumStatements = 0;
-    private int numMethods = 0;
+public class MaximumOperationSizeCalculator extends ClassCalculator
+{
+	private int numStatements = 0;
+	private int maxNumStatements = 0;
+	private int numMethods = 0;
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            int prevMaxNumStatements = 0;
-            int prevNumStatements = 0;
-            int prevNumMethods = 0;
-            if (isConcreteClass(aClass)) {
-                prevNumStatements = numStatements;
-                prevMaxNumStatements = numStatements;
-                prevNumMethods = numMethods;
-                maxNumStatements = 0;
-                numStatements = 0;
-                numMethods = 0;
-            }
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                if (numMethods != 0) {
-                    postMetric(aClass, (double) maxNumStatements);
-                }
-                maxNumStatements = prevMaxNumStatements;
-                numStatements = prevNumStatements;
-                numMethods = prevNumMethods;
-            }
-        }
+		public void visitClass(PsiClass aClass)
+		{
+			int prevMaxNumStatements = 0;
+			int prevNumStatements = 0;
+			int prevNumMethods = 0;
+			if(isConcreteClass(aClass))
+			{
+				prevNumStatements = numStatements;
+				prevMaxNumStatements = numStatements;
+				prevNumMethods = numMethods;
+				maxNumStatements = 0;
+				numStatements = 0;
+				numMethods = 0;
+			}
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				if(numMethods != 0)
+				{
+					postMetric(aClass, (double) maxNumStatements);
+				}
+				maxNumStatements = prevMaxNumStatements;
+				numStatements = prevNumStatements;
+				numMethods = prevNumMethods;
+			}
+		}
 
-        public void visitMethod(PsiMethod method) {
-            if (method.getBody() != null) {
-                numStatements = 0;
-                numMethods++;
-            }
-            super.visitMethod(method);
-            if (numStatements > maxNumStatements) {
-                maxNumStatements = numStatements;
-            }
-        }
+		public void visitMethod(PsiMethod method)
+		{
+			if(method.getBody() != null)
+			{
+				numStatements = 0;
+				numMethods++;
+			}
+			super.visitMethod(method);
+			if(numStatements > maxNumStatements)
+			{
+				maxNumStatements = numStatements;
+			}
+		}
 
-        public void visitStatement(PsiStatement statement) {
-            super.visitStatement(statement);
-            if (!(statement instanceof PsiEmptyStatement) && !(statement instanceof PsiBlockStatement)) {
-                numStatements++;
-            }
-        }
-    }
+		public void visitStatement(PsiStatement statement)
+		{
+			super.visitStatement(statement);
+			if(!(statement instanceof PsiEmptyStatement) && !(statement instanceof PsiBlockStatement))
+			{
+				numStatements++;
+			}
+		}
+	}
 }

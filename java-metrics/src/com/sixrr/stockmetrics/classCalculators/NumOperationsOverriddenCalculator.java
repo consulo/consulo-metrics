@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
+import java.util.Collection;
+
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaRecursiveElementVisitor;
@@ -27,44 +29,52 @@ import com.intellij.psi.search.searches.OverridingMethodsSearch;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.MethodUtils;
 
-import java.util.Collection;
+public class NumOperationsOverriddenCalculator extends ClassCalculator
+{
 
-public class NumOperationsOverriddenCalculator extends ClassCalculator {
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-
-        public void visitClass(final PsiClass aClass) {
-            super.visitClass(aClass);
-            final Runnable runnable = new Runnable() {
-                public void run() {
-                    if (!ClassUtils.isAnonymous(aClass) && !aClass.isInterface()) {
-                        final PsiMethod[] methods = aClass.getMethods();
-                        final Project project = executionContext.getProject();
-                        final GlobalSearchScope globalScope = GlobalSearchScope.allScope(project);
-                        int numOverriddenMethods = 0;
-                        for (final PsiMethod method : methods) {
-                            final Collection<PsiMethod> overrides = OverridingMethodsSearch
-                                    .search(method, globalScope, true).findAll();
-                            boolean overrideFound = false;
-                            for (final PsiMethod override : overrides) {
-                                if (!MethodUtils.isAbstract(override)) {
-                                    overrideFound = true;
-                                }
-                            }
-                            if (overrideFound) {
-                                numOverriddenMethods++;
-                            }
-                        }
-                        postMetric(aClass, numOverriddenMethods);
-                    }
-                }
-            };
-            final ProgressManager progressManager = ProgressManager.getInstance();
-            progressManager.runProcess(runnable, null);
-        }
-    }
+		public void visitClass(final PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			final Runnable runnable = new Runnable()
+			{
+				public void run()
+				{
+					if(!ClassUtils.isAnonymous(aClass) && !aClass.isInterface())
+					{
+						final PsiMethod[] methods = aClass.getMethods();
+						final Project project = executionContext.getProject();
+						final GlobalSearchScope globalScope = GlobalSearchScope.allScope(project);
+						int numOverriddenMethods = 0;
+						for(final PsiMethod method : methods)
+						{
+							final Collection<PsiMethod> overrides = OverridingMethodsSearch.search(method, globalScope, true).findAll();
+							boolean overrideFound = false;
+							for(final PsiMethod override : overrides)
+							{
+								if(!MethodUtils.isAbstract(override))
+								{
+									overrideFound = true;
+								}
+							}
+							if(overrideFound)
+							{
+								numOverriddenMethods++;
+							}
+						}
+						postMetric(aClass, numOverriddenMethods);
+					}
+				}
+			};
+			final ProgressManager progressManager = ProgressManager.getInstance();
+			progressManager.runProcess(runnable, null);
+		}
+	}
 }

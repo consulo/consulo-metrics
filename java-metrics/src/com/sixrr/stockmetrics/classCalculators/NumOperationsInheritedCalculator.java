@@ -16,31 +16,42 @@
 
 package com.sixrr.stockmetrics.classCalculators;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 
-public class NumOperationsInheritedCalculator extends ClassCalculator {
+public class NumOperationsInheritedCalculator extends ClassCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
 
-        public void visitClass(PsiClass aClass) {
-            super.visitClass(aClass);
-            if (isConcreteClass(aClass)) {
-                final PsiMethod[] allMethods = aClass.getAllMethods();
-                int numInheritedMethods = 0;
-                for (final PsiMethod method : allMethods) {
-                    final PsiClass containingClass = method.getContainingClass();
-                    if (containingClass != null && !containingClass.equals(aClass) &&
-                            !method.hasModifierProperty(PsiModifier.STATIC)) {
-                        numInheritedMethods++;
-                    }
-                }
+		public void visitClass(PsiClass aClass)
+		{
+			super.visitClass(aClass);
+			if(isConcreteClass(aClass))
+			{
+				final PsiMethod[] allMethods = aClass.getAllMethods();
+				int numInheritedMethods = 0;
+				for(final PsiMethod method : allMethods)
+				{
+					final PsiClass containingClass = method.getContainingClass();
+					if(containingClass != null && !containingClass.equals(aClass) &&
+							!method.hasModifierProperty(PsiModifier.STATIC))
+					{
+						numInheritedMethods++;
+					}
+				}
 
-                postMetric(aClass, numInheritedMethods);
-            }
-        }
-    }
+				postMetric(aClass, numInheritedMethods);
+			}
+		}
+	}
 }

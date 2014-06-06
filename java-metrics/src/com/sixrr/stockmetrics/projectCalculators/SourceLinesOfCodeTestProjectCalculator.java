@@ -16,30 +16,41 @@
 
 package com.sixrr.stockmetrics.projectCalculators;
 
-import com.intellij.psi.*;
-import com.sixrr.stockmetrics.utils.LineUtil;
+import com.intellij.psi.JavaRecursiveElementVisitor;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.TestUtils;
+import com.sixrr.stockmetrics.utils.LineUtil;
 
-public class SourceLinesOfCodeTestProjectCalculator extends ElementCountProjectCalculator {
+public class SourceLinesOfCodeTestProjectCalculator extends ElementCountProjectCalculator
+{
 
-    protected PsiElementVisitor createVisitor() {
-        return new Visitor();
-    }
+	protected PsiElementVisitor createVisitor()
+	{
+		return new Visitor();
+	}
 
-    private class Visitor extends JavaRecursiveElementVisitor {
-        public void visitJavaFile(PsiJavaFile file) {
-            super.visitJavaFile(file);
-            if (TestUtils.isTest(file)) {
-                numElements += LineUtil.countLines(file);
-            }
-        }
+	private class Visitor extends JavaRecursiveElementVisitor
+	{
+		public void visitJavaFile(PsiJavaFile file)
+		{
+			super.visitJavaFile(file);
+			if(TestUtils.isTest(file))
+			{
+				numElements += LineUtil.countLines(file);
+			}
+		}
 
-        public void visitComment(PsiComment comment) {
-            super.visitComment(comment);
-            final PsiFile file = comment.getContainingFile();
-            if (TestUtils.isTest(file)) {
-                numElements -= LineUtil.countCommentOnlyLines(comment);
-            }
-        }
-    }
+		public void visitComment(PsiComment comment)
+		{
+			super.visitComment(comment);
+			final PsiFile file = comment.getContainingFile();
+			if(TestUtils.isTest(file))
+			{
+				numElements -= LineUtil.countCommentOnlyLines(comment);
+			}
+		}
+	}
 }

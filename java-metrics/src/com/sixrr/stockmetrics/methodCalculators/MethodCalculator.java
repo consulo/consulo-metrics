@@ -19,16 +19,20 @@ package com.sixrr.stockmetrics.methodCalculators;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
-abstract class MethodCalculator extends BaseMetricsCalculator {
-    void postMetric(PsiMethod method, int numerator, int denominator) {
-        resultsHolder.postMethodMetric(metric, method, (double) numerator, (double) denominator);
-    }
+abstract class MethodCalculator extends BaseMetricsCalculator
+{
+	void postMetric(PsiMethod method, int numerator, int denominator)
+	{
+		resultsHolder.postMethodMetric(metric, method, (double) numerator, (double) denominator);
+	}
 
-    void postMetric(PsiMethod method, int value) {
-        resultsHolder.postMethodMetric(metric, method, (double) value);
-    }
+	void postMetric(PsiMethod method, int value)
+	{
+		resultsHolder.postMethodMetric(metric, method, (double) value);
+	}
 
-    void postMetric(PsiMethod method, double value) {
-        resultsHolder.postMethodMetric(metric, method, value);
-    }
+	void postMetric(PsiMethod method, double value)
+	{
+		resultsHolder.postMethodMetric(metric, method, value);
+	}
 }
