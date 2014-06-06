@@ -20,8 +20,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.sixrr.metrics.metricModel.BaseMetricsRunImpl;
 import com.sixrr.metrics.metricModel.MetricsExecutionContextImpl;
-import com.sixrr.metrics.metricModel.MetricsRunImpl;
 import com.sixrr.metrics.metricModel.TimeStamp;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
@@ -45,7 +45,7 @@ class UpdateWithDiffAction extends AnAction
 	{
 		final AnalysisScope scope = toolWindow.getCurrentScope();
 		final MetricsProfile currentProfile = toolWindow.getCurrentProfile();
-		final MetricsRunImpl metricsRun = new MetricsRunImpl();
+		final BaseMetricsRunImpl metricsRun = new BaseMetricsRunImpl();
 		new MetricsExecutionContextImpl(project, scope)
 		{
 

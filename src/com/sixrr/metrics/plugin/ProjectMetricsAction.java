@@ -25,8 +25,8 @@ import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.analysis.BaseAnalysisActionDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.sixrr.metrics.metricModel.BaseMetricsRunImpl;
 import com.sixrr.metrics.metricModel.MetricsExecutionContextImpl;
-import com.sixrr.metrics.metricModel.MetricsRunImpl;
 import com.sixrr.metrics.metricModel.TimeStamp;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.profile.MetricsProfileRepository;
@@ -49,7 +49,7 @@ public class ProjectMetricsAction extends BaseAnalysisAction
 		final MetricsProfileRepository repository = plugin.getProfileRepository();
 		final MetricsProfile profile = repository.getCurrentProfile();
 		final MetricsToolWindow toolWindow = plugin.getMetricsToolWindow();
-		final MetricsRunImpl metricsRun = new MetricsRunImpl();
+		final BaseMetricsRunImpl metricsRun = new BaseMetricsRunImpl();
 		new MetricsExecutionContextImpl(project, analysisScope)
 		{
 

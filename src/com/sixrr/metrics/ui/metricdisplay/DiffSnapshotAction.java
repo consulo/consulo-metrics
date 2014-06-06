@@ -26,8 +26,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
+import com.sixrr.metrics.metricModel.BaseMetricsRunImpl;
 import com.sixrr.metrics.metricModel.MetricsRun;
-import com.sixrr.metrics.metricModel.MetricsRunImpl;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
 class DiffSnapshotAction extends AnAction
@@ -57,7 +57,7 @@ class DiffSnapshotAction extends AnAction
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			final File selectedFile = chooser.getSelectedFile();
-			final MetricsRun previousResults = MetricsRunImpl.readFromFile(selectedFile);
+			final MetricsRun previousResults = BaseMetricsRunImpl.readFromFile(selectedFile);
 			toolWindow.reloadAsDiff(previousResults);
 		}
 	}

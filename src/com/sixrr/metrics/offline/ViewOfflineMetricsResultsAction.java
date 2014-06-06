@@ -32,10 +32,10 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.sixrr.metrics.Metric;
+import com.sixrr.metrics.metricModel.BaseMetricsRunImpl;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
 import com.sixrr.metrics.metricModel.MetricsRun;
-import com.sixrr.metrics.metricModel.MetricsRunImpl;
 import com.sixrr.metrics.plugin.MetricsPlugin;
 import com.sixrr.metrics.profile.MetricsProfile;
 import com.sixrr.metrics.profile.MetricsProfileImpl;
@@ -64,7 +64,7 @@ public class ViewOfflineMetricsResultsAction extends AnAction
 			return;
 		}
 		final File selectedFile = chooser.getSelectedFile();
-		final MetricsRun results = MetricsRunImpl.readFromFile(selectedFile);
+		final MetricsRun results = BaseMetricsRunImpl.readFromFile(selectedFile);
 		assert project != null;
 		final MetricsPlugin plugin = project.getComponent(MetricsPlugin.class);
 		final MetricsToolWindow toolWindow = plugin.getMetricsToolWindow();

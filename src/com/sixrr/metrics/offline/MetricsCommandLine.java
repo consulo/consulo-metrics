@@ -26,8 +26,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.sixrr.metrics.export.XMLExporter;
+import com.sixrr.metrics.metricModel.BaseMetricsRunImpl;
 import com.sixrr.metrics.metricModel.MetricsExecutionContextImpl;
-import com.sixrr.metrics.metricModel.MetricsRunImpl;
 import com.sixrr.metrics.metricModel.TimeStamp;
 import com.sixrr.metrics.plugin.MetricsPlugin;
 import com.sixrr.metrics.profile.MetricsProfile;
@@ -90,7 +90,7 @@ public class MetricsCommandLine implements ApplicationStarter
 			final Project project = ProjectManager.getInstance().loadAndOpenProject(projectFileName);
 			final MetricsProfile profile = getMetricsProfile(project, metricsProfileName);
 			final AnalysisScope scope = new AnalysisScope(project);
-			final MetricsRunImpl metricsRun = new MetricsRunImpl();
+			final BaseMetricsRunImpl metricsRun = new BaseMetricsRunImpl();
 			new MetricsExecutionContextImpl(project, scope)
 			{
 				@Override
