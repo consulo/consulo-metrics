@@ -22,6 +22,7 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
@@ -29,13 +30,13 @@ import com.sixrr.metrics.utils.ClassUtils;
 public class NumMethodPackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numMethodsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numMethodsPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numMethodsPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numMethodsPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numClasses = numMethodsPerPackage.getBucketValue(aPackage);
 			postMetric(aPackage, (double) numClasses);
@@ -55,7 +56,7 @@ public class NumMethodPackageCalculator extends PackageCalculator
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final PsiPackage aPackage = ClassUtils.findPackage(file);
+			final PsiJavaPackage aPackage = ClassUtils.findPackage(file);
 			if(aPackage == null)
 			{
 				return;
@@ -72,7 +73,7 @@ public class NumMethodPackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final PsiPackage aPackage = ClassUtils.findPackage(containingClass);
+			final PsiJavaPackage aPackage = ClassUtils.findPackage(containingClass);
 			if(aPackage == null)
 			{
 				return;

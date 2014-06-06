@@ -22,6 +22,7 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
@@ -31,13 +32,13 @@ import com.sixrr.metrics.utils.TestUtils;
 public class NumTestAssertsRecursivePackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numTestAssertsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numTestAssertsPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numTestAssertsPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numTestAssertsPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numCommentLines = numTestAssertsPerPackage.getBucketValue(aPackage);
 			postMetric(aPackage, (double) numCommentLines);
@@ -57,8 +58,8 @@ public class NumTestAssertsRecursivePackageCalculator extends PackageCalculator
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
-			for(PsiPackage aPackage : packages)
+			final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
+			for(PsiJavaPackage aPackage : packages)
 			{
 				numTestAssertsPerPackage.createBucket(aPackage);
 			}
@@ -71,8 +72,8 @@ public class NumTestAssertsRecursivePackageCalculator extends PackageCalculator
 			if(TestUtils.isJUnitAssertCall(expression))
 			{
 				final PsiClass aClass = PsiTreeUtil.getParentOfType(expression, PsiClass.class);
-				final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
-				for(PsiPackage aPackage : packages)
+				final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
+				for(PsiJavaPackage aPackage : packages)
 				{
 					numTestAssertsPerPackage.incrementBucketValue(aPackage, 1);
 				}

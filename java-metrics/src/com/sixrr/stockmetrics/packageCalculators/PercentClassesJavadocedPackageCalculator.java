@@ -21,7 +21,7 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
@@ -29,14 +29,14 @@ import com.sixrr.metrics.utils.ClassUtils;
 public class PercentClassesJavadocedPackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numJavadocedClassesPerPackage = new BucketedCount<PsiPackage>();
-	private final BucketedCount<PsiPackage> numClassesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numJavadocedClassesPerPackage = new BucketedCount<PsiJavaPackage>();
+	private final BucketedCount<PsiJavaPackage> numClassesPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numClassesPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numClassesPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numClasses = numClassesPerPackage.getBucketValue(aPackage);
 			final int numJavadocedClasses = numJavadocedClassesPerPackage.getBucketValue(aPackage);
@@ -57,7 +57,7 @@ public class PercentClassesJavadocedPackageCalculator extends PackageCalculator
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
-			final PsiPackage aPackage = ClassUtils.findPackage(aClass);
+			final PsiJavaPackage aPackage = ClassUtils.findPackage(aClass);
 			if(aPackage == null)
 			{
 				return;

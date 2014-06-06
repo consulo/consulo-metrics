@@ -22,16 +22,17 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 
 public class AdjustedLevelOrderPackageCalculator extends PackageCalculator
 {
-	private final Set<PsiPackage> packages = new HashSet<PsiPackage>();
+	private final Set<PsiJavaPackage> packages = new HashSet<PsiJavaPackage>();
 
 	public void endMetricsRun()
 	{
-		for(final PsiPackage packageName : packages)
+		for(final PsiJavaPackage packageName : packages)
 		{
 			final DependencyMap dependencyMap = getDependencyMap();
 			final int levelOrder = dependencyMap.calculatePackageAdjustedLevelOrder(packageName);
@@ -52,7 +53,7 @@ public class AdjustedLevelOrderPackageCalculator extends PackageCalculator
 			super.visitClass(aClass);
 			if(!ClassUtils.isAnonymous(aClass))
 			{
-				final PsiPackage usedPackage = ClassUtils.findPackage(aClass);
+				final PsiJavaPackage usedPackage = ClassUtils.findPackage(aClass);
 				packages.add(usedPackage);
 			}
 		}

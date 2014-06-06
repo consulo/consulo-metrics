@@ -22,6 +22,7 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
@@ -29,14 +30,14 @@ import com.sixrr.metrics.utils.ClassUtils;
 public class PercentFieldsJavadocedPackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numJavadocedFieldsPerPackage = new BucketedCount<PsiPackage>();
-	private final BucketedCount<PsiPackage> numFieldsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numJavadocedFieldsPerPackage = new BucketedCount<PsiJavaPackage>();
+	private final BucketedCount<PsiJavaPackage> numFieldsPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numFieldsPerPackage.getBuckets();
-		for(final PsiPackage packageName : packages)
+		final Set<PsiJavaPackage> packages = numFieldsPerPackage.getBuckets();
+		for(final PsiJavaPackage packageName : packages)
 		{
 			final int numFields = numFieldsPerPackage.getBucketValue(packageName);
 			final int numJavadocedFields = numJavadocedFieldsPerPackage.getBucketValue(packageName);
@@ -63,7 +64,7 @@ public class PercentFieldsJavadocedPackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final PsiPackage aPackage = ClassUtils.findPackage(containingClass);
+			final PsiJavaPackage aPackage = ClassUtils.findPackage(containingClass);
 			if(aPackage == null)
 			{
 				return;

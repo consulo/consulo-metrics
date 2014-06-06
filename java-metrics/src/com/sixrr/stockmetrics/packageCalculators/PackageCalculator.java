@@ -16,22 +16,23 @@
 
 package com.sixrr.stockmetrics.packageCalculators;
 
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.stockmetrics.execution.BaseMetricsCalculator;
 
 abstract class PackageCalculator extends BaseMetricsCalculator
 {
-	void postMetric(PsiPackage aPackage, int numerator, int denominator)
+	void postMetric(PsiJavaPackage aPackage, int numerator, int denominator)
 	{
 		resultsHolder.postPackageMetric(metric, aPackage, (double) numerator, (double) denominator);
 	}
 
-	void postMetric(PsiPackage aPackage, int value)
+	void postMetric(PsiJavaPackage aPackage, int value)
 	{
 		resultsHolder.postPackageMetric(metric, aPackage, (double) value);
 	}
 
-	void postMetric(PsiPackage aPackage, double value)
+	void postMetric(PsiJavaPackage aPackage, double value)
 	{
 		resultsHolder.postPackageMetric(metric, aPackage, value);
 	}

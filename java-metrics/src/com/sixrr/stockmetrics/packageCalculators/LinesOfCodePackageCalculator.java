@@ -21,7 +21,7 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.utils.LineUtil;
@@ -29,13 +29,13 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 public class LinesOfCodePackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numLinesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numLinesPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numLinesPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numLinesPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numLines = numLinesPerPackage.getBucketValue(aPackage);
 			postMetric(aPackage, (double) numLines);
@@ -55,7 +55,7 @@ public class LinesOfCodePackageCalculator extends PackageCalculator
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final PsiPackage aPackage = ClassUtils.findPackage(file);
+			final PsiJavaPackage aPackage = ClassUtils.findPackage(file);
 			if(aPackage == null)
 			{
 				return;

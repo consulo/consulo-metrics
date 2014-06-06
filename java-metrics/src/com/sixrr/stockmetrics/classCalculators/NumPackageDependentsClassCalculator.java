@@ -21,7 +21,7 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.stockmetrics.dependency.DependentsMap;
 
 public class NumPackageDependentsClassCalculator extends ClassCalculator
@@ -41,7 +41,7 @@ public class NumPackageDependentsClassCalculator extends ClassCalculator
 			if(isConcreteClass(aClass))
 			{
 				final DependentsMap map = getDependentsMap();
-				final Set<PsiPackage> dependents = map.calculatePackageDependents(aClass);
+				final Set<PsiJavaPackage> dependents = map.calculatePackageDependents(aClass);
 				final int numDependents = dependents.size();
 				postMetric(aClass, numDependents);
 			}

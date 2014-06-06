@@ -27,14 +27,14 @@ public class AverageCyclomaticComplexityPackageCalculator extends PackageCalcula
 
 	private int methodNestingDepth = 0;
 	private int complexity = 0;
-	private final BucketedCount<PsiPackage> totalComplexityPerPackage = new BucketedCount<PsiPackage>();
-	private final BucketedCount<PsiPackage> numMethodsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> totalComplexityPerPackage = new BucketedCount<PsiJavaPackage>();
+	private final BucketedCount<PsiJavaPackage> numMethodsPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numMethodsPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numMethodsPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numClasses = numMethodsPerPackage.getBucketValue(aPackage);
 			final int numAbstractClasses = totalComplexityPerPackage.getBucketValue(aPackage);
@@ -70,7 +70,7 @@ public class AverageCyclomaticComplexityPackageCalculator extends PackageCalcula
 				{
 					return;
 				}
-				final PsiPackage aPackage = ClassUtils.findPackage(containingClass);
+				final PsiJavaPackage aPackage = ClassUtils.findPackage(containingClass);
 				if(aPackage == null)
 				{
 					return;

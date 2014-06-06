@@ -21,6 +21,7 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.BucketedCount;
@@ -29,14 +30,14 @@ import com.sixrr.metrics.utils.ClassUtils;
 public class PercentMethodsJavadocedRecursivePackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numJavadocedMethodsPerPackage = new BucketedCount<PsiPackage>();
-	private final BucketedCount<PsiPackage> numMethodsPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numJavadocedMethodsPerPackage = new BucketedCount<PsiJavaPackage>();
+	private final BucketedCount<PsiJavaPackage> numMethodsPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numMethodsPerPackage.getBuckets();
-		for(final PsiPackage packageName : packages)
+		final Set<PsiJavaPackage> packages = numMethodsPerPackage.getBuckets();
+		for(final PsiJavaPackage packageName : packages)
 		{
 			final int numMethods = numMethodsPerPackage.getBucketValue(packageName);
 			final int numJavadocedMethods = numJavadocedMethodsPerPackage.getBucketValue(packageName);
@@ -63,9 +64,9 @@ public class PercentMethodsJavadocedRecursivePackageCalculator extends PackageCa
 			{
 				return;
 			}
-			final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(containingClass);
+			final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(containingClass);
 
-			for(final PsiPackage aPackage : packages)
+			for(final PsiJavaPackage aPackage : packages)
 			{
 				numMethodsPerPackage.createBucket(aPackage);
 

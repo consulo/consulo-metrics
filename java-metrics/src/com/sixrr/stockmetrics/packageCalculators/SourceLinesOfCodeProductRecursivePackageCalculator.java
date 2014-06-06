@@ -24,6 +24,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
@@ -33,14 +34,14 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 public class SourceLinesOfCodeProductRecursivePackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numLinesPerPackage = new BucketedCount<PsiPackage>();
-	private final BucketedCount<PsiPackage> numCommentLinesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numLinesPerPackage = new BucketedCount<PsiJavaPackage>();
+	private final BucketedCount<PsiJavaPackage> numCommentLinesPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numLinesPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numLinesPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numLines = numLinesPerPackage.getBucketValue(aPackage);
 			final int numCommentLines = numCommentLinesPerPackage.getBucketValue(aPackage);
@@ -64,8 +65,8 @@ public class SourceLinesOfCodeProductRecursivePackageCalculator extends PackageC
 			if(TestUtils.isProduction(file))
 			{
 				final int lineCount = LineUtil.countLines(file);
-				final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
-				for(final PsiPackage aPackage : packages)
+				final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
+				for(final PsiJavaPackage aPackage : packages)
 				{
 					numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 				}
@@ -81,8 +82,8 @@ public class SourceLinesOfCodeProductRecursivePackageCalculator extends PackageC
 			{
 				final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
 				final int lineCount = LineUtil.countCommentOnlyLines(comment);
-				final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
-				for(final PsiPackage aPackage : packages)
+				final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
+				for(final PsiJavaPackage aPackage : packages)
 				{
 					numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 				}

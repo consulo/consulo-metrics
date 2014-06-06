@@ -22,20 +22,20 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
 
 public class NumCyclicDependenciesPackageCalculator extends PackageCalculator
 {
-	private final Set<PsiPackage> packages = new HashSet<PsiPackage>();
+	private final Set<PsiJavaPackage> packages = new HashSet<PsiJavaPackage>();
 
 	public void endMetricsRun()
 	{
-		for(final PsiPackage aPackage : packages)
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final DependencyMap dependencyMap = getDependencyMap();
-			final Set<PsiPackage> component = dependencyMap.calculateStronglyConnectedPackageComponents(aPackage);
+			final Set<PsiJavaPackage> component = dependencyMap.calculateStronglyConnectedPackageComponents(aPackage);
 			final int cyclicDependencies = component.size() - 1;
 			postMetric(aPackage, (double) cyclicDependencies);
 		}
@@ -53,7 +53,7 @@ public class NumCyclicDependenciesPackageCalculator extends PackageCalculator
 			super.visitClass(aClass);
 			if(!ClassUtils.isAnonymous(aClass))
 			{
-				final PsiPackage usedPackage = ClassUtils.findPackage(aClass);
+				final PsiJavaPackage usedPackage = ClassUtils.findPackage(aClass);
 				packages.add(usedPackage);
 			}
 		}

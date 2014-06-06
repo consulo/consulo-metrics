@@ -32,9 +32,8 @@ import com.sixrr.stockmetrics.moduleMetrics.*;
 import com.sixrr.stockmetrics.packageMetrics.*;
 import com.sixrr.stockmetrics.projectMetrics.*;
 
-public class DefaultMetricProvider implements MetricProvider
+public class JavaMetricProvider implements MetricProvider
 {
-
 	private static final String COMPLEXITY_PROFILE_NAME = StockMetricsBundle.message("complexity.metrics.profile.name");
 	private static final String JAVADOC_PROFILE_NAME = StockMetricsBundle.message("javadoc.coverage.metrics.profile.name");
 	private static final String CODE_SIZE_PROFILE_NAME = StockMetricsBundle.message("lines.of.code.metrics.profile.name");
@@ -283,7 +282,6 @@ public class DefaultMetricProvider implements MetricProvider
 	{
 		metricsClasses.add(NumAbstractClassesModuleMetric.class);
 		metricsClasses.add(NumClassesModuleMetric.class);
-		metricsClasses.add(NumJSPFilesModuleMetric.class);
 		metricsClasses.add(NumHTMLFilesModuleMetric.class);
 		metricsClasses.add(NumXMLFilesModuleMetric.class);
 		metricsClasses.add(NumProductClassesModuleMetric.class);
@@ -298,7 +296,6 @@ public class DefaultMetricProvider implements MetricProvider
 		metricsClasses.add(LinesOfCodeModuleMetric.class);
 		metricsClasses.add(LinesOfTestCodeModuleMetric.class);
 		metricsClasses.add(LinesOfProductCodeModuleMetric.class);
-		metricsClasses.add(LinesOfJSPModuleMetric.class);
 		metricsClasses.add(LinesOfHTMLModuleMetric.class);
 		metricsClasses.add(LinesOfXMLModuleMetric.class);
 		metricsClasses.add(CommentLinesOfCodeModuleMetric.class);
@@ -327,7 +324,6 @@ public class DefaultMetricProvider implements MetricProvider
 	{
 		metricsClasses.add(NumAbstractClassesProjectMetric.class);
 		metricsClasses.add(NumClassesProjectMetric.class);
-		metricsClasses.add(NumJSPFilesProjectMetric.class);
 		metricsClasses.add(NumHTMLFilesProjectMetric.class);
 		metricsClasses.add(NumXMLFilesProjectMetric.class);
 		metricsClasses.add(NumConcreteClassesProjectMetric.class);
@@ -351,7 +347,6 @@ public class DefaultMetricProvider implements MetricProvider
 		metricsClasses.add(NumProductClassesProjectMetric.class);
 		metricsClasses.add(LinesOfProductCodeProjectMetric.class);
 		metricsClasses.add(LinesOfTestCodeProjectMetric.class);
-		metricsClasses.add(LinesOfJSPProjectMetric.class);
 		metricsClasses.add(LinesOfHTMLProjectMetric.class);
 		metricsClasses.add(LinesOfXMLProjectMetric.class);
 		metricsClasses.add(TestRatioProjectMetric.class);
@@ -418,8 +413,6 @@ public class DefaultMetricProvider implements MetricProvider
 		profile.addMetric("LinesOfTestCodeRecursivePackage");
 		profile.addMetric("LinesOfHTMLProject");
 		profile.addMetric("LinesOfHTMLModule");
-		profile.addMetric("LinesOfJSPProject");
-		profile.addMetric("LinesOfJSPModule");
 		profile.addMetric("LinesOfXMLProject");
 		profile.addMetric("LinesOfXMLModule");
 		return profile;

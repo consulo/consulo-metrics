@@ -22,6 +22,7 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiEnumConstantInitializer;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiTypeParameter;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
@@ -29,13 +30,13 @@ import com.sixrr.metrics.utils.ClassUtils;
 abstract class ClassCountingRecursivePackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numClassesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numClassesPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numClassesPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numClassesPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numClasses = numClassesPerPackage.getBucketValue(aPackage);
 			postMetric(aPackage, (double) numClasses);
@@ -62,8 +63,8 @@ abstract class ClassCountingRecursivePackageCalculator extends PackageCalculator
 				return;
 			}
 			final boolean satisfied = satisfies(aClass);
-			final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
-			for(final PsiPackage aPackage : packages)
+			final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
+			for(final PsiJavaPackage aPackage : packages)
 			{
 				numClassesPerPackage.createBucket(aPackage);
 				if(satisfied)

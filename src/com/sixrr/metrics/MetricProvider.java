@@ -30,7 +30,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 public interface MetricProvider
 {
 
-	ExtensionPointName<MetricProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("MetricsReloaded.metricProvider");
+	ExtensionPointName<MetricProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("rg.mustbe.consulo.metrics.metricProvider");
 
 	/**
 	 * Returns the list of metrics classes provided by this provider.

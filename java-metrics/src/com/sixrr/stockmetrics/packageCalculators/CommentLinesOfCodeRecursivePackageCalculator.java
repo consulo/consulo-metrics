@@ -23,6 +23,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
@@ -31,13 +32,13 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 public class CommentLinesOfCodeRecursivePackageCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numCommentLinesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numCommentLinesPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numCommentLinesPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numCommentLinesPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numCommentLines = numCommentLinesPerPackage.getBucketValue(aPackage);
 
@@ -58,7 +59,7 @@ public class CommentLinesOfCodeRecursivePackageCalculator extends PackageCalcula
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final PsiPackage aPackage = ClassUtils.findPackage(file);
+			final PsiJavaPackage aPackage = ClassUtils.findPackage(file);
 			if(aPackage == null)
 			{
 				return;
@@ -72,8 +73,8 @@ public class CommentLinesOfCodeRecursivePackageCalculator extends PackageCalcula
 			super.visitComment(comment);
 			final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
 			final int lineCount = LineUtil.countLines(comment);
-			final PsiPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
-			for(final PsiPackage aPackage : packages)
+			final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
+			for(final PsiJavaPackage aPackage : packages)
 			{
 				numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 			}

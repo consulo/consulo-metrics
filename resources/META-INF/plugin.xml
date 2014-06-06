@@ -1,27 +1,21 @@
 <idea-plugin version="2">
+	<id>org.mustbe.consulo.metrics</id>
 	<name>MetricsReloaded</name>
-	<id>MetricsReloaded</id>
-	<vendor email="basleijdekkersYour Hat@gmail.com">Bas Leijdekkers (remove 'Your Hat' to mail me;)</vendor>
-	<version>1.0 alpha 3</version>
+	<vendor>Bas Leijdekkers (Basleijdekkers@gmail.com)</vendor>
+	<version>SNAPSHOT</version>
 
 	<extensionPoints>
-		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.Metricrovider"/>
+		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<appStarter implementation="com.sixrr.metrics.offline.MetricsCommandLine"/>
-	</extensions>
-	<extensions defaultExtensionNs="MetricsReloaded">
-		<metricProvider implementation="com.sixrr.stockmetrics.DefaultMetricProvider"/>
 	</extensions>
 
 	<application-components>
 		<component>
 			<interface-class>com.sixrr.metrics.plugin.MetricsPluginApplication</interface-class>
 			<implementation-class>com.sixrr.metrics.plugin.MetricsPluginApplicationImpl</implementation-class>
-		</component>
-		<component>
-			<implementation-class>com.sixrr.stockmetrics.DefaultMetricProvider</implementation-class>
 		</component>
 	</application-components>
 

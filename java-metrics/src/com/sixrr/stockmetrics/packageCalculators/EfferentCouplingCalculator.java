@@ -21,7 +21,7 @@ import java.util.Set;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.stockmetrics.dependency.DependencyMap;
@@ -29,13 +29,13 @@ import com.sixrr.stockmetrics.dependency.DependencyMap;
 public class EfferentCouplingCalculator extends PackageCalculator
 {
 
-	private final BucketedCount<PsiPackage> numExternalDependenciesPerPackage = new BucketedCount<PsiPackage>();
+	private final BucketedCount<PsiJavaPackage> numExternalDependenciesPerPackage = new BucketedCount<PsiJavaPackage>();
 
 	@Override
 	public void endMetricsRun()
 	{
-		final Set<PsiPackage> packages = numExternalDependenciesPerPackage.getBuckets();
-		for(final PsiPackage aPackage : packages)
+		final Set<PsiJavaPackage> packages = numExternalDependenciesPerPackage.getBuckets();
+		for(final PsiJavaPackage aPackage : packages)
 		{
 			final int numExternalDependencies = numExternalDependenciesPerPackage.getBucketValue(aPackage);
 			postMetric(aPackage, numExternalDependencies);
@@ -59,15 +59,15 @@ public class EfferentCouplingCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final PsiPackage referencingPackage = ClassUtils.findPackage(aClass);
+			final PsiJavaPackage referencingPackage = ClassUtils.findPackage(aClass);
 			if(referencingPackage == null)
 			{
 				return;
 			}
 			numExternalDependenciesPerPackage.createBucket(referencingPackage);
 			final DependencyMap dependencyMap = getDependencyMap();
-			final Set<PsiPackage> packageDependencies = dependencyMap.calculatePackageDependencies(aClass);
-			for(final PsiPackage referencedPackage : packageDependencies)
+			final Set<PsiJavaPackage> packageDependencies = dependencyMap.calculatePackageDependencies(aClass);
+			for(final PsiJavaPackage referencedPackage : packageDependencies)
 			{
 				final int strength = dependencyMap.getStrengthForPackageDependency(aClass, referencedPackage);
 				numExternalDependenciesPerPackage.incrementBucketValue(referencingPackage, strength);
