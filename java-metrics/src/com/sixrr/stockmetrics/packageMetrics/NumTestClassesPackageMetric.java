@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumTestClassesPackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.test.classes.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.test.classes.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

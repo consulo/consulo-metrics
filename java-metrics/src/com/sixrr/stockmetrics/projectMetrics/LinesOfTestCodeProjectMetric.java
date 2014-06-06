@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class LinesOfTestCodeProjectMetric extends ProjectMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("lines.of.test.code.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("lines.of.test.code.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

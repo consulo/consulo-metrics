@@ -47,6 +47,7 @@ class MetricTableMouseListener extends MouseAdapter implements MouseListener
 		this.configuration = configuration;
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent e)
 	{
 		super.mouseClicked(e);

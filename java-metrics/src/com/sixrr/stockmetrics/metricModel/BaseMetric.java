@@ -36,11 +36,13 @@ public abstract class BaseMetric implements Cloneable, Metric
 
 	private final String name;
 
+	@Override
 	public Metric clone() throws CloneNotSupportedException
 	{
 		return (Metric) super.clone();
 	}
 
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(this == obj)
@@ -57,16 +59,19 @@ public abstract class BaseMetric implements Cloneable, Metric
 		return name.equals(baseMetric.getID());
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return name.hashCode();
 	}
 
+	@Override
 	public String getID()
 	{
 		return name;
 	}
 
+	@Override
 	@Nullable
 	public MetricCalculator createCalculator()
 	{
@@ -94,12 +99,14 @@ public abstract class BaseMetric implements Cloneable, Metric
 		return calculator;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpURL()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{

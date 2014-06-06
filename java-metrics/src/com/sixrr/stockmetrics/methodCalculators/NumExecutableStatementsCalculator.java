@@ -32,6 +32,7 @@ public class NumExecutableStatementsCalculator extends MethodCalculator
 	private int methodNestingDepth = 0;
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -40,6 +41,7 @@ public class NumExecutableStatementsCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -55,36 +57,42 @@ public class NumExecutableStatementsCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitExpressionListStatement(PsiExpressionListStatement statement)
 		{
 			super.visitExpressionListStatement(statement);
 			elementCount++;
 		}
 
+		@Override
 		public void visitExpressionStatement(PsiExpressionStatement statement)
 		{
 			super.visitExpressionStatement(statement);
 			elementCount++;
 		}
 
+		@Override
 		public void visitDeclarationStatement(PsiDeclarationStatement statement)
 		{
 			super.visitDeclarationStatement(statement);
 			elementCount++;
 		}
 
+		@Override
 		public void visitAssertStatement(PsiAssertStatement statement)
 		{
 			super.visitAssertStatement(statement);
 			elementCount++;
 		}
 
+		@Override
 		public void visitReturnStatement(PsiReturnStatement statement)
 		{
 			super.visitReturnStatement(statement);
 			elementCount++;
 		}
 
+		@Override
 		public void visitThrowStatement(PsiThrowStatement statement)
 		{
 			super.visitThrowStatement(statement);

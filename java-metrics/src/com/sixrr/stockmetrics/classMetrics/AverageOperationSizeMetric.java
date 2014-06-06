@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class AverageOperationSizeMetric extends ClassMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("average.operation.size.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("average.operation.size.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Average;

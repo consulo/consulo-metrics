@@ -34,6 +34,7 @@ public class ResponseForClassCalculator extends ClassCalculator
 {
 	private final Set<PsiMethod> methodsCalled = new HashSet<PsiMethod>();
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -42,6 +43,7 @@ public class ResponseForClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			if(ClassUtils.isConcrete(aClass) && !ClassUtils.isAnonymous(aClass))
@@ -61,6 +63,7 @@ public class ResponseForClassCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitMethodCallExpression(PsiMethodCallExpression expression)
 		{
 			final PsiMethod referent = expression.resolveMethod();
@@ -70,6 +73,7 @@ public class ResponseForClassCalculator extends ClassCalculator
 			}
 			final Runnable runnable = new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					methodsCalled.add(referent);

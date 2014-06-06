@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class PercentFieldsJavadocedRecursivePackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("javadoc.field.coverage.recursive.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("javadoc.field.coverage.recursive.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.RecursiveRatio;

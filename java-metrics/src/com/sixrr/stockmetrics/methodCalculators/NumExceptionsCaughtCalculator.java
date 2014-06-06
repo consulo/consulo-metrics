@@ -32,6 +32,7 @@ public class NumExceptionsCaughtCalculator extends MethodCalculator
 	private int methodNestingDepth = 0;
 	private final Set<String> caughtExceptions = new HashSet<String>();
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -39,6 +40,7 @@ public class NumExceptionsCaughtCalculator extends MethodCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -55,6 +57,7 @@ public class NumExceptionsCaughtCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitTryStatement(PsiTryStatement statement)
 		{
 			super.visitTryStatement(statement);

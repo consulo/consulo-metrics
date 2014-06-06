@@ -27,6 +27,7 @@ public class SourceLinesOfCodeClassCalculator extends ClassCalculator
 {
 	private int commentLines = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class SourceLinesOfCodeClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			int prevCommentLines = 0;
@@ -65,6 +67,7 @@ public class SourceLinesOfCodeClassCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

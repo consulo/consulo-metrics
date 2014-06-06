@@ -28,6 +28,7 @@ public class JavadocLinesOfCodeMethodCalculator extends MethodCalculator
 	private int methodNestingDepth = 0;
 	protected int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -36,6 +37,7 @@ public class JavadocLinesOfCodeMethodCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -51,6 +53,7 @@ public class JavadocLinesOfCodeMethodCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitDocComment(PsiDocComment comment)
 		{
 			super.visitDocComment(comment);

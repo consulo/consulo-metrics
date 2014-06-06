@@ -25,6 +25,7 @@ import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
 public class SnapshotFileFilter extends FileFilter
 {
+	@Override
 	public boolean accept(File f)
 	{
 		if(f.isDirectory())
@@ -35,6 +36,7 @@ public class SnapshotFileFilter extends FileFilter
 		return fileName.endsWith(".met");
 	}
 
+	@Override
 	public String getDescription()
 	{
 		return MetricsReloadedBundle.message("snapshot.files.description");

@@ -30,6 +30,7 @@ public class NumCyclicDependenciesPackageCalculator extends PackageCalculator
 {
 	private final Set<PsiJavaPackage> packages = new HashSet<PsiJavaPackage>();
 
+	@Override
 	public void endMetricsRun()
 	{
 		for(final PsiJavaPackage aPackage : packages)
@@ -41,6 +42,7 @@ public class NumCyclicDependenciesPackageCalculator extends PackageCalculator
 		}
 	}
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -48,6 +50,7 @@ public class NumCyclicDependenciesPackageCalculator extends PackageCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

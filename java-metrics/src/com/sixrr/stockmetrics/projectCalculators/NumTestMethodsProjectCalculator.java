@@ -24,6 +24,7 @@ import com.sixrr.metrics.utils.TestUtils;
 public class NumTestMethodsProjectCalculator extends ElementCountProjectCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -31,6 +32,7 @@ public class NumTestMethodsProjectCalculator extends ElementCountProjectCalculat
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			super.visitMethod(method);

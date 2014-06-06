@@ -21,6 +21,7 @@ import com.intellij.psi.*;
 public class DesignComplexityCalculator extends ComplexityCalculator
 {
 
+	@Override
 	public boolean statementIsReducible(PsiStatement statement)
 	{
 		if(statement == null)
@@ -149,6 +150,7 @@ public class DesignComplexityCalculator extends ComplexityCalculator
 	{
 		private boolean methodCalled = false;
 
+		@Override
 		public void visitMethodCallExpression(PsiMethodCallExpression expression)
 		{
 			methodCalled = true;

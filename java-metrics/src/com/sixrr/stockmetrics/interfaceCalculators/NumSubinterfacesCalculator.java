@@ -28,6 +28,7 @@ import com.intellij.util.Query;
 public class NumSubinterfacesCalculator extends InterfaceCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -36,6 +37,7 @@ public class NumSubinterfacesCalculator extends InterfaceCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(final PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -43,6 +45,7 @@ public class NumSubinterfacesCalculator extends InterfaceCalculator
 			{
 				final Runnable runnable = new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final Project project = executionContext.getProject();

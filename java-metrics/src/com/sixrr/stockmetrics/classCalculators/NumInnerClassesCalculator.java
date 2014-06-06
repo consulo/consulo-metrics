@@ -23,6 +23,7 @@ import com.intellij.psi.PsiElementVisitor;
 public class NumInnerClassesCalculator extends ClassCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -31,6 +32,7 @@ public class NumInnerClassesCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

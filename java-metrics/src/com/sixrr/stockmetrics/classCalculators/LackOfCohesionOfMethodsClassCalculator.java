@@ -44,6 +44,7 @@ public class LackOfCohesionOfMethodsClassCalculator extends ClassCalculator
 		Collections.addAll(boilerplateMethods, "toString", "equals", "hashCode", "finalize", "clone", "readObject", "writeObject");
 	}
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -52,6 +53,7 @@ public class LackOfCohesionOfMethodsClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -149,6 +151,7 @@ public class LackOfCohesionOfMethodsClassCalculator extends ClassCalculator
 		{
 		}
 
+		@Override
 		public void visitReferenceExpression(PsiReferenceExpression referenceExpression)
 		{
 			super.visitReferenceExpression(referenceExpression);
@@ -205,6 +208,7 @@ public class LackOfCohesionOfMethodsClassCalculator extends ClassCalculator
 			this.applicableMethods = applicableMethods;
 		}
 
+		@Override
 		public void visitMethodCallExpression(PsiMethodCallExpression callExpression)
 		{
 			super.visitMethodCallExpression(callExpression);

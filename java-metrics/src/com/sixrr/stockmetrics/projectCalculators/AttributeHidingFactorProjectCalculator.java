@@ -27,6 +27,7 @@ public class AttributeHidingFactorProjectCalculator extends ProjectCalculator
 	private Bag<String> packageVisibleAttributesPerPackage = new Bag<String>();
 	private Map<PsiClass, Integer> subclassesPerClass = new HashMap<PsiClass, Integer>();
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -34,6 +35,7 @@ public class AttributeHidingFactorProjectCalculator extends ProjectCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -42,6 +44,7 @@ public class AttributeHidingFactorProjectCalculator extends ProjectCalculator
 			classesPerPackage.add(packageName);
 		}
 
+		@Override
 		public void visitField(PsiField field)
 		{
 			super.visitField(field);
@@ -78,6 +81,7 @@ public class AttributeHidingFactorProjectCalculator extends ProjectCalculator
 		final int[] numSubclasses = new int[1];
 		final Runnable runnable = new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				final Project project = executionContext.getProject();
@@ -98,6 +102,7 @@ public class AttributeHidingFactorProjectCalculator extends ProjectCalculator
 		return numSubclasses[0];
 	}
 
+	@Override
 	public void endMetricsRun()
 	{
 		totalVisibility += numPublicAttributes * (numClasses - 1);

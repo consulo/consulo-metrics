@@ -21,21 +21,25 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class CouplingBetweenObjectsClassMetric extends ClassMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("coupling.between.objects.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("coupling.between.objects.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

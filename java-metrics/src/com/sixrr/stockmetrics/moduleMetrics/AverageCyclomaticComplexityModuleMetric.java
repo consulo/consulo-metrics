@@ -23,26 +23,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class AverageCyclomaticComplexityModuleMetric extends ModuleMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("average.cyclomatic.complexity.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("average.cyclomatic.complexity.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Average;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.COMPLEXITY_URL;
 	}
 
+	@Override
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.COMPLEXITY_DISPLAY_STRING;

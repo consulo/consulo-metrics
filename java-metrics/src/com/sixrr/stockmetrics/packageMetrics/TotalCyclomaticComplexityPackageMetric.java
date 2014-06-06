@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class TotalCyclomaticComplexityPackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("total.cyclomatic.complexity.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("total.cyclomatic.complexity.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

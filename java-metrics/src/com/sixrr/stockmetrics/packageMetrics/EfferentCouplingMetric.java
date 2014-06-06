@@ -24,32 +24,38 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class EfferentCouplingMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("efferent.coupling.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("efferent.coupling.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.MARTIN_URL;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.MARTIN_DISPLAY_STRING;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

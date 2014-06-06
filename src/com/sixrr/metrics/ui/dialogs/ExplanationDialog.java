@@ -80,6 +80,7 @@ public class ExplanationDialog extends DialogWrapper
 		}
 		urlLabel.addHyperlinkListener(new HyperlinkListener()
 		{
+			@Override
 			public void hyperlinkUpdate(HyperlinkEvent e)
 			{
 				if(helpURL != null)

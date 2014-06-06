@@ -399,6 +399,7 @@ class MetricTableModel extends AbstractTableModel
 			this.tableSpecification = tableSpecification;
 		}
 
+		@Override
 		public int compare(Pair pair1, Pair pair2)
 		{
 			final Object value1 = pair1.getSecond();

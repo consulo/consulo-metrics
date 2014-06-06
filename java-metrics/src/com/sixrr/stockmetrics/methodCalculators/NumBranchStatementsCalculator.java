@@ -29,6 +29,7 @@ public class NumBranchStatementsCalculator extends MethodCalculator
 	private int methodNestingDepth = 0;
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -37,6 +38,7 @@ public class NumBranchStatementsCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -52,12 +54,14 @@ public class NumBranchStatementsCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitContinueStatement(PsiContinueStatement statement)
 		{
 			super.visitContinueStatement(statement);
 			elementCount++;
 		}
 
+		@Override
 		public void visitBreakStatement(PsiBreakStatement statement)
 		{
 			super.visitBreakStatement(statement);

@@ -27,6 +27,7 @@ import com.sixrr.stockmetrics.dependency.DependentsMap;
 public class NumPackageDependentsInterfaceCalculator extends InterfaceCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class NumPackageDependentsInterfaceCalculator extends InterfaceCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

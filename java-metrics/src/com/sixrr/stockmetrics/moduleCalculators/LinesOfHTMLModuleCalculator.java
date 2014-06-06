@@ -25,6 +25,7 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 public class LinesOfHTMLModuleCalculator extends ElementCountModuleCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public class LinesOfHTMLModuleCalculator extends ElementCountModuleCalculator
 	private class Visitor extends PsiRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitFile(PsiFile file)
 		{
 			super.visitFile(file);

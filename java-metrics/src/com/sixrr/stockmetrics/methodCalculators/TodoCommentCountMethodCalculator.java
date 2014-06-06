@@ -29,6 +29,7 @@ public class TodoCommentCountMethodCalculator extends MethodCalculator
 	private int methodNestingDepth = 0;
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -37,6 +38,7 @@ public class TodoCommentCountMethodCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -52,6 +54,7 @@ public class TodoCommentCountMethodCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

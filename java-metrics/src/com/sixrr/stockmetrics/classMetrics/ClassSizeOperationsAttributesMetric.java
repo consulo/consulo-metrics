@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class ClassSizeOperationsAttributesMetric extends ClassMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("class.size.operations.attributes.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("class.size.operations.attributes.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

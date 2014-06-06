@@ -71,6 +71,7 @@ public class MetricsCommandLine implements ApplicationStarter
 	 *
 	 * @param args
 	 */
+	@Override
 	public void main(String[] args)
 	{
 		int exitCode = 0;

@@ -21,6 +21,7 @@ import com.sixrr.stockmetrics.metricModel.BaseMetric;
 
 abstract class MethodMetric extends BaseMetric
 {
+	@Override
 	public MetricCategory getCategory()
 	{
 		return MetricCategory.Method;

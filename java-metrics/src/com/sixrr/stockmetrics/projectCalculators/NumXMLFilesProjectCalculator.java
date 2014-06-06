@@ -24,6 +24,7 @@ import com.intellij.psi.xml.XmlFile;
 public class NumXMLFilesProjectCalculator extends ElementCountProjectCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -31,6 +32,7 @@ public class NumXMLFilesProjectCalculator extends ElementCountProjectCalculator
 
 	private class Visitor extends PsiRecursiveElementVisitor
 	{
+		@Override
 		public void visitFile(PsiFile file)
 		{
 			if(!(file instanceof XmlFile))

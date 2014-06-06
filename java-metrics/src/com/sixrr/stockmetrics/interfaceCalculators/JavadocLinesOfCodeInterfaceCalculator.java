@@ -27,6 +27,7 @@ public class JavadocLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 {
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class JavadocLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -55,6 +57,7 @@ public class JavadocLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 			}
 		}
 
+		@Override
 		public void visitDocComment(PsiDocComment comment)
 		{
 			elementCount += LineUtil.countLines(comment);

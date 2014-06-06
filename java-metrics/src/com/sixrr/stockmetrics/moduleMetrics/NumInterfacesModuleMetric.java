@@ -21,16 +21,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class NumInterfacesModuleMetric extends ModuleMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.interfaces.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.interfaces.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

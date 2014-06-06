@@ -29,6 +29,7 @@ import com.sixrr.metrics.utils.ClassUtils;
 public class NumSubclassesCalculator extends ClassCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -37,11 +38,13 @@ public class NumSubclassesCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(final PsiClass aClass)
 		{
 			super.visitClass(aClass);
 			final Runnable runnable = new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					if(!aClass.isInterface() && !ClassUtils.isAnonymous(aClass))

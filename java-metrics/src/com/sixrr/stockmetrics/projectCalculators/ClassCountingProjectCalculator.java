@@ -27,11 +27,13 @@ abstract class ClassCountingProjectCalculator extends ProjectCalculator
 
 	private int numElements = 0;
 
+	@Override
 	public void endMetricsRun()
 	{
 		postMetric(numElements);
 	}
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -40,6 +42,7 @@ abstract class ClassCountingProjectCalculator extends ProjectCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

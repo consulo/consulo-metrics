@@ -23,26 +23,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class ExtendedCyclomaticComplexityMetric extends MethodMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("extended.cyclomatic.complexity.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("extended.cyclomatic.complexity.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.COMPLEXITY_URL;
 	}
 
+	@Override
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.COMPLEXITY_DISPLAY_STRING;

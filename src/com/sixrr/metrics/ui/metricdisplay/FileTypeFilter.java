@@ -34,6 +34,7 @@ class FileTypeFilter extends FileFilter
 		this.description = description;
 	}
 
+	@Override
 	public boolean accept(File f)
 	{
 		if(f.isDirectory())
@@ -44,6 +45,7 @@ class FileTypeFilter extends FileFilter
 		return name.endsWith(extension);
 	}
 
+	@Override
 	public String getDescription()
 	{
 		return description;

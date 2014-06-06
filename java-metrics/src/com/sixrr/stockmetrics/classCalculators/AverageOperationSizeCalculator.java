@@ -29,6 +29,7 @@ public class AverageOperationSizeCalculator extends ClassCalculator
 	private int numStatements = 0;
 	private int numMethods = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -37,6 +38,7 @@ public class AverageOperationSizeCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			final int prevNumMethods = numMethods;
@@ -58,6 +60,7 @@ public class AverageOperationSizeCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			super.visitMethod(method);
@@ -67,6 +70,7 @@ public class AverageOperationSizeCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitStatement(PsiStatement statement)
 		{
 			super.visitStatement(statement);

@@ -25,6 +25,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 	private int complexity = 1;
 	private int methodNestingDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -56,6 +58,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitForStatement(PsiForStatement statement)
 		{
 			super.visitForStatement(statement);
@@ -65,6 +68,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitForeachStatement(PsiForeachStatement statement)
 		{
 			super.visitForeachStatement(statement);
@@ -74,6 +78,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitIfStatement(PsiIfStatement statement)
 		{
 			super.visitIfStatement(statement);
@@ -83,6 +88,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitDoWhileStatement(PsiDoWhileStatement statement)
 		{
 			super.visitDoWhileStatement(statement);
@@ -92,6 +98,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitSwitchStatement(PsiSwitchStatement statement)
 		{
 			super.visitSwitchStatement(statement);
@@ -122,6 +129,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitWhileStatement(PsiWhileStatement statement)
 		{
 			super.visitWhileStatement(statement);
@@ -131,6 +139,7 @@ abstract class ComplexityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitBinaryExpression(PsiBinaryExpression expression)
 		{
 			super.visitBinaryExpression(expression);

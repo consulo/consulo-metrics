@@ -23,6 +23,7 @@ import com.intellij.psi.PsiMethod;
 public class NumMethodsProjectCalculator extends ElementCountProjectCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -30,6 +31,7 @@ public class NumMethodsProjectCalculator extends ElementCountProjectCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			numElements++;

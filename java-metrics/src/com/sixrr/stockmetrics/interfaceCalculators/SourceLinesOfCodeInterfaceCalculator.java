@@ -27,6 +27,7 @@ public class SourceLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 {
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class SourceLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			int prevElementCount = 0;
@@ -60,6 +62,7 @@ public class SourceLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 			}
 		}
 
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

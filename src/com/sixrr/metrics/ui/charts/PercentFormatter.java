@@ -32,6 +32,7 @@ class PercentFormatter extends NumberFormat
 		numberFormatter.setMinimumFractionDigits(2);
 	}
 
+	@Override
 	public StringBuffer format(
 			double number, StringBuffer toAppendTo, FieldPosition pos)
 	{
@@ -40,6 +41,7 @@ class PercentFormatter extends NumberFormat
 		return toAppendTo;
 	}
 
+	@Override
 	public StringBuffer format(
 			long number, StringBuffer toAppendTo, FieldPosition pos)
 	{
@@ -48,6 +50,7 @@ class PercentFormatter extends NumberFormat
 		return toAppendTo;
 	}
 
+	@Override
 	@Nullable
 	public Number parse(String source, ParsePosition parsePosition)
 	{

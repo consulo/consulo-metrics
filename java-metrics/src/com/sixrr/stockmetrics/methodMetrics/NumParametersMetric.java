@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumParametersMetric extends MethodMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.parameters.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.parameters.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;

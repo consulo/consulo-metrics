@@ -22,21 +22,25 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumTransitiveDependentPackagesPackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.transitively.dependent.packages.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.transitively.dependent.packages.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

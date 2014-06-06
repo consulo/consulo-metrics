@@ -21,16 +21,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class MessagePassingCouplingClassMetric extends ClassMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("message.passing.coupling.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("message.passing.complexity.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;

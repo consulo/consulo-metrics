@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumAnnotationClassesRecursivePackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.annotation.interfaces.recursive.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.annotation.interfaces.recursive.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.RecursiveCount;

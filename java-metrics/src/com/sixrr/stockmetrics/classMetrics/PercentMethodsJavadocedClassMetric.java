@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class PercentMethodsJavadocedClassMetric extends ClassMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("javadoc.method.coverage.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("javadoc.method.coverage.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Ratio;

@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class SourceLinesOfCodeProductRecursivePackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("source.lines.of.code.product.recursive.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("source.lines.of.code.product.recursive.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.RecursiveCount;

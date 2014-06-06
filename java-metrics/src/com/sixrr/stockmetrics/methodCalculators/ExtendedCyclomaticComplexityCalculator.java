@@ -20,11 +20,13 @@ import com.intellij.psi.PsiStatement;
 
 public class ExtendedCyclomaticComplexityCalculator extends ComplexityCalculator
 {
+	@Override
 	public boolean statementIsReducible(PsiStatement statement)
 	{
 		return false;
 	}
 
+	@Override
 	protected boolean countShortCircuitExpressions()
 	{
 		return true;

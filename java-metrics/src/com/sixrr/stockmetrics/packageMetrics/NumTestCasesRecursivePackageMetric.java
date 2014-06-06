@@ -24,26 +24,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumTestCasesRecursivePackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.junit.test.cases.recursive.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.junit.test.cases.recursive.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.RecursiveCount;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.JUNIT_URL;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{

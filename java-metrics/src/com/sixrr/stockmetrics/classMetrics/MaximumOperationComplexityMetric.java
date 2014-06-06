@@ -23,26 +23,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class MaximumOperationComplexityMetric extends ClassMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("maximum.operation.complexity.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("maximum.operation.complexity.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.COMPLEXITY_URL;
 	}
 
+	@Override
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.COMPLEXITY_DISPLAY_STRING;

@@ -24,6 +24,7 @@ import com.intellij.psi.PsiField;
 public class InterfaceSizeAttributesCalculator extends InterfaceCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -32,6 +33,7 @@ public class InterfaceSizeAttributesCalculator extends InterfaceCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

@@ -23,26 +23,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumQueriesInterfaceMetric extends InterfaceMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.queries.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.queries.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.MEYER_URL;
 	}
 
+	@Override
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.MEYER_DISPLAY_STRING;

@@ -21,16 +21,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class LackOfCohesionOfMethodsClassMetric extends ClassMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("lack.of.cohesion.of.methods.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("lack.of.cohesion.of.methods.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;

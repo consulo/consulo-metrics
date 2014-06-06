@@ -34,6 +34,7 @@ public class MetricInstanceImpl implements MetricInstance
 		this.metric = metric;
 	}
 
+	@Override
 	public void copyFrom(MetricInstance o)
 	{
 		upperThresholdEnabled = o.isUpperThresholdEnabled();
@@ -42,6 +43,7 @@ public class MetricInstanceImpl implements MetricInstance
 		lowerThreshold = o.getLowerThreshold();
 	}
 
+	@Override
 	public int compareTo(MetricInstance o)
 	{
 		final MetricCategory category1 = metric.getCategory();
@@ -56,6 +58,7 @@ public class MetricInstanceImpl implements MetricInstance
 		return displayName1.compareTo(displayName2);
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o.getClass() != MetricInstanceImpl.class)
@@ -80,56 +83,67 @@ public class MetricInstanceImpl implements MetricInstance
 		return 31 * metric.getCategory().hashCode() + metric.getDisplayName().hashCode();
 	}
 
+	@Override
 	public Metric getMetric()
 	{
 		return metric;
 	}
 
+	@Override
 	public boolean isEnabled()
 	{
 		return enabled;
 	}
 
+	@Override
 	public void setEnabled(boolean enabled)
 	{
 		this.enabled = enabled;
 	}
 
+	@Override
 	public boolean isUpperThresholdEnabled()
 	{
 		return upperThresholdEnabled;
 	}
 
+	@Override
 	public void setUpperThresholdEnabled(boolean upperThresholdEnabled)
 	{
 		this.upperThresholdEnabled = upperThresholdEnabled;
 	}
 
+	@Override
 	public double getUpperThreshold()
 	{
 		return upperThreshold;
 	}
 
+	@Override
 	public void setUpperThreshold(double upperThreshold)
 	{
 		this.upperThreshold = upperThreshold;
 	}
 
+	@Override
 	public boolean isLowerThresholdEnabled()
 	{
 		return lowerThresholdEnabled;
 	}
 
+	@Override
 	public void setLowerThresholdEnabled(boolean lowerThresholdEnabled)
 	{
 		this.lowerThresholdEnabled = lowerThresholdEnabled;
 	}
 
+	@Override
 	public double getLowerThreshold()
 	{
 		return lowerThreshold;
 	}
 
+	@Override
 	public void setLowerThreshold(double lowerThreshold)
 	{
 		this.lowerThreshold = lowerThreshold;
@@ -141,6 +155,7 @@ public class MetricInstanceImpl implements MetricInstance
 		return (MetricInstanceImpl) super.clone();
 	}
 
+	@Override
 	public String toString()
 	{
 		return metric.getCategory() + "/" + metric.getDisplayName();

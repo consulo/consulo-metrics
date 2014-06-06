@@ -26,6 +26,7 @@ public abstract class HalsteadMethodCalculator extends MethodCalculator
 {
 	private int methodNestingDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -34,6 +35,7 @@ public abstract class HalsteadMethodCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))

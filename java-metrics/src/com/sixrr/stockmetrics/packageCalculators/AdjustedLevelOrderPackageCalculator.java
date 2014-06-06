@@ -30,6 +30,7 @@ public class AdjustedLevelOrderPackageCalculator extends PackageCalculator
 {
 	private final Set<PsiJavaPackage> packages = new HashSet<PsiJavaPackage>();
 
+	@Override
 	public void endMetricsRun()
 	{
 		for(final PsiJavaPackage packageName : packages)
@@ -40,6 +41,7 @@ public class AdjustedLevelOrderPackageCalculator extends PackageCalculator
 		}
 	}
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -48,6 +50,7 @@ public class AdjustedLevelOrderPackageCalculator extends PackageCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

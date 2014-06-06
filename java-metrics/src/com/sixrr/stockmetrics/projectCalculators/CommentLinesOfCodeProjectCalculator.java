@@ -23,6 +23,7 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentLinesOfCodeProjectCalculator extends ElementCountProjectCalculator
 {
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -30,6 +31,7 @@ public class CommentLinesOfCodeProjectCalculator extends ElementCountProjectCalc
 
 	private class Visitor extends PsiRecursiveElementVisitor
 	{
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

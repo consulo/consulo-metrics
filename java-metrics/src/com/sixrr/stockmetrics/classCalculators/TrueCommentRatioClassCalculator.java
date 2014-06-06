@@ -27,6 +27,7 @@ public class TrueCommentRatioClassCalculator extends ClassCalculator
 {
 	private int commentLines = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class TrueCommentRatioClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -66,6 +68,7 @@ public class TrueCommentRatioClassCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

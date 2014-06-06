@@ -32,6 +32,7 @@ public class NumOverridesMethodCalculator extends MethodCalculator
 {
 	private int methodNestingDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -40,10 +41,12 @@ public class NumOverridesMethodCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(final PsiMethod method)
 		{
 			final Runnable runnable = new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))

@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class EncapsulationRatioPackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("encapsulation.ratio.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("encapsulation.ratio.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Ratio;

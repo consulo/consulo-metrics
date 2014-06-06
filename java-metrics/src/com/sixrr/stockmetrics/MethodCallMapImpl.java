@@ -47,6 +47,7 @@ public class MethodCallMapImpl implements MethodCallMap
 	private final Map<SmartPsiElementPointer<PsiMethod>, Set<PsiReference>> methodToProductCallPointMap = new
 			HashMap<SmartPsiElementPointer<PsiMethod>, Set<PsiReference>>(1024);
 
+	@Override
 	public Set<PsiReference> calculateMethodCallPoints(PsiMethod method)
 	{
 		final SmartPointerManager manager = SmartPointerManager.getInstance(method.getProject());
@@ -58,6 +59,7 @@ public class MethodCallMapImpl implements MethodCallMap
 		return methodToCallPointMap.get(pointer);
 	}
 
+	@Override
 	public Set<PsiReference> calculateTestMethodCallPoints(PsiMethod method)
 	{
 		final SmartPointerManager manager = SmartPointerManager.getInstance(method.getProject());
@@ -69,6 +71,7 @@ public class MethodCallMapImpl implements MethodCallMap
 		return methodToTestCallPointMap.get(pointer);
 	}
 
+	@Override
 	public Set<PsiReference> calculateProductMethodCallPoints(
 			PsiMethod method)
 	{
@@ -91,6 +94,7 @@ public class MethodCallMapImpl implements MethodCallMap
 		final SearchScope scope = GlobalSearchScope.projectScope(project);
 		final Runnable runnable = new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				final Query<PsiReference> query = ReferencesSearch.search(method, scope, false);

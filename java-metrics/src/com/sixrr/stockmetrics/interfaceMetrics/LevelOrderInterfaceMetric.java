@@ -23,33 +23,39 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class LevelOrderInterfaceMetric extends InterfaceMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("level.order.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("level.order.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpURL()
 	{
 		return HelpURLs.LAYERING_URL;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.LAYERING_DISPLAY_STRING;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

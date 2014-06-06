@@ -26,6 +26,7 @@ public class NumExceptionsThrownCalculator extends MethodCalculator
 {
 	private int methodNestingDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public class NumExceptionsThrownCalculator extends MethodCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)

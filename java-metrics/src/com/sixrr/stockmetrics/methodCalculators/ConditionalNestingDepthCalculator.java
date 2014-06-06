@@ -29,6 +29,7 @@ public class ConditionalNestingDepthCalculator extends MethodCalculator
 	private int maximumDepth = 0;
 	private int currentDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -36,6 +37,7 @@ public class ConditionalNestingDepthCalculator extends MethodCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingCount == 0)
@@ -55,6 +57,7 @@ public class ConditionalNestingDepthCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitIfStatement(PsiIfStatement statement)
 		{
 			boolean isAlreadyCounted = false;

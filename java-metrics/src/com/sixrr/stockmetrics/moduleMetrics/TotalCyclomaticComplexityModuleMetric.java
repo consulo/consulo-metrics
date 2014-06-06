@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class TotalCyclomaticComplexityModuleMetric extends ModuleMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("total.cyclomatic.complexity");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("cctot");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

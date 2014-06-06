@@ -22,16 +22,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class CommentRatioModuleMetric extends ModuleMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("comment.ratio.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("comment.ratio.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Ratio;

@@ -21,16 +21,19 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class NumHTMLFilesModuleMetric extends ModuleMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.html.files.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.html.files.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;

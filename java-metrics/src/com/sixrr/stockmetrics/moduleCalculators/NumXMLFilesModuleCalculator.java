@@ -22,6 +22,7 @@ import com.intellij.psi.xml.XmlFile;
 public class NumXMLFilesModuleCalculator extends FileCountModuleCalculator
 {
 
+	@Override
 	protected boolean satisfies(PsiFile file)
 	{
 		if(!(file instanceof XmlFile))

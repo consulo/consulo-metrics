@@ -23,6 +23,7 @@ import com.sixrr.stockmetrics.utils.TodoUtil;
 
 public class TodoCommentCountProjectCalculator extends ElementCountProjectCalculator
 {
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -30,6 +31,7 @@ public class TodoCommentCountProjectCalculator extends ElementCountProjectCalcul
 
 	private class Visitor extends PsiRecursiveElementVisitor
 	{
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

@@ -23,31 +23,37 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class CouplingFactorProjectMetric extends ProjectMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("coupling.factor.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("coupling.factor.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Ratio;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.MOOD_URL;
 	}
 
+	@Override
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.MOOD_DISPLAY_STRING;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

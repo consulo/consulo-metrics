@@ -28,6 +28,7 @@ public class CouplingFactorProjectCalculator extends ProjectCalculator
 	private int totalCoupling = 0;
 	private int numClasses = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class CouplingFactorProjectCalculator extends ProjectCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			numClasses++;
@@ -45,6 +47,7 @@ public class CouplingFactorProjectCalculator extends ProjectCalculator
 		}
 	}
 
+	@Override
 	public void endMetricsRun()
 	{
 		final int denominator = (numClasses * (numClasses - 1)) / 2;

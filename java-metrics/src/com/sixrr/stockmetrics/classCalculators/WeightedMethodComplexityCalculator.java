@@ -22,6 +22,7 @@ public class WeightedMethodComplexityCalculator extends ClassCalculator
 {
 	private int complexity = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -30,6 +31,7 @@ public class WeightedMethodComplexityCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			int prevComplexity = 0;
@@ -47,6 +49,7 @@ public class WeightedMethodComplexityCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			super.visitMethod(method);
@@ -56,36 +59,42 @@ public class WeightedMethodComplexityCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitForStatement(PsiForStatement statement)
 		{
 			super.visitForStatement(statement);
 			complexity++;
 		}
 
+		@Override
 		public void visitForeachStatement(PsiForeachStatement statement)
 		{
 			super.visitForeachStatement(statement);
 			complexity++;
 		}
 
+		@Override
 		public void visitIfStatement(PsiIfStatement statement)
 		{
 			super.visitIfStatement(statement);
 			complexity++;
 		}
 
+		@Override
 		public void visitDoWhileStatement(PsiDoWhileStatement statement)
 		{
 			super.visitDoWhileStatement(statement);
 			complexity++;
 		}
 
+		@Override
 		public void visitConditionalExpression(PsiConditionalExpression expression)
 		{
 			super.visitConditionalExpression(expression);
 			complexity++;
 		}
 
+		@Override
 		public void visitSwitchStatement(PsiSwitchStatement statement)
 		{
 			super.visitSwitchStatement(statement);
@@ -113,6 +122,7 @@ public class WeightedMethodComplexityCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitWhileStatement(PsiWhileStatement statement)
 		{
 			super.visitWhileStatement(statement);

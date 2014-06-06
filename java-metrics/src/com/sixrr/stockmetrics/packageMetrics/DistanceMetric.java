@@ -24,32 +24,38 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class DistanceMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("distance.to.main.sequence.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("distance.to.main.sequence.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Average;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.MARTIN_URL;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.MARTIN_DISPLAY_STRING;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

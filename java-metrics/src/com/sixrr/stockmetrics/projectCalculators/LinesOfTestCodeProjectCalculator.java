@@ -25,6 +25,7 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 public class LinesOfTestCodeProjectCalculator extends ElementCountProjectCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public class LinesOfTestCodeProjectCalculator extends ElementCountProjectCalcula
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			if(TestUtils.isTest(file))

@@ -23,26 +23,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class AttributeHidingFactorProjectMetric extends ProjectMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("attribute.hiding.factor.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("attribute.hiding.factor.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Ratio;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.MOOD_URL;
 	}
 
+	@Override
 	public String getHelpDisplayString()
 	{
 		return HelpURLs.MOOD_DISPLAY_STRING;

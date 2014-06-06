@@ -25,6 +25,7 @@ public class ControlDensityCalculator extends MethodCalculator
 	private int numerator = 0;
 	private int denominator = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public class ControlDensityCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -56,6 +58,7 @@ public class ControlDensityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitStatement(PsiStatement statement)
 		{
 			super.visitStatement(statement);
@@ -65,66 +68,77 @@ public class ControlDensityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitIfStatement(PsiIfStatement statement)
 		{
 			super.visitIfStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitDoWhileStatement(PsiDoWhileStatement statement)
 		{
 			super.visitDoWhileStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitContinueStatement(PsiContinueStatement statement)
 		{
 			super.visitContinueStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitBreakStatement(PsiBreakStatement statement)
 		{
 			super.visitBreakStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitForStatement(PsiForStatement statement)
 		{
 			super.visitForStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitForeachStatement(PsiForeachStatement statement)
 		{
 			super.visitForeachStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitSwitchLabelStatement(PsiSwitchLabelStatement statement)
 		{
 			super.visitSwitchLabelStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitSwitchStatement(PsiSwitchStatement statement)
 		{
 			super.visitSwitchStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitSynchronizedStatement(PsiSynchronizedStatement statement)
 		{
 			super.visitSynchronizedStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitTryStatement(PsiTryStatement statement)
 		{
 			super.visitTryStatement(statement);
 			numerator++;
 		}
 
+		@Override
 		public void visitWhileStatement(PsiWhileStatement statement)
 		{
 			super.visitWhileStatement(statement);

@@ -22,6 +22,7 @@ import com.sixrr.metrics.Metric;
 
 public class MetricAbbreviationComparator implements Comparator<Metric>
 {
+	@Override
 	public int compare(Metric o1, Metric o2)
 	{
 		final String abbrev1 = o1.getAbbreviation();

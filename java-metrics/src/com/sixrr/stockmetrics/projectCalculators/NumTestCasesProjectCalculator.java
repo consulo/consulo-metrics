@@ -22,6 +22,7 @@ import com.sixrr.metrics.utils.TestUtils;
 public class NumTestCasesProjectCalculator extends ClassCountingProjectCalculator
 {
 
+	@Override
 	public boolean satisfies(PsiClass aClass)
 	{
 		return TestUtils.isJUnitTestCase(aClass);

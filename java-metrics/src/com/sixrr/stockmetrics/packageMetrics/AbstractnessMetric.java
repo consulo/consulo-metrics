@@ -24,26 +24,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class AbstractnessMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("abstractness.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("abstractness.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Ratio;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.MARTIN_URL;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{

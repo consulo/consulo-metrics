@@ -29,6 +29,7 @@ import com.sixrr.metrics.utils.MethodUtils;
 public class NumImplementationsMethodCalculator extends MethodCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -37,11 +38,13 @@ public class NumImplementationsMethodCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(final PsiMethod method)
 		{
 			super.visitMethod(method);
 			final Runnable runnable = new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					if(MethodUtils.isAbstract(method))

@@ -30,6 +30,7 @@ public class MaximumOperationSizeCalculator extends ClassCalculator
 	private int maxNumStatements = 0;
 	private int numMethods = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -38,6 +39,7 @@ public class MaximumOperationSizeCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			int prevMaxNumStatements = 0;
@@ -65,6 +67,7 @@ public class MaximumOperationSizeCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(method.getBody() != null)
@@ -79,6 +82,7 @@ public class MaximumOperationSizeCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitStatement(PsiStatement statement)
 		{
 			super.visitStatement(statement);

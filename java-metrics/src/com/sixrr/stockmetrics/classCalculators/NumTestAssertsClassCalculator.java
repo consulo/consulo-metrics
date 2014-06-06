@@ -27,6 +27,7 @@ public class NumTestAssertsClassCalculator extends ClassCalculator
 {
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -35,6 +36,7 @@ public class NumTestAssertsClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			final int prevElementCount = elementCount;
@@ -53,6 +55,7 @@ public class NumTestAssertsClassCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitMethodCallExpression(PsiMethodCallExpression expression)
 		{
 			super.visitMethodCallExpression(expression);

@@ -25,6 +25,7 @@ public class NestingDepthCalculator extends MethodCalculator
 	private int maximumDepth = 0;
 	private int currentDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public class NestingDepthCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingCount == 0)
@@ -52,6 +54,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitBlockStatement(PsiBlockStatement statement)
 		{
 			final PsiElement parent = statement.getParent();
@@ -71,6 +74,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitDoWhileStatement(PsiDoWhileStatement statement)
 		{
 			enterScope();
@@ -78,6 +82,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			enterScope();
 		}
 
+		@Override
 		public void visitForStatement(PsiForStatement statement)
 		{
 			enterScope();
@@ -85,6 +90,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			enterScope();
 		}
 
+		@Override
 		public void visitForeachStatement(PsiForeachStatement statement)
 		{
 			enterScope();
@@ -92,6 +98,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			enterScope();
 		}
 
+		@Override
 		public void visitIfStatement(PsiIfStatement statement)
 		{
 			boolean isAlreadyCounted = false;
@@ -116,6 +123,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitSynchronizedStatement(PsiSynchronizedStatement statement)
 		{
 			enterScope();
@@ -123,6 +131,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitTryStatement(PsiTryStatement statement)
 		{
 			enterScope();
@@ -130,6 +139,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitSwitchStatement(PsiSwitchStatement statement)
 		{
 			enterScope();
@@ -137,6 +147,7 @@ public class NestingDepthCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitWhileStatement(PsiWhileStatement statement)
 		{
 			enterScope();

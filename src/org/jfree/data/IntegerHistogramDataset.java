@@ -128,6 +128,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param series the series index.
 	 * @return An array of bins.
 	 */
+	@Override
 	HistogramBin[] getBins(int series)
 	{
 		@NonNls final Map map = (Map) list.get(series);
@@ -163,6 +164,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 *
 	 * @return The series count.
 	 */
+	@Override
 	public int getSeriesCount()
 	{
 		return list.size();
@@ -174,6 +176,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param series the series index (zero based).
 	 * @return The series name.
 	 */
+	@Override
 	public String getSeriesName(int series)
 	{
 		@NonNls final Map map = (Map) list.get(series);
@@ -186,6 +189,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param series the series index (zero based).
 	 * @return The item count.
 	 */
+	@Override
 	public int getItemCount(int series)
 	{
 		return getBins(series).length;
@@ -202,6 +206,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param item   the item index (zero based).
 	 * @return The start value.
 	 */
+	@Override
 	public Number getXValue(int series, int item)
 	{
 		final HistogramBin[] bins = getBins(series);
@@ -216,6 +221,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param item   the item index (zero based).
 	 * @return The Y value.
 	 */
+	@Override
 	public Number getYValue(int series, int item)
 	{
 		final HistogramBin[] bins = getBins(series);
@@ -247,6 +253,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param item   the item index (zero based).
 	 * @return The start value.
 	 */
+	@Override
 	public Number getStartXValue(int series, int item)
 	{
 		final HistogramBin[] bins = getBins(series);
@@ -260,6 +267,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param item   the item index (zero based).
 	 * @return The end value.
 	 */
+	@Override
 	public Number getEndXValue(int series, int item)
 	{
 		final HistogramBin[] bins = getBins(series);
@@ -273,6 +281,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param item   the item index (zero based).
 	 * @return The Y value.
 	 */
+	@Override
 	public Number getStartYValue(int series, int item)
 	{
 		//HistogramBin[] bins = getBins(series);
@@ -286,6 +295,7 @@ public class IntegerHistogramDataset extends HistogramDataset
 	 * @param item   the item index (zero based).
 	 * @return The Y value.
 	 */
+	@Override
 	public Number getEndYValue(int series, int item)
 	{
 		//HistogramBin[] bins = getBins(series);

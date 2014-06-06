@@ -28,6 +28,7 @@ public class TodoCommentCountClassCalculator extends ClassCalculator
 {
 	private int elementCount = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -36,6 +37,7 @@ public class TodoCommentCountClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			final int prevElementCount = elementCount;
@@ -54,6 +56,7 @@ public class TodoCommentCountClassCalculator extends ClassCalculator
 			}
 		}
 
+		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);

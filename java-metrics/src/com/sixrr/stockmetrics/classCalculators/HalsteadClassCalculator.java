@@ -25,6 +25,7 @@ public abstract class HalsteadClassCalculator extends ClassCalculator
 {
 	protected abstract double calculateValue(HalsteadVisitor visitor);
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public abstract class HalsteadClassCalculator extends ClassCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

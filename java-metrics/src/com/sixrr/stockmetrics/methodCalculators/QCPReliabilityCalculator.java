@@ -30,6 +30,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 	private int maxNestingDepth = 0;
 	private int currentDepth = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -37,6 +38,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -62,42 +64,49 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitExpressionListStatement(PsiExpressionListStatement statement)
 		{
 			super.visitExpressionListStatement(statement);
 			numExecutableStatements++;
 		}
 
+		@Override
 		public void visitExpressionStatement(PsiExpressionStatement statement)
 		{
 			super.visitExpressionStatement(statement);
 			numExecutableStatements++;
 		}
 
+		@Override
 		public void visitDeclarationStatement(PsiDeclarationStatement statement)
 		{
 			super.visitDeclarationStatement(statement);
 			numExecutableStatements++;
 		}
 
+		@Override
 		public void visitAssertStatement(PsiAssertStatement statement)
 		{
 			super.visitAssertStatement(statement);
 			numExecutableStatements++;
 		}
 
+		@Override
 		public void visitReturnStatement(PsiReturnStatement statement)
 		{
 			super.visitReturnStatement(statement);
 			numExecutableStatements++;
 		}
 
+		@Override
 		public void visitThrowStatement(PsiThrowStatement statement)
 		{
 			super.visitThrowStatement(statement);
 			numExecutableStatements++;
 		}
 
+		@Override
 		public void visitIfStatement(PsiIfStatement statement)
 		{
 			boolean isAlreadyCounted = false;
@@ -123,6 +132,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitDoWhileStatement(PsiDoWhileStatement statement)
 		{
 			enterScope();
@@ -132,6 +142,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitContinueStatement(PsiContinueStatement statement)
 		{
 			super.visitContinueStatement(statement);
@@ -139,6 +150,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			numControlStatements++;
 		}
 
+		@Override
 		public void visitBreakStatement(PsiBreakStatement statement)
 		{
 			super.visitBreakStatement(statement);
@@ -153,6 +165,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitForStatement(PsiForStatement statement)
 		{
 			enterScope();
@@ -162,6 +175,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitForeachStatement(PsiForeachStatement statement)
 		{
 			enterScope();
@@ -171,12 +185,14 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitSwitchLabelStatement(PsiSwitchLabelStatement statement)
 		{
 			super.visitSwitchLabelStatement(statement);
 			numControlStatements++;
 		}
 
+		@Override
 		public void visitSwitchStatement(PsiSwitchStatement statement)
 		{
 			enterScope();
@@ -207,6 +223,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitSynchronizedStatement(PsiSynchronizedStatement statement)
 		{
 			enterScope();
@@ -215,6 +232,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitTryStatement(PsiTryStatement statement)
 		{
 			enterScope();
@@ -223,6 +241,7 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitWhileStatement(PsiWhileStatement statement)
 		{
 			enterScope();
@@ -232,12 +251,14 @@ public class QCPReliabilityCalculator extends MethodCalculator
 			exitScope();
 		}
 
+		@Override
 		public void visitConditionalExpression(PsiConditionalExpression expression)
 		{
 			super.visitConditionalExpression(expression);
 			complexity++;
 		}
 
+		@Override
 		public void visitBlockStatement(PsiBlockStatement statement)
 		{
 			final PsiElement parent = statement.getParent();

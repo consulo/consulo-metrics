@@ -20,6 +20,7 @@ import com.intellij.psi.PsiClass;
 
 public class NumClassesModuleCalculator extends ClassCountingModuleCalculator
 {
+	@Override
 	public boolean satisfies(PsiClass aClass)
 	{
 		return true;

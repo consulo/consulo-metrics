@@ -25,6 +25,7 @@ import com.intellij.psi.javadoc.PsiDocComment;
 public class PercentMethodsJavadocedInterfaceCalculator extends InterfaceCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -33,6 +34,7 @@ public class PercentMethodsJavadocedInterfaceCalculator extends InterfaceCalcula
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);

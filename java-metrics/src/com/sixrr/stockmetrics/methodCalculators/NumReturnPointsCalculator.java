@@ -31,6 +31,7 @@ public class NumReturnPointsCalculator extends MethodCalculator
 	private int methodNestingDepth = 0;
 	private int numReturnPoints = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -39,6 +40,7 @@ public class NumReturnPointsCalculator extends MethodCalculator
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
 
+		@Override
 		public void visitMethod(PsiMethod method)
 		{
 			if(methodNestingDepth == 0)
@@ -75,6 +77,7 @@ public class NumReturnPointsCalculator extends MethodCalculator
 			}
 		}
 
+		@Override
 		public void visitReturnStatement(PsiReturnStatement statement)
 		{
 			numReturnPoints++;

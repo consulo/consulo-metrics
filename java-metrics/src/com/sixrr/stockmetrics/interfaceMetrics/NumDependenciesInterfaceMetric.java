@@ -21,21 +21,25 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 
 public class NumDependenciesInterfaceMetric extends InterfaceMetric
 {
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.dependencies.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.dependencies.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

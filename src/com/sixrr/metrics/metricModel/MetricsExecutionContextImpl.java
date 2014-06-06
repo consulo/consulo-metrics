@@ -55,6 +55,7 @@ public abstract class MetricsExecutionContextImpl implements MetricsExecutionCon
 		final Task.Backgroundable task = new Task.Backgroundable(project, MetricsReloadedBundle.message("calculating.metrics"), true)
 		{
 
+			@Override
 			public void run(@NotNull final ProgressIndicator indicator)
 			{
 				final List<MetricInstance> metrics = profile.getMetrics();
@@ -64,6 +65,7 @@ public abstract class MetricsExecutionContextImpl implements MetricsExecutionCon
 				final List<MetricCalculator> calculators = new ArrayList<MetricCalculator>(numMetrics);
 				ApplicationManager.getApplication().runReadAction(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						for(final MetricInstance metricInstance : metrics)
@@ -140,11 +142,13 @@ public abstract class MetricsExecutionContextImpl implements MetricsExecutionCon
 	{
 	}
 
+	@Override
 	public final Project getProject()
 	{
 		return project;
 	}
 
+	@Override
 	public final AnalysisScope getScope()
 	{
 		return scope;
@@ -152,11 +156,13 @@ public abstract class MetricsExecutionContextImpl implements MetricsExecutionCon
 
 	private Map userData = new HashMap();
 
+	@Override
 	public final <T> T getUserData(Key<T> key)
 	{
 		return (T) userData.get(key);
 	}
 
+	@Override
 	public final <T> void putUserData(Key<T> key, T t)
 	{
 		userData.put(key, t);

@@ -21,6 +21,7 @@ import com.intellij.psi.*;
 public class EssentialCyclomaticComplexityCalculator extends ComplexityCalculator
 {
 
+	@Override
 	public boolean statementIsReducible(PsiStatement statement)
 	{
 		if(statement == null)

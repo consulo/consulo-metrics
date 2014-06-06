@@ -28,6 +28,7 @@ public class ClassReferenceCache
 		{
 			final Runnable runnable = new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final SearchScope scope = aClass.getUseScope();

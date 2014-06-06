@@ -24,26 +24,31 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumTestMethodsPackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.junit.test.methods.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.junit.test.methods.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Count;
 	}
 
+	@Override
 	public String getHelpURL()
 	{
 		return HelpURLs.JUNIT_URL;
 	}
 
+	@Override
 	@Nullable
 	public String getHelpDisplayString()
 	{

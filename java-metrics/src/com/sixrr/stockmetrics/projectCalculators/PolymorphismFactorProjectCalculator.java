@@ -35,6 +35,7 @@ public class PolymorphismFactorProjectCalculator extends ProjectCalculator
 	private int numOverridingMethods = 0;
 	private int numOverridePotentials = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -42,6 +43,7 @@ public class PolymorphismFactorProjectCalculator extends ProjectCalculator
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -61,6 +63,7 @@ public class PolymorphismFactorProjectCalculator extends ProjectCalculator
 		}
 	}
 
+	@Override
 	public void endMetricsRun()
 	{
 		postMetric(numOverridingMethods, numOverridePotentials);
@@ -75,6 +78,7 @@ public class PolymorphismFactorProjectCalculator extends ProjectCalculator
 		final int[] numSubclasses = new int[1];
 		final Runnable runnable = new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				final Project project = executionContext.getProject();

@@ -24,6 +24,7 @@ import com.sixrr.stockmetrics.utils.LineUtil;
 public class JavadocLinesOfCodeProjectCalculator extends ElementCountProjectCalculator
 {
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -31,6 +32,7 @@ public class JavadocLinesOfCodeProjectCalculator extends ElementCountProjectCalc
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitDocComment(PsiDocComment comment)
 		{
 			numElements += LineUtil.countLines(comment);

@@ -127,16 +127,19 @@ public class DiffDistributionDialog extends DialogWrapper
 		return new JFreeChart(title, JFreeChartConstants.DEFAULT_TITLE_FONT, plot, true);
 	}
 
+	@Override
 	public JComponent createCenterPanel()
 	{
 		return chartPanel;
 	}
 
+	@Override
 	public Action[] createActions()
 	{
 		return new Action[0];
 	}
 
+	@Override
 	public String getTitle()
 	{
 		if(metricName.startsWith(MetricsReloadedBundle.message("number.of")))
@@ -151,6 +154,7 @@ public class DiffDistributionDialog extends DialogWrapper
 	}
 
 
+	@Override
 	@NonNls
 	protected String getDimensionServiceKey()
 	{

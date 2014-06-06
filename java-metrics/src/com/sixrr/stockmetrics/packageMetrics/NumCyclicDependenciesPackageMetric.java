@@ -22,21 +22,25 @@ import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
 public class NumCyclicDependenciesPackageMetric extends PackageMetric
 {
 
+	@Override
 	public String getDisplayName()
 	{
 		return StockMetricsBundle.message("number.of.cyclic.package.dependencies.display.name");
 	}
 
+	@Override
 	public String getAbbreviation()
 	{
 		return StockMetricsBundle.message("number.of.cyclic.dependencies.abbreviation");
 	}
 
+	@Override
 	public MetricType getType()
 	{
 		return MetricType.Score;
 	}
 
+	@Override
 	public boolean requiresDependents()
 	{
 		return true;

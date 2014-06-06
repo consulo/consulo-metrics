@@ -50,11 +50,13 @@ public class MetricsProfileImpl implements MetricsProfile
 		Collections.sort(this.metrics);
 	}
 
+	@Override
 	public MetricDisplaySpecification getDisplaySpecification()
 	{
 		return displaySpecification;
 	}
 
+	@Override
 	public void copyFrom(List<MetricInstance> metrics)
 	{
 		for(MetricInstance newMetric : metrics)
@@ -70,31 +72,37 @@ public class MetricsProfileImpl implements MetricsProfile
 		}
 	}
 
+	@Override
 	public boolean isBuiltIn()
 	{
 		return builtIn;
 	}
 
+	@Override
 	public void setBuiltIn(boolean builtIn)
 	{
 		this.builtIn = builtIn;
 	}
 
+	@Override
 	public void setName(String newProfileName)
 	{
 		name = newProfileName;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 
+	@Override
 	public List<MetricInstance> getMetrics()
 	{
 		return Collections.unmodifiableList(metrics);
 	}
 
+	@Override
 	public void replaceMetrics(List<MetricInstance> newMetrics)
 	{
 		metrics.clear();
@@ -102,6 +110,7 @@ public class MetricsProfileImpl implements MetricsProfile
 		Collections.sort(metrics);
 	}
 
+	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
 		final MetricsProfileImpl out = (MetricsProfileImpl) super.clone();
@@ -114,6 +123,7 @@ public class MetricsProfileImpl implements MetricsProfile
 		return out;
 	}
 
+	@Override
 	@Nullable
 	public MetricInstance getMetricForClass(Class<? extends Metric> aClass)
 	{
@@ -128,6 +138,7 @@ public class MetricsProfileImpl implements MetricsProfile
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public MetricInstance getMetricForName(String name)
 	{
@@ -289,6 +300,7 @@ public class MetricsProfileImpl implements MetricsProfile
 		return metricInstance;
 	}
 
+	@Override
 	@SuppressWarnings({"HardCodedStringLiteral"})
 	public void writeToFile(File profileFile) throws FileNotFoundException
 	{

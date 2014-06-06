@@ -27,6 +27,7 @@ public class AttributeInheritanceFactorProjectCalculator extends ProjectCalculat
 	private int availableFields = 0;
 	private int inheritedFields = 0;
 
+	@Override
 	protected PsiElementVisitor createVisitor()
 	{
 		return new Visitor();
@@ -34,6 +35,7 @@ public class AttributeInheritanceFactorProjectCalculator extends ProjectCalculat
 
 	private class Visitor extends JavaRecursiveElementVisitor
 	{
+		@Override
 		public void visitClass(PsiClass aClass)
 		{
 			super.visitClass(aClass);
@@ -63,6 +65,7 @@ public class AttributeInheritanceFactorProjectCalculator extends ProjectCalculat
 		}
 	}
 
+	@Override
 	public void endMetricsRun()
 	{
 		postMetric(inheritedFields, availableFields);

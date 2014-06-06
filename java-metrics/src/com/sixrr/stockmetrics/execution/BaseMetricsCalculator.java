@@ -50,6 +50,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 	protected MetricsResultsHolder resultsHolder = null;
 	protected MetricsExecutionContext executionContext = null;
 
+	@Override
 	public void beginMetricsRun(
 			Metric metric, MetricsResultsHolder resultsHolder, MetricsExecutionContext executionContext)
 	{
@@ -62,6 +63,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 		}
 	}
 
+	@Override
 	public void processFile(PsiFile file)
 	{
 		final PsiElementVisitor visitor = createVisitor();
@@ -70,6 +72,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 
 	protected abstract PsiElementVisitor createVisitor();
 
+	@Override
 	public void endMetricsRun()
 	{
 	}
@@ -97,6 +100,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 		final int[] count = {0};
 		query.forEach(new Processor<PsiClass>()
 		{
+			@Override
 			public boolean process(PsiClass aClass)
 			{
 				count[0]++;
@@ -121,6 +125,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 		{
 			private int dependencyProgress = 0;
 
+			@Override
 			public boolean process(PsiClass aClass)
 			{
 				final String fileName = aClass.getName();
