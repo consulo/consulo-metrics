@@ -22,7 +22,8 @@ import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
-import com.sixrr.metrics.metricModel.BaseMetricsRunImpl;
+import com.sixrr.metrics.MetricsResultsHolder;
+import com.sixrr.metrics.metricModel.DelegateMetricsHolder;
 import com.sixrr.metrics.metricModel.MetricsCategoryNameUtil;
 import com.sixrr.metrics.metricModel.MetricsResult;
 import com.sixrr.metrics.utils.MethodUtils;
@@ -31,9 +32,14 @@ import com.sixrr.metrics.utils.MethodUtils;
  * @author VISTALL
  * @since 06.06.14
  */
-public class JavaMetricsRunImpl extends BaseMetricsRunImpl implements JavaMetricsResultsHolder
+public class JavaMetricsRunImpl extends DelegateMetricsHolder implements JavaMetricsResultsHolder
 {
 	private static final Logger logger = Logger.getInstance(JavaMetricsRunImpl.class);
+
+	public JavaMetricsRunImpl(MetricsResultsHolder resultsHolder)
+	{
+		super(resultsHolder);
+	}
 
 	@Override
 	public void postPackageMetric(Metric metric, PsiJavaPackage aPackage, double value)

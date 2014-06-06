@@ -17,12 +17,13 @@
 package com.sixrr.metrics;
 
 import com.intellij.openapi.module.Module;
+import com.sixrr.metrics.metricModel.MetricsRun;
 
 /**
  * The MetricsResultHolder is the mechanism by which metrics values get reported for later display and processing.  There
  * are a pair of metric posting methods for each metric category, one for simple values and one for ratio values.
  */
-public interface MetricsResultsHolder
+public interface MetricsResultsHolder extends MetricsRun
 {
 	/**
 	 * Post a simple value for a project metric.

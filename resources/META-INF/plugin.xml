@@ -3,6 +3,7 @@
 	<name>MetricsReloaded</name>
 	<vendor>Bas Leijdekkers (Basleijdekkers@gmail.com)</vendor>
 	<version>SNAPSHOT</version>
+	<depends config-file="java.xml" optional="true">org.consulo.java</depends>
 
 	<extensionPoints>
 		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>

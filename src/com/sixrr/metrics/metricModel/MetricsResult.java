@@ -23,7 +23,6 @@ import com.sixrr.metrics.profile.MetricsProfile;
 
 public interface MetricsResult
 {
-
 	void postValue(Metric metric, String measured, double value);
 
 	void postValue(Metric metric, String measured, double numerator, double denominator);

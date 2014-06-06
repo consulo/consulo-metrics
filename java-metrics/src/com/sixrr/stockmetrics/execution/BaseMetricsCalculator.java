@@ -16,6 +16,8 @@
 
 package com.sixrr.stockmetrics.execution;
 
+import org.mustbe.consulo.metrics.java.JavaMetricsResultsHolder;
+import org.mustbe.consulo.metrics.java.JavaMetricsRunImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -47,7 +49,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 
 
 	protected Metric metric = null;
-	protected MetricsResultsHolder resultsHolder = null;
+	protected JavaMetricsResultsHolder resultsHolder = null;
 	protected MetricsExecutionContext executionContext = null;
 
 	@Override
@@ -55,7 +57,7 @@ public abstract class BaseMetricsCalculator implements MetricCalculator
 			Metric metric, MetricsResultsHolder resultsHolder, MetricsExecutionContext executionContext)
 	{
 		this.metric = metric;
-		this.resultsHolder = resultsHolder;
+		this.resultsHolder = new JavaMetricsRunImpl(resultsHolder);
 		this.executionContext = executionContext;
 		if(((BaseMetric) metric).requiresDependents() && getDependencyMap() == null)
 		{
