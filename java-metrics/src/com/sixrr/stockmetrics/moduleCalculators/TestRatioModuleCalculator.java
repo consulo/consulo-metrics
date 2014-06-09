@@ -23,7 +23,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class TestRatioModuleCalculator extends ElementRatioModuleCalculator
 {
@@ -42,7 +41,7 @@ public class TestRatioModuleCalculator extends ElementRatioModuleCalculator
 		{
 			super.visitFile(file);
 
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			incrementDenominator(file, lineCount);
 			if(TestUtils.isTest(file))
 			{

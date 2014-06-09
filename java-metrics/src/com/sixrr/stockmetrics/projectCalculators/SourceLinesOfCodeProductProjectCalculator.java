@@ -22,7 +22,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class SourceLinesOfCodeProductProjectCalculator extends ElementCountProjectCalculator
 {
@@ -41,7 +40,7 @@ public class SourceLinesOfCodeProductProjectCalculator extends ElementCountProje
 			super.visitJavaFile(file);
 			if(TestUtils.isProduction(file))
 			{
-				numElements += LineUtil.countLines(file);
+				numElements += com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			}
 		}
 
@@ -52,7 +51,7 @@ public class SourceLinesOfCodeProductProjectCalculator extends ElementCountProje
 			final PsiFile file = comment.getContainingFile();
 			if(TestUtils.isProduction(file))
 			{
-				numElements -= LineUtil.countCommentOnlyLines(comment);
+				numElements -= com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 			}
 		}
 	}

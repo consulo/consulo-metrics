@@ -27,7 +27,6 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class JavadocLinesOfCodeRecursivePackageCalculator extends PackageCalculator
 {
@@ -72,7 +71,7 @@ public class JavadocLinesOfCodeRecursivePackageCalculator extends PackageCalcula
 		{
 			super.visitDocComment(comment);
 			final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
 			for(final PsiJavaPackage aPackage : packages)
 			{

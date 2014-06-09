@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentLinesOfCodeMethodCalculator extends MethodCalculator
 {
@@ -56,7 +55,7 @@ public class CommentLinesOfCodeMethodCalculator extends MethodCalculator
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			elementCount += LineUtil.countLines(comment);
+			elementCount += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 		}
 	}
 }

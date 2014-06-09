@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class RelativeLinesOfCodeCalculator extends MethodCalculator
 {
@@ -40,11 +39,11 @@ public class RelativeLinesOfCodeCalculator extends MethodCalculator
 		{
 			if(methodNestingDepth == 0)
 			{
-				final int numMethodLines = LineUtil.countLines(method);
+				final int numMethodLines = com.sixrr.stockmetrics.utils.LineUtil.countLines(method);
 				final PsiClass containingClass = method.getContainingClass();
 				if(containingClass != null)
 				{
-					final int numClassLines = LineUtil.countLines(containingClass);
+					final int numClassLines = com.sixrr.stockmetrics.utils.LineUtil.countLines(containingClass);
 					postMetric(method, numMethodLines, numClassLines);
 				}
 			}

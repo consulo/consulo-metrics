@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentRatioClassCalculator extends ClassCalculator
 {
@@ -49,11 +48,11 @@ public class CommentRatioClassCalculator extends ClassCalculator
 			{
 				if(!aClass.isInterface())
 				{
-					int linesOfCode = LineUtil.countLines(aClass);
+					int linesOfCode = com.sixrr.stockmetrics.utils.LineUtil.countLines(aClass);
 					final PsiClass[] innerClasses = aClass.getInnerClasses();
 					for(PsiClass innerClass : innerClasses)
 					{
-						linesOfCode -= LineUtil.countLines(innerClass);
+						linesOfCode -= com.sixrr.stockmetrics.utils.LineUtil.countLines(innerClass);
 					}
 					postMetric(aClass, commentLines, linesOfCode);
 				}
@@ -65,7 +64,7 @@ public class CommentRatioClassCalculator extends ClassCalculator
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			commentLines += LineUtil.countLines(comment);
+			commentLines += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 		}
 	}
 }

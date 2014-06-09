@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class JavadocLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 {
@@ -60,7 +59,7 @@ public class JavadocLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 		@Override
 		public void visitDocComment(PsiDocComment comment)
 		{
-			elementCount += LineUtil.countLines(comment);
+			elementCount += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 		}
 	}
 }

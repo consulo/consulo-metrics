@@ -21,7 +21,6 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.MethodUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.stockmetrics.utils.TodoUtil;
 
 public class TodoCommentCountMethodCalculator extends MethodCalculator
@@ -60,7 +59,7 @@ public class TodoCommentCountMethodCalculator extends MethodCalculator
 			super.visitComment(comment);
 			if(TodoUtil.isTodoComment(comment))
 			{
-				elementCount += LineUtil.countLines(comment);
+				elementCount += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			}
 		}
 	}

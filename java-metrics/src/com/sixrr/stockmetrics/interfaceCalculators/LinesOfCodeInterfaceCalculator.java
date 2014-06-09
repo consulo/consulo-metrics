@@ -19,7 +19,6 @@ package com.sixrr.stockmetrics.interfaceCalculators;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class LinesOfCodeInterfaceCalculator extends InterfaceCalculator
 {
@@ -39,11 +38,11 @@ public class LinesOfCodeInterfaceCalculator extends InterfaceCalculator
 			super.visitClass(aClass);
 			if(isInterface(aClass))
 			{
-				int linesOfCode = LineUtil.countLines(aClass);
+				int linesOfCode = com.sixrr.stockmetrics.utils.LineUtil.countLines(aClass);
 				final PsiClass[] innerClasses = aClass.getInnerClasses();
 				for(PsiClass innerClass : innerClasses)
 				{
-					linesOfCode -= LineUtil.countLines(innerClass);
+					linesOfCode -= com.sixrr.stockmetrics.utils.LineUtil.countLines(innerClass);
 				}
 				postMetric(aClass, linesOfCode);
 			}

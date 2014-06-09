@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentRatioMethodCalculator extends MethodCalculator
 {
@@ -45,7 +44,7 @@ public class CommentRatioMethodCalculator extends MethodCalculator
 				numerator = 0;
 				denominator = 0;
 			}
-			denominator = LineUtil.countLines(method);
+			denominator = com.sixrr.stockmetrics.utils.LineUtil.countLines(method);
 
 			methodNestingDepth++;
 			super.visitMethod(method);
@@ -67,7 +66,7 @@ public class CommentRatioMethodCalculator extends MethodCalculator
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			numerator += LineUtil.countLines(comment);
+			numerator += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 		}
 	}
 }

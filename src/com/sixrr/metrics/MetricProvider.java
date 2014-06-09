@@ -19,6 +19,7 @@ package com.sixrr.metrics;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 import com.intellij.openapi.extensions.ExtensionPointName;
 
 /**
@@ -38,6 +39,8 @@ public interface MetricProvider
 	 * @return the metrics classes for this provider
 	 */
 	@NotNull
+	@Deprecated
+	@DeprecationInfo("Use ep with name 'org.mustbe.consulo.metrics.metric'")
 	List<Class<? extends Metric>> getMetricClasses();
 
 	/**

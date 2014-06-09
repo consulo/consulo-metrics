@@ -21,8 +21,8 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
+import com.sixrr.metrics.impl.defaultMetricsProvider.projectCalculators.LineUtil;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class LinesOfCodeModuleCalculator extends ElementCountModuleCalculator
 {

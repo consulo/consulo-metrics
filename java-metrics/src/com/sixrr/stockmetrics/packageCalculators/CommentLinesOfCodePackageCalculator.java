@@ -27,7 +27,6 @@ import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentLinesOfCodePackageCalculator extends PackageCalculator
 {
@@ -75,7 +74,7 @@ public class CommentLinesOfCodePackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 		}
 	}

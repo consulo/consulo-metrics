@@ -54,13 +54,9 @@ class EditThresholdsAction extends AnAction
 		final MetricCategory category = toolWindow.getSelectedCategory();
 		final MetricsProfile profile = toolWindow.getCurrentProfile();
 		final List<MetricInstance> metrics = new ArrayList<MetricInstance>();
-		for(MetricInstance instance : profile.getMetrics())
+		for(MetricInstance instance : profile.getSortedMetrics(true))
 		{
-			if(!instance.isEnabled())
-			{
-				continue;
-			}
-			final Metric metric = instance.getMetric();
+			Metric metric = instance.getMetric();
 			if(metric.getCategory() != category)
 			{
 				continue;

@@ -58,7 +58,7 @@ public abstract class MetricsExecutionContextImpl implements MetricsExecutionCon
 			@Override
 			public void run(@NotNull final ProgressIndicator indicator)
 			{
-				final List<MetricInstance> metrics = profile.getMetrics();
+				final List<MetricInstance> metrics = profile.getSortedMetrics(true);
 				indicator.setText(MetricsReloadedBundle.message("initializing.progress.string"));
 				final int numFiles = scope.getFileCount();
 				final int numMetrics = metrics.size();
@@ -75,15 +75,13 @@ public abstract class MetricsExecutionContextImpl implements MetricsExecutionCon
 								return;
 							}
 							final Metric metric = metricInstance.getMetric();
-							if(metricInstance.isEnabled())
-							{
-								final MetricCalculator calculator = metric.createCalculator();
 
-								if(calculator != null)
-								{
-									calculators.add(calculator);
-									calculator.beginMetricsRun(metricInstance.getMetric(), metricsRun, MetricsExecutionContextImpl.this);
-								}
+							final MetricCalculator calculator = metric.createCalculator();
+
+							if(calculator != null)
+							{
+								calculators.add(calculator);
+								calculator.beginMetricsRun(metricInstance.getMetric(), metricsRun, MetricsExecutionContextImpl.this);
 							}
 						}
 

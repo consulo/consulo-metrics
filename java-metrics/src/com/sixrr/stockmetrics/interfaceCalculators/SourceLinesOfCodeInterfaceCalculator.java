@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class SourceLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 {
@@ -45,11 +44,11 @@ public class SourceLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 				prevElementCount = elementCount;
 				elementCount = 0;
 			}
-			elementCount += LineUtil.countLines(aClass);
+			elementCount += com.sixrr.stockmetrics.utils.LineUtil.countLines(aClass);
 			final PsiClass[] innerClasses = aClass.getInnerClasses();
 			for(PsiClass innerClass : innerClasses)
 			{
-				elementCount -= LineUtil.countLines(innerClass);
+				elementCount -= com.sixrr.stockmetrics.utils.LineUtil.countLines(innerClass);
 			}
 			super.visitClass(aClass);
 			if(!ClassUtils.isAnonymous(aClass))
@@ -66,7 +65,7 @@ public class SourceLinesOfCodeInterfaceCalculator extends InterfaceCalculator
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			elementCount -= LineUtil.countCommentOnlyLines(comment);
+			elementCount -= com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 		}
 	}
 }

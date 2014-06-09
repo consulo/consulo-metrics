@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 import com.sixrr.stockmetrics.utils.TodoUtil;
 
 public class TodoCommentCountClassCalculator extends ClassCalculator
@@ -63,7 +62,7 @@ public class TodoCommentCountClassCalculator extends ClassCalculator
 			if(TodoUtil.isTodoComment(comment))
 			{
 
-				elementCount += LineUtil.countLines(comment);
+				elementCount += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			}
 		}
 	}

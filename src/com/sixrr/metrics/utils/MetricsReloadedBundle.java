@@ -16,22 +16,9 @@
 
 package com.sixrr.metrics.utils;
 
-import org.jetbrains.annotations.PropertyKey;
-import com.intellij.AbstractBundle;
+import org.consulo.lombok.annotations.Bundle;
 
-public class MetricsReloadedBundle extends AbstractBundle
+@Bundle(value = "com.sixrr.metrics.utils.MetricsReloadedBundle")
+public class MetricsReloadedBundle
 {
-
-	public static final String BUNDLE_NAME = "com.sixrr.metrics.utils.MetricsReloadedBundle";
-	private static final MetricsReloadedBundle INSTANCE = new MetricsReloadedBundle();
-
-	private MetricsReloadedBundle()
-	{
-		super(BUNDLE_NAME);
-	}
-
-	public static String message(@PropertyKey(resourceBundle = BUNDLE_NAME) String key, Object... params)
-	{
-		return INSTANCE.getMessage(key, params);
-	}
 }

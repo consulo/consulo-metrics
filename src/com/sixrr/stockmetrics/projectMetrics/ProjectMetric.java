@@ -16,27 +16,14 @@
 
 package com.sixrr.stockmetrics.projectMetrics;
 
-import com.sixrr.metrics.MetricType;
-import com.sixrr.stockmetrics.i18n.StockMetricsBundle;
+import com.sixrr.metrics.MetricCategory;
+import com.sixrr.stockmetrics.metricModel.BaseMetric;
 
-public class LinesOfCodeProjectMetric extends ProjectMetric
+public abstract class ProjectMetric extends BaseMetric
 {
-
 	@Override
-	public String getDisplayName()
+	public MetricCategory getCategory()
 	{
-		return StockMetricsBundle.message("lines.of.code.display.name");
-	}
-
-	@Override
-	public String getAbbreviation()
-	{
-		return StockMetricsBundle.message("lines.of.code.abbreviation");
-	}
-
-	@Override
-	public MetricType getType()
-	{
-		return MetricType.Count;
+		return MetricCategory.Project;
 	}
 }

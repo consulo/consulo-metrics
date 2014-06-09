@@ -19,7 +19,7 @@ package com.sixrr.metrics.profile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,14 +45,12 @@ import com.sixrr.metrics.metricModel.MetricInstance;
 })
 public class MetricsProfileRepository
 {
-
 	private static final Logger LOG = Logger.getInstance("#com.sixrr.metrics.profile.MetricsProfileRepository");
 
 	@NonNls
 	public static final String METRIC_PROFILE_DIR = PathManager.getConfigPath() + File.separator + "metrics";
 
 	private final Map<String, MetricsProfile> profiles = new LinkedHashMap<String, MetricsProfile>(20);
-	private final MetricsProfileTemplate template;
 	private String selectedProfile = "";
 	private final MetricsReloadedConfig configuration;
 
@@ -60,25 +58,16 @@ public class MetricsProfileRepository
 	{
 		final MetricsProfileRepository repository = new MetricsProfileRepository(null);
 		repository.initialize();
-		repository.printMetricsDescriptions();
-	}
-
-	private void printMetricsDescriptions()
-	{
-		template.printMetricsDescriptions();
 	}
 
 	public MetricsProfileRepository(MetricsReloadedConfig configuration)
 	{
 		this.configuration = configuration;
-		template = new MetricsProfileTemplate();
-		template.loadMetricsFromProviders();
 	}
 
 	public void initialize()
 	{
 		loadProfiles();
-		reconcileProfiles();
 		addPrebuiltProfiles();
 		if(configuration != null)
 		{
@@ -115,11 +104,11 @@ public class MetricsProfileRepository
 		{
 			return;
 		}
-		final MetricsProfile profile = template.instantiate(name);
+		final MetricsProfile profile = new MetricsProfileImpl(name, Collections.<MetricInstance>emptyList());
 		final Set<String> metricNames = builtInProfile.getMetricIDs();
 		for(String metricName : metricNames)
 		{
-			final MetricInstance instance = profile.getMetricForName(metricName);
+			final MetricInstance instance = profile.getMetricByID(metricName);
 			if(instance == null)
 			{
 				continue;
@@ -158,15 +147,6 @@ public class MetricsProfileRepository
 				final String profileName = profile.getName();
 				profiles.put(profileName, profile);
 			}
-		}
-	}
-
-	private void reconcileProfiles()
-	{
-		final Collection<MetricsProfile> existingProfiles = profiles.values();
-		for(final MetricsProfile profile : existingProfiles)
-		{
-			template.reconcile(profile);
 		}
 	}
 
@@ -251,7 +231,7 @@ public class MetricsProfileRepository
 
 	public void createEmptyProfile(String newProfileName)
 	{
-		final MetricsProfile newProfile = template.instantiate(newProfileName);
+		final MetricsProfile newProfile = new MetricsProfileImpl(newProfileName, Collections.<MetricInstance>emptyList());
 		profiles.put(newProfileName, newProfile);
 		persistProfile(newProfile);
 		setSelectedProfile(newProfileName);

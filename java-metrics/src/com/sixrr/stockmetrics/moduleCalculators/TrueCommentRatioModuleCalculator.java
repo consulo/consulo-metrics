@@ -23,7 +23,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class TrueCommentRatioModuleCalculator extends ElementRatioModuleCalculator
 {
@@ -54,7 +53,7 @@ public class TrueCommentRatioModuleCalculator extends ElementRatioModuleCalculat
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			incrementDenominator(file, lineCount);
 		}
 
@@ -62,9 +61,9 @@ public class TrueCommentRatioModuleCalculator extends ElementRatioModuleCalculat
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			final int commentOnlyLineCount = LineUtil.countCommentOnlyLines(comment);
+			final int commentOnlyLineCount = com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 			incrementDenominator(comment, -commentOnlyLineCount);
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			incrementNumerator(comment, lineCount);
 		}
 	}

@@ -21,7 +21,6 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentRatioModuleCalculator extends ElementRatioModuleCalculator
 {
@@ -46,7 +45,7 @@ public class CommentRatioModuleCalculator extends ElementRatioModuleCalculator
 			}
 			numeratorPerModule.createBucket(module);
 			denominatorPerModule.createBucket(module);
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			incrementDenominator(file, lineCount);
 		}
 
@@ -54,7 +53,7 @@ public class CommentRatioModuleCalculator extends ElementRatioModuleCalculator
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			incrementNumerator(comment, lineCount);
 		}
 	}

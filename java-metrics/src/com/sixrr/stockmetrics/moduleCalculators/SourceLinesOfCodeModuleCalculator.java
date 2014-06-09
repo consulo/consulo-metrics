@@ -23,7 +23,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class SourceLinesOfCodeModuleCalculator extends ElementCountModuleCalculator
 {
@@ -41,7 +40,7 @@ public class SourceLinesOfCodeModuleCalculator extends ElementCountModuleCalcula
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			incrementElementCount(file, lineCount);
 		}
 
@@ -49,7 +48,7 @@ public class SourceLinesOfCodeModuleCalculator extends ElementCountModuleCalcula
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			final int lineCount = LineUtil.countCommentOnlyLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 			incrementElementCount(comment, -lineCount);
 		}
 

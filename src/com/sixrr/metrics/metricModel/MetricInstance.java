@@ -1,10 +1,14 @@
 package com.sixrr.metrics.metricModel;
 
+import org.jetbrains.annotations.NotNull;
 import com.sixrr.metrics.Metric;
 
 public interface MetricInstance extends Cloneable, Comparable<MetricInstance>
 {
+	@NotNull
+	String getMetricClass();
 
+	@NotNull
 	Metric getMetric();
 
 	void copyFrom(MetricInstance o);

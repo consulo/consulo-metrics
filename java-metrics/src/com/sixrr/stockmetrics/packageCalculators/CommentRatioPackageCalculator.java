@@ -27,7 +27,6 @@ import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentRatioPackageCalculator extends PackageCalculator
 {
@@ -61,7 +60,7 @@ public class CommentRatioPackageCalculator extends PackageCalculator
 		{
 			super.visitJavaFile(file);
 			final PsiJavaPackage aPackage = ClassUtils.findPackage(file);
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			if(aPackage == null)
 			{
 				return;
@@ -75,7 +74,7 @@ public class CommentRatioPackageCalculator extends PackageCalculator
 			super.visitComment(comment);
 			final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
 			final PsiJavaPackage aPackage = ClassUtils.findPackage(aClass);
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			if(aPackage == null)
 			{
 				return;

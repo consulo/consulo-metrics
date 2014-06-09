@@ -17,24 +17,27 @@
 package com.sixrr.stockmetrics.metricModel;
 
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCalculator;
 
 public abstract class BaseMetric implements Cloneable, Metric
 {
+	public static String getIdByClassName(@NotNull Class<? extends Metric> clazz)
+	{
+		final String className = clazz.getSimpleName();
+		@NonNls final int endIndex = className.length() - "Metric".length();
+		return className.substring(0, endIndex);
+	}
+
+	private final String myId;
 
 	protected BaseMetric()
 	{
 		super();
-		final Class<?> aClass = getClass();
-		final String className = aClass.getName();
-		final int startIndex = className.lastIndexOf((int) '.') + 1;
-		@NonNls final int endIndex = className.length() - "Metric".length();
-		name = className.substring(startIndex, endIndex);
+		myId = getIdByClassName(getClass());
 	}
-
-	private final String name;
 
 	@Override
 	public Metric clone() throws CloneNotSupportedException
@@ -56,19 +59,19 @@ public abstract class BaseMetric implements Cloneable, Metric
 
 		final BaseMetric baseMetric = (BaseMetric) obj;
 
-		return name.equals(baseMetric.getID());
+		return myId.equals(baseMetric.getID());
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return name.hashCode();
+		return myId.hashCode();
 	}
 
 	@Override
 	public String getID()
 	{
-		return name;
+		return myId;
 	}
 
 	@Override

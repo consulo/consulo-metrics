@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.utils.MethodUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class LinesOfCodeMethodCalculator extends MethodCalculator
 {
@@ -44,7 +43,7 @@ public class LinesOfCodeMethodCalculator extends MethodCalculator
 				elementCount = 0;
 			}
 			methodNestingDepth++;
-			elementCount = LineUtil.countLines(method);
+			elementCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(method);
 			super.visitMethod(method);
 			methodNestingDepth--;
 			if(methodNestingDepth == 0 && !MethodUtils.isAbstract(method))

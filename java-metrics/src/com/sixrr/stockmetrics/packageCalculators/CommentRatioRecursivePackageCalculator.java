@@ -27,7 +27,6 @@ import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentRatioRecursivePackageCalculator extends PackageCalculator
 {
@@ -60,7 +59,7 @@ public class CommentRatioRecursivePackageCalculator extends PackageCalculator
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			final PsiJavaPackage[] packageNames = ClassUtils.calculatePackagesRecursive(file);
 			for(final PsiJavaPackage packageName : packageNames)
 			{
@@ -74,7 +73,7 @@ public class CommentRatioRecursivePackageCalculator extends PackageCalculator
 			super.visitComment(comment);
 			final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
 			final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			for(final PsiJavaPackage aPackage : packages)
 			{
 				numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);

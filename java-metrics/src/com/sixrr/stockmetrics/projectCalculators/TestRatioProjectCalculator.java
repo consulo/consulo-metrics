@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class TestRatioProjectCalculator extends ElementRatioProjectCalculator
 {
@@ -35,7 +34,7 @@ public class TestRatioProjectCalculator extends ElementRatioProjectCalculator
 		@Override
 		public void visitJavaFile(PsiJavaFile file)
 		{
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			denominator += lineCount;
 			if(TestUtils.isTest(file))
 			{

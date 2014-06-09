@@ -1,0 +1,59 @@
+/*
+ * Copyright 2013-2014 must-be.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.sixrr.metrics.impl;
+
+import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.sixrr.metrics.Metric;
+import com.sixrr.metrics.MetricCalculator;
+import com.sixrr.metrics.MetricsExecutionContext;
+import com.sixrr.metrics.MetricsResultsHolder;
+
+/**
+ * @author VISTALL
+ * @since 09.06.14
+ */
+public abstract class SimpleMetricCalculator implements MetricCalculator
+{
+	protected MetricsResultsHolder myResultsHolder = null;
+	protected Metric myMetric = null;
+
+	@Override
+	public void beginMetricsRun(
+			Metric metric, MetricsResultsHolder resultsHolder, MetricsExecutionContext executionContext)
+	{
+		myMetric = metric;
+		myResultsHolder = resultsHolder;
+	}
+
+	@Override
+	public void processFile(PsiFile file)
+	{
+		final PsiElementVisitor visitor = createVisitor();
+		file.accept(visitor);
+	}
+
+	@NotNull
+	protected abstract PsiElementVisitor createVisitor();
+
+	@Override
+	public void endMetricsRun()
+	{
+
+	}
+}

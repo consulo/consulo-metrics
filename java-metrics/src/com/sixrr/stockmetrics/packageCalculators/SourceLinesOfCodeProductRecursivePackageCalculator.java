@@ -29,7 +29,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class SourceLinesOfCodeProductRecursivePackageCalculator extends PackageCalculator
 {
@@ -64,7 +63,7 @@ public class SourceLinesOfCodeProductRecursivePackageCalculator extends PackageC
 			super.visitJavaFile(file);
 			if(TestUtils.isProduction(file))
 			{
-				final int lineCount = LineUtil.countLines(file);
+				final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 				final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(file);
 				for(final PsiJavaPackage aPackage : packages)
 				{
@@ -81,7 +80,7 @@ public class SourceLinesOfCodeProductRecursivePackageCalculator extends PackageC
 			if(TestUtils.isProduction(file))
 			{
 				final PsiClass aClass = PsiTreeUtil.getParentOfType(comment, PsiClass.class);
-				final int lineCount = LineUtil.countCommentOnlyLines(comment);
+				final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 				final PsiJavaPackage[] packages = ClassUtils.calculatePackagesRecursive(aClass);
 				for(final PsiJavaPackage aPackage : packages)
 				{

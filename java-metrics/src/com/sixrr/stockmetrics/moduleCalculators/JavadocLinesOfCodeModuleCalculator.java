@@ -22,7 +22,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class JavadocLinesOfCodeModuleCalculator extends ElementCountModuleCalculator
 {
@@ -52,7 +51,7 @@ public class JavadocLinesOfCodeModuleCalculator extends ElementCountModuleCalcul
 		public void visitDocComment(PsiDocComment comment)
 		{
 			super.visitDocComment(comment);
-			final int lineCount = LineUtil.countLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 			incrementElementCount(comment, lineCount);
 		}
 	}

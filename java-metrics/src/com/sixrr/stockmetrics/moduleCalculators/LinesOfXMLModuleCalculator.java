@@ -20,7 +20,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.xml.XmlFile;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class LinesOfXMLModuleCalculator extends ElementCountModuleCalculator
 {
@@ -46,7 +45,7 @@ public class LinesOfXMLModuleCalculator extends ElementCountModuleCalculator
 			//noinspection HardCodedStringLiteral
 			if(!fileName.endsWith(".html") && !fileName.endsWith(".htm"))
 			{
-				final int lineCount = LineUtil.countLines(file);
+				final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 				incrementElementCount(file, lineCount);
 			}
 		}

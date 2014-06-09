@@ -22,32 +22,41 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.util.containers.ContainerUtil;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
+import com.sixrr.metrics.profile.instanceHolder.DummyMetric;
+import com.sixrr.metrics.profile.instanceHolder.MetricInstanceHolder;
 
 public class MetricsProfileImpl implements MetricsProfile
 {
-
-	private String name;
-	private List<MetricInstance> metrics = new ArrayList<MetricInstance>();
+	private String myName;
+	private Set<MetricInstance> myMetricInstances = new LinkedHashSet<MetricInstance>();
 	private MetricDisplaySpecification displaySpecification = new MetricDisplaySpecification();
 	private boolean builtIn = false;
 
 	public MetricsProfileImpl(String name, List<MetricInstance> metrics)
 	{
-		this.name = name;
-		this.metrics.addAll(metrics);
-		Collections.sort(this.metrics);
+		myName = name;
+
+		MetricInstanceHolder.getInstance().createInstances(myMetricInstances);
+
+		myMetricInstances.removeAll(metrics);  // remove old
+		myMetricInstances.addAll(metrics);
 	}
 
 	@Override
@@ -57,18 +66,15 @@ public class MetricsProfileImpl implements MetricsProfile
 	}
 
 	@Override
-	public void copyFrom(List<MetricInstance> metrics)
+	public void copyFrom(@NotNull List<MetricInstance> metrics)
 	{
 		for(MetricInstance newMetric : metrics)
 		{
-			for(int i = 0, metricsSize = this.metrics.size(); i < metricsSize; i++)
-			{
-				final MetricInstance metric = this.metrics.get(i);
-				if(metric.equals(newMetric))
-				{
-					metric.copyFrom(newMetric);
-				}
-			}
+			MetricInstance methodByClassName = getMethodByClassName(newMetric.getMetricClass());
+
+			assert methodByClassName != null;
+
+			methodByClassName.copyFrom(newMetric);
 		}
 	}
 
@@ -87,37 +93,52 @@ public class MetricsProfileImpl implements MetricsProfile
 	@Override
 	public void setName(String newProfileName)
 	{
-		name = newProfileName;
+		myName = newProfileName;
 	}
 
 	@Override
 	public String getName()
 	{
-		return name;
+		return myName;
 	}
 
+	@NotNull
 	@Override
-	public List<MetricInstance> getMetrics()
+	public Set<MetricInstance> getMetrics()
 	{
-		return Collections.unmodifiableList(metrics);
+		return Collections.unmodifiableSet(myMetricInstances);
 	}
 
+	@NotNull
 	@Override
-	public void replaceMetrics(List<MetricInstance> newMetrics)
+	public List<MetricInstance> getSortedMetrics(boolean onlyEnabled)
 	{
-		metrics.clear();
-		metrics.addAll(newMetrics);
-		Collections.sort(metrics);
+		List<MetricInstance> metricInstances = new ArrayList<MetricInstance>();
+		for(MetricInstance metricInstance : myMetricInstances)
+		{
+			if(metricInstance.getMetric() == DummyMetric.INSTANCE)
+			{
+				continue;
+			}
+
+			if(onlyEnabled && !metricInstance.isEnabled())
+			{
+				continue;
+			}
+			metricInstances.add(metricInstance);
+		}
+		ContainerUtil.sort(metricInstances);
+		return metricInstances;
 	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
 		final MetricsProfileImpl out = (MetricsProfileImpl) super.clone();
-		out.metrics = new ArrayList<MetricInstance>(metrics.size());
-		for(MetricInstance metric : metrics)
+		out.myMetricInstances = new HashSet<MetricInstance>(myMetricInstances.size());
+		for(MetricInstance metric : myMetricInstances)
 		{
-			out.metrics.add(metric.clone());
+			out.myMetricInstances.add(metric.clone());
 		}
 		out.displaySpecification = new MetricDisplaySpecification();
 		return out;
@@ -127,7 +148,7 @@ public class MetricsProfileImpl implements MetricsProfile
 	@Nullable
 	public MetricInstance getMetricForClass(Class<? extends Metric> aClass)
 	{
-		for(final MetricInstance metric : metrics)
+		for(final MetricInstance metric : myMetricInstances)
 		{
 			final Class<? extends Metric> metricClass = metric.getMetric().getClass();
 			if(metricClass.equals(aClass))
@@ -140,11 +161,25 @@ public class MetricsProfileImpl implements MetricsProfile
 
 	@Override
 	@Nullable
-	public MetricInstance getMetricForName(String name)
+	public MetricInstance getMetricByID(String name)
 	{
-		for(final MetricInstance metric : metrics)
+		for(final MetricInstance metric : myMetricInstances)
 		{
 			final String metricName = metric.getMetric().getID();
+			if(metricName.equals(name))
+			{
+				return metric;
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	public MetricInstance getMethodByClassName(String name)
+	{
+		for(final MetricInstance metric : myMetricInstances)
+		{
+			final String metricName = metric.getMetric().getClass().getName();
 			if(metricName.equals(name))
 			{
 				return metric;
@@ -160,8 +195,7 @@ public class MetricsProfileImpl implements MetricsProfile
 		final Document doc;
 		try
 		{
-			final SAXBuilder builder = new SAXBuilder();
-			doc = builder.build(file);
+			doc = JDOMUtil.loadDocument(file);
 		}
 		catch(Exception e)
 		{
@@ -281,17 +315,8 @@ public class MetricsProfileImpl implements MetricsProfile
 		{
 			enabled = "true".equals(enabledString);
 		}
-		final Metric metric;
-		try
-		{
-			final Class<? extends Metric> metricClass = (Class<? extends Metric>) Class.forName(className);
-			metric = metricClass.newInstance();
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-		final MetricInstance metricInstance = new MetricInstanceImpl(metric);
+		Metric metricByClass = MetricInstanceHolder.getInstance().getMetricByClass(className);
+		final MetricInstance metricInstance = new MetricInstanceImpl(className, metricByClass);
 		metricInstance.setEnabled(enabled);
 		metricInstance.setLowerThreshold(lowerThreshold);
 		metricInstance.setLowerThresholdEnabled(lowerThresholdEnabled);
@@ -307,9 +332,9 @@ public class MetricsProfileImpl implements MetricsProfile
 		final PrintWriter writer = new PrintWriter(new FileOutputStream(profileFile));
 		try
 		{
-			writer.println("<METRICS_PROFILE name = \"" + name + "\">");
+			writer.println("<METRICS_PROFILE name = \"" + myName + "\">");
 			writeDisplaySpec(writer, displaySpecification);
-			for(final MetricInstance metric : metrics)
+			for(final MetricInstance metric : myMetricInstances)
 			{
 				writeMetric(metric, writer);
 			}
@@ -350,7 +375,7 @@ public class MetricsProfileImpl implements MetricsProfile
 
 	private static String writeListAsString(List<?> list)
 	{
-		final StringBuffer out = new StringBuffer();
+		final StringBuilder out = new StringBuilder();
 
 		for(Iterator<?> iterator = list.iterator(); iterator.hasNext(); )
 		{
@@ -367,8 +392,7 @@ public class MetricsProfileImpl implements MetricsProfile
 	@SuppressWarnings({"HardCodedStringLiteral"})
 	private static void writeMetric(MetricInstance metric, PrintWriter writer)
 	{
-		final Class<? extends Metric> metricClass = metric.getMetric().getClass();
-		writer.println("\t<METRIC className = \"" + metricClass.getName() + "\" " + "enabled = \"" +
+		writer.println("\t<METRIC className = \"" + metric.getMetricClass() + "\" " + "enabled = \"" +
 				metric.isEnabled() + "\" " + "lowerThreshold = \"" + metric.getLowerThreshold() + "\" " +
 				"lowerThresholdEnabled = \"" + metric.isLowerThresholdEnabled() + "\" " + "upperThreshold = \"" +
 				metric.getUpperThreshold() + "\" " + "upperThresholdEnabled = \"" + metric.isUpperThresholdEnabled() +

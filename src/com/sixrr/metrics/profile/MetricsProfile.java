@@ -19,29 +19,36 @@ package com.sixrr.metrics.profile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.metricModel.MetricInstance;
 
 public interface MetricsProfile extends Cloneable
 {
-
-	void copyFrom(List<MetricInstance> metrics);
+	void copyFrom(@NotNull List<MetricInstance> metrics);
 
 	void setName(String newProfileName);
 
 	String getName();
 
-	List<MetricInstance> getMetrics();
+	@NotNull
+	Set<MetricInstance> getMetrics();
 
-	void replaceMetrics(List<MetricInstance> newMetrics);
+	/**
+	 * Return metric instances with order, and without DummyMetric
+	 * @return sorted list
+	 */
+	@NotNull
+	List<MetricInstance> getSortedMetrics(boolean onlyEnabled);
 
 	@Nullable
 	MetricInstance getMetricForClass(Class<? extends Metric> aClass);
 
 	@Nullable
-	MetricInstance getMetricForName(String metricName);
+	MetricInstance getMetricByID(String metricName);
 
 	void writeToFile(File profileFile) throws IOException;
 

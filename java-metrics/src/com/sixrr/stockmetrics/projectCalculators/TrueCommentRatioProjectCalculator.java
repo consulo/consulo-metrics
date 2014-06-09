@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class TrueCommentRatioProjectCalculator extends ElementRatioProjectCalculator
 {
@@ -37,15 +36,15 @@ public class TrueCommentRatioProjectCalculator extends ElementRatioProjectCalcul
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			denominator += LineUtil.countLines(file);
+			denominator += com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 		}
 
 		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			numerator += LineUtil.countLines(comment);
-			denominator -= LineUtil.countCommentOnlyLines(comment);
+			numerator += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
+			denominator -= com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 		}
 	}
 }

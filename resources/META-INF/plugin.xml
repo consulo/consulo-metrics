@@ -4,13 +4,23 @@
 	<vendor>Bas Leijdekkers (Basleijdekkers@gmail.com)</vendor>
 	<version>SNAPSHOT</version>
 	<depends config-file="java.xml" optional="true">org.consulo.java</depends>
+	<depends config-file="xml.xml" optional="true">com.intellij.xml</depends>
 
 	<extensionPoints>
 		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
+		<extensionPoint name="metric" interface="com.sixrr.metrics.Metric"/>
+
+		<extensionPoint name="lineOfCodeFileTypeProvider" beanClass="com.sixrr.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP"/>
 	</extensionPoints>
+
+	<extensions defaultExtensionNs="org.mustbe.consulo.metrics">
+		<metricProvider implementation="com.sixrr.metrics.impl.defaultMetricsProvider.DefaultMetricProvider" />
+	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<appStarter implementation="com.sixrr.metrics.offline.MetricsCommandLine"/>
+
+		<applicationService serviceImplementation="com.sixrr.metrics.profile.instanceHolder.MetricInstanceHolder" />
 	</extensions>
 
 	<application-components>

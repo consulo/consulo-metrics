@@ -27,7 +27,6 @@ import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class TrueCommentRatioPackageCalculator extends PackageCalculator
 {
@@ -65,7 +64,7 @@ public class TrueCommentRatioPackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 		}
 
@@ -79,7 +78,7 @@ public class TrueCommentRatioPackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final int lineCount = LineUtil.countCommentOnlyLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 			numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 		}
 	}

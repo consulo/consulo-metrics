@@ -25,7 +25,6 @@ import com.intellij.psi.PsiJavaPackage;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class LinesOfTestCodeRecursivePackageCalculator extends PackageCalculator
 {
@@ -56,7 +55,7 @@ public class LinesOfTestCodeRecursivePackageCalculator extends PackageCalculator
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			final PsiJavaPackage[] packageNames = ClassUtils.calculatePackagesRecursive(file);
 			for(final PsiJavaPackage packageName : packageNames)
 			{

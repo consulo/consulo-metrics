@@ -26,6 +26,7 @@ import javax.swing.filechooser.FileFilter;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.Presentation;
@@ -50,7 +51,7 @@ public class ViewOfflineMetricsResultsAction extends AnAction
 	public void actionPerformed(AnActionEvent event)
 	{
 		final DataContext dataContext = event.getDataContext();
-		final Project project = (Project) dataContext.getData(DataConstants.PROJECT);
+		final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
 		final JFileChooser chooser = new JFileChooser();
 		final FileFilter filter = new SnapshotFileFilter();
@@ -77,7 +78,7 @@ public class ViewOfflineMetricsResultsAction extends AnAction
 			final List<MetricInstance> instances = new ArrayList<MetricInstance>();
 			for(Metric metric : metrics)
 			{
-				final MetricInstanceImpl metricInstance = new MetricInstanceImpl(metric);
+				final MetricInstanceImpl metricInstance = new MetricInstanceImpl(metric.getClass().getName(), metric);
 				metricInstance.setEnabled(true);
 				instances.add(metricInstance);
 			}

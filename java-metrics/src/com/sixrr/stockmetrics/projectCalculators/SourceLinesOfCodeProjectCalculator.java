@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class SourceLinesOfCodeProjectCalculator extends ElementCountProjectCalculator
 {
@@ -36,14 +35,14 @@ public class SourceLinesOfCodeProjectCalculator extends ElementCountProjectCalcu
 		public void visitJavaFile(PsiJavaFile file)
 		{
 			super.visitJavaFile(file);
-			numElements += LineUtil.countLines(file);
+			numElements += com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 		}
 
 		@Override
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			numElements -= LineUtil.countCommentOnlyLines(comment);
+			numElements -= com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 		}
 	}
 }

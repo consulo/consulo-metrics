@@ -18,6 +18,7 @@ package com.sixrr.metrics;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.extensions.ExtensionPointName;
 
 /**
  * To add a new metric to IntelliJ IDEA, create a Metric class for it, which specifies both all the "metadata" for a metric,
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Metric
 {
+	ExtensionPointName<Metric> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.metrics.metric");
 	/**
 	 * The id of the metric.  This is a non-user visible string which will be used a key for managing metrics internal
 	 * to MetricsReloaded.  It should be unique over the space of all defined metrics.

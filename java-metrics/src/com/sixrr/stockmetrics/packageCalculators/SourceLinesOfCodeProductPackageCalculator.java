@@ -29,7 +29,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.metrics.utils.BucketedCount;
 import com.sixrr.metrics.utils.ClassUtils;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class SourceLinesOfCodeProductPackageCalculator extends PackageCalculator
 {
@@ -71,7 +70,7 @@ public class SourceLinesOfCodeProductPackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final int lineCount = LineUtil.countLines(file);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			numLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 		}
 
@@ -90,7 +89,7 @@ public class SourceLinesOfCodeProductPackageCalculator extends PackageCalculator
 			{
 				return;
 			}
-			final int lineCount = LineUtil.countCommentOnlyLines(comment);
+			final int lineCount = com.sixrr.stockmetrics.utils.LineUtil.countCommentOnlyLines(comment);
 			numCommentLinesPerPackage.incrementBucketValue(aPackage, lineCount);
 		}
 	}

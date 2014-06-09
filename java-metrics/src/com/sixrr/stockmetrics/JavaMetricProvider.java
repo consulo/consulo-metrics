@@ -36,7 +36,6 @@ public class JavaMetricProvider implements MetricProvider
 {
 	private static final String COMPLEXITY_PROFILE_NAME = StockMetricsBundle.message("complexity.metrics.profile.name");
 	private static final String JAVADOC_PROFILE_NAME = StockMetricsBundle.message("javadoc.coverage.metrics.profile.name");
-	private static final String CODE_SIZE_PROFILE_NAME = StockMetricsBundle.message("lines.of.code.metrics.profile.name");
 	private static final String MARTIN_PROFILE_NAME = StockMetricsBundle.message("martin.packaging.metrics.profile.name");
 	private static final String DEPENDENCY_PROFILE_NAME = StockMetricsBundle.message("dependency.metrics.profile.name");
 	private static final String MOOD_PROFILE_NAME = StockMetricsBundle.message("mood.metrics.profile.name");
@@ -331,7 +330,6 @@ public class JavaMetricProvider implements MetricProvider
 		metricsClasses.add(NumTopLevelInterfacesProjectMetric.class);
 		metricsClasses.add(NumTopLevelClassesProjectMetric.class);
 		metricsClasses.add(NumMethodsProjectMetric.class);
-		metricsClasses.add(LinesOfCodeProjectMetric.class);
 		metricsClasses.add(CommentLinesOfCodeProjectMetric.class);
 		metricsClasses.add(JavadocLinesOfCodeProjectMetric.class);
 		metricsClasses.add(CommentRatioProjectMetric.class);
@@ -373,7 +371,6 @@ public class JavaMetricProvider implements MetricProvider
 	{
 		final List<PrebuiltMetricProfile> out = new ArrayList<PrebuiltMetricProfile>();
 		out.add(createComplexityProfile());
-		out.add(createCodeSizeProfile());
 		out.add(createChidamberKemererProfile());
 		out.add(createClassCountProfile());
 		out.add(createDependencyProfile());
@@ -396,27 +393,6 @@ public class JavaMetricProvider implements MetricProvider
 		return profile;
 	}
 
-	private static PrebuiltMetricProfile createCodeSizeProfile()
-	{
-		final PrebuiltMetricProfile profile = new PrebuiltMetricProfile(CODE_SIZE_PROFILE_NAME);
-		profile.addMetric("LinesOfCodeProject");
-		profile.addMetric("LinesOfCodeModule");
-		profile.addMetric("LinesOfCodePackage");
-		profile.addMetric("LinesOfCodeRecursivePackage");
-		profile.addMetric("LinesOfProductCodeProject");
-		profile.addMetric("LinesOfProductCodeModule");
-		profile.addMetric("LinesOfProductCodePackage");
-		profile.addMetric("LinesOfProductCodeRecursivePackage");
-		profile.addMetric("LinesOfTestCodeProject");
-		profile.addMetric("LinesOfTestCodeModule");
-		profile.addMetric("LinesOfTestCodePackage");
-		profile.addMetric("LinesOfTestCodeRecursivePackage");
-		profile.addMetric("LinesOfHTMLProject");
-		profile.addMetric("LinesOfHTMLModule");
-		profile.addMetric("LinesOfXMLProject");
-		profile.addMetric("LinesOfXMLModule");
-		return profile;
-	}
 
 	private static PrebuiltMetricProfile createClassCountProfile()
 	{

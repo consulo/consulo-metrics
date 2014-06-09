@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElementVisitor;
 import com.sixrr.metrics.utils.ClassUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class CommentLinesOfCodeClassCalculator extends ClassCalculator
 {
@@ -59,7 +58,7 @@ public class CommentLinesOfCodeClassCalculator extends ClassCalculator
 		public void visitComment(PsiComment comment)
 		{
 			super.visitComment(comment);
-			elementCount += LineUtil.countLines(comment);
+			elementCount += com.sixrr.stockmetrics.utils.LineUtil.countLines(comment);
 		}
 	}
 }

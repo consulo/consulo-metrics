@@ -16,22 +16,24 @@
 
 package com.sixrr.metrics.metricModel;
 
+import org.jetbrains.annotations.NotNull;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 
 public class MetricInstanceImpl implements MetricInstance
 {
-
-	private final Metric metric;
+	private final Metric myMetric;
+	private final String myMetricClassName;
 	private boolean enabled = false;
 	private boolean upperThresholdEnabled = false;
 	private double upperThreshold = 0.0;
 	private boolean lowerThresholdEnabled = false;
 	private double lowerThreshold = 0.0;
 
-	public MetricInstanceImpl(Metric metric)
+	public MetricInstanceImpl(@NotNull String metricClassName, Metric metric)
 	{
-		this.metric = metric;
+		myMetric = metric;
+		myMetricClassName = metricClassName;
 	}
 
 	@Override
@@ -44,16 +46,16 @@ public class MetricInstanceImpl implements MetricInstance
 	}
 
 	@Override
-	public int compareTo(MetricInstance o)
+	public int compareTo(@NotNull MetricInstance o)
 	{
-		final MetricCategory category1 = metric.getCategory();
+		final MetricCategory category1 = myMetric.getCategory();
 		final MetricCategory category2 = o.getMetric().getCategory();
 		final int categoryComparison = category1.compareTo(category2);
 		if(categoryComparison != 0)
 		{
 			return -categoryComparison;
 		}
-		final String displayName1 = metric.getDisplayName();
+		final String displayName1 = myMetric.getDisplayName();
 		final String displayName2 = o.getMetric().getDisplayName();
 		return displayName1.compareTo(displayName2);
 	}
@@ -61,32 +63,27 @@ public class MetricInstanceImpl implements MetricInstance
 	@Override
 	public boolean equals(Object o)
 	{
-		if(o.getClass() != MetricInstanceImpl.class)
-		{
-			return false;
-		}
-		final MetricInstanceImpl other = (MetricInstanceImpl) o;
-		final MetricCategory category1 = metric.getCategory();
-		final MetricCategory category2 = other.metric.getCategory();
-		if(category1 != category2)
-		{
-			return false;
-		}
-		final String displayName1 = metric.getDisplayName();
-		final String displayName2 = other.metric.getDisplayName();
-		return displayName1.equals(displayName2);
+		return o instanceof MetricInstanceImpl && getMetricClass().equals(((MetricInstanceImpl) o).getMetricClass());
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return 31 * metric.getCategory().hashCode() + metric.getDisplayName().hashCode();
+		return 31 * myMetric.getCategory().hashCode() + myMetric.getDisplayName().hashCode();
 	}
 
+	@NotNull
+	@Override
+	public String getMetricClass()
+	{
+		return myMetricClassName;
+	}
+
+	@NotNull
 	@Override
 	public Metric getMetric()
 	{
-		return metric;
+		return myMetric;
 	}
 
 	@Override
@@ -158,6 +155,6 @@ public class MetricInstanceImpl implements MetricInstance
 	@Override
 	public String toString()
 	{
-		return metric.getCategory() + "/" + metric.getDisplayName();
+		return myMetric.getCategory() + "/" + myMetric.getDisplayName();
 	}
 }

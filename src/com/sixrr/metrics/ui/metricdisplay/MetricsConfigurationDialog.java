@@ -343,7 +343,7 @@ public class MetricsConfigurationDialog extends DialogWrapper implements TreeSel
 
 		if(profile != null)
 		{
-			final List<MetricInstance> metrics = profile.getMetrics();
+			final List<MetricInstance> metrics = profile.getSortedMetrics(false);
 			for(final MetricInstance metricInstance : metrics)
 			{
 				final Metric metric = metricInstance.getMetric();

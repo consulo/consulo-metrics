@@ -20,7 +20,6 @@ import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJavaFile;
 import com.sixrr.metrics.utils.TestUtils;
-import com.sixrr.stockmetrics.utils.LineUtil;
 
 public class LinesOfTestCodeProjectCalculator extends ElementCountProjectCalculator
 {
@@ -39,7 +38,7 @@ public class LinesOfTestCodeProjectCalculator extends ElementCountProjectCalcula
 		{
 			if(TestUtils.isTest(file))
 			{
-				numElements += LineUtil.countLines(file);
+				numElements += com.sixrr.stockmetrics.utils.LineUtil.countLines(file);
 			}
 		}
 	}
