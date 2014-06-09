@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact name="dist">
+    <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
+    <root id="root">
+      <element id="directory" name="metrics">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="metrics.jar">
+            <element id="module-output" name="consulo-metrics" />
+            <element id="module-production-resource-output" name="consulo-metrics" />
+          </element>
+          <element id="file-copy" path="$PROJECT_DIR$/lib/jcommon-0.9.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/jfreechart-0.9.16.jar" />
+          <element id="zip-archive" name="java-metrics.jar">
+            <element id="module-production-resource-output" name="java-metrics" />
+            <element id="module-output" name="java-metrics" />
+          </element>
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
