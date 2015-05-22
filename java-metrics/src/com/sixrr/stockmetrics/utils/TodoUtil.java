@@ -31,7 +31,7 @@ public class TodoUtil
 	public static boolean isTodoComment(PsiComment comment)
 	{
 		final PsiFile file = comment.getContainingFile();
-		final PsiTodoSearchHelper searchHelper = PsiTodoSearchHelper.SERVICE.getInstance(comment.getProject());
+		final PsiTodoSearchHelper searchHelper = PsiTodoSearchHelper.getInstance(comment.getProject());
 		final TodoItem[] todoItems = searchHelper.findTodoItems(file);
 		for(final TodoItem todoItem : todoItems)
 		{
