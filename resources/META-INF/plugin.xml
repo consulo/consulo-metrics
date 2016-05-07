@@ -18,8 +18,6 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<appStarter implementation="com.sixrr.metrics.offline.MetricsCommandLine"/>
-
 		<applicationService serviceImplementation="com.sixrr.metrics.profile.instanceHolder.MetricInstanceHolder" />
 	</extensions>
 
@@ -43,10 +41,7 @@
 		<group>
 			<action id="Metrics.ProjectMetricsAction" class="com.sixrr.metrics.plugin.ProjectMetricsAction"
 					text="Calculate Metrics..."/>
-			<!--action id="Metrics.ViewOfflineMetricsResults"
-					  class="com.sixrr.metrics.offline.ViewOfflineMetricsResultsAction"
-					  text="View Offline Metrics Results...">
-			  </action-->
+
 			<add-to-group group-id="InspectCodeGroup" anchor="last"/>
 		</group>
 	</actions>
