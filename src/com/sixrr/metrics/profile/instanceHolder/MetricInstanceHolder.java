@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.consulo.annotations.Immutable;
-import org.consulo.lombok.annotations.ApplicationService;
-import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -43,6 +41,8 @@ import com.sixrr.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderE
 import com.sixrr.metrics.impl.defaultMetricsProvider.projectMetrics.LinesOfCodeProjectMetric;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
+import consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL

@@ -16,7 +16,7 @@
 
 package com.sixrr.metrics.utils;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 
 @Bundle(value = "com.sixrr.metrics.utils.MetricsReloadedBundle")
 public class MetricsReloadedBundle
