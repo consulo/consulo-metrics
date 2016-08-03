@@ -26,17 +26,28 @@ public abstract class BaseMetric implements Cloneable, Metric
 {
 	public static String getIdByClassName(@NotNull Class<? extends Metric> clazz)
 	{
-		final String className = clazz.getSimpleName();
+		return getIdByClassName(clazz.getSimpleName());
+	}
+
+	public static String getIdByClassName(@NotNull String className)
+	{
 		@NonNls final int endIndex = className.length() - "Metric".length();
 		return className.substring(0, endIndex);
 	}
 
-	private final String myId;
+	private String myId;
 
 	protected BaseMetric()
 	{
 		super();
 		myId = getIdByClassName(getClass());
+	}
+
+	public void setId(@NotNull String id)
+	{
+		assert myId != null;
+
+		myId = id;
 	}
 
 	@Override

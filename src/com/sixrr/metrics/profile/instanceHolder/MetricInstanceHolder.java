@@ -16,8 +16,6 @@
 
 package com.sixrr.metrics.profile.instanceHolder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -26,21 +24,17 @@ import java.util.Set;
 
 import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.openapi.util.text.StringUtil;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricProvider;
 import com.sixrr.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP;
 import com.sixrr.metrics.impl.defaultMetricsProvider.projectMetrics.LinesOfCodeProjectMetric;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
+import com.sixrr.stockmetrics.metricModel.BaseMetric;
 import consulo.lombok.annotations.ApplicationService;
 import consulo.lombok.annotations.Logger;
 
@@ -121,65 +115,12 @@ public class MetricInstanceHolder
 				LOGGER.error("File type is unknown: " + ep.fileType);
 				fileTypeByFileName = PlainTextFileType.INSTANCE;
 			}
-			String lineOfCodeClass = Type.getInternalName(LinesOfCodeProjectMetric.class);
-			String className = lineOfCodeClass + "$" + ep.fileType;
+			String className = LinesOfCodeProjectMetric.class.getName() + "$" + ep.fileType;
 
-			ClassWriter writer = new ClassWriter(Opcodes.F_FULL);
-			writer.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, className, null, lineOfCodeClass, null);
+			LinesOfCodeProjectMetric projectMetric = new LinesOfCodeProjectMetric(fileTypeByFileName);
+			projectMetric.setId(BaseMetric.getIdByClassName(StringUtil.getShortName(className)));
 
-			String desc = Type.getConstructorDescriptor(LinesOfCodeProjectMetric.class.getConstructors()[0]);
-			MethodVisitor methodVisitor = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", desc, null, null);
-
-			methodVisitor.visitMaxs(2, 2);
-			methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-			methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);
-			methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, lineOfCodeClass, "<init>", desc);
-			methodVisitor.visitInsn(Opcodes.RETURN);
-			methodVisitor.visitEnd();
-			writer.visitEnd();
-
-			Class<?> aClass = defineClass(className.replace("/", "."), writer.toByteArray());
-
-			try
-			{
-				myMetricInstances.put(aClass.getName(), (Metric) aClass.getConstructors()[0].newInstance(fileTypeByFileName));
-			}
-			catch(InstantiationException e)
-			{
-				LOGGER.error(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				LOGGER.error(e);
-			}
-			catch(InvocationTargetException e)
-			{
-				LOGGER.error(e);
-			}
+			myMetricInstances.put(className, projectMetric);
 		}
-	}
-
-	private Class<?> defineClass(String name, byte[] array)
-	{
-		PluginClassLoader classLoader = ((PluginClassLoader) getClass().getClassLoader());
-		try
-		{
-			Method defineClass = UrlClassLoader.class.getDeclaredMethod("_defineClass", String.class, byte[].class);
-			defineClass.setAccessible(true);
-			return (Class<?>) defineClass.invoke(classLoader, name, array);
-		}
-		catch(NoSuchMethodException e)
-		{
-			LOGGER.error(e);
-		}
-		catch(InvocationTargetException e)
-		{
-			LOGGER.error(e);
-		}
-		catch(IllegalAccessException e)
-		{
-			LOGGER.error(e);
-		}
-		return null;
 	}
 }
