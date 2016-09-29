@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package com.sixrr.metrics.impl;
+package consulo.metrics.impl.defaultMetricsProvider;
 
-import com.intellij.openapi.module.Module;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
  * @author VISTALL
  * @since 09.06.14
  */
-public abstract class SimpleModuleCalculator extends SimpleMetricCalculator
+public class LineOfCodeFileTypeProviderEP extends AbstractExtensionPointBean
 {
-	protected void postMetric(Module module, int numerator, int denominator)
-	{
-		myResultsHolder.postModuleMetric(myMetric, module, (double) numerator, (double) denominator);
-	}
+	public static ExtensionPointName<LineOfCodeFileTypeProviderEP> EP_NAME = ExtensionPointName.create("consulo.metrics.lineOfCodeFileTypeProvider");
 
-	protected void postMetric(Module module, int value)
-	{
-		myResultsHolder.postModuleMetric(myMetric, module, (double) value);
-	}
+	@Attribute("fileType")
+	public String fileType;
 }

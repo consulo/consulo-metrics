@@ -26,7 +26,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
  */
 public interface Metric
 {
-	ExtensionPointName<Metric> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.metrics.metric");
+	ExtensionPointName<Metric> EP_NAME = ExtensionPointName.create("consulo.metrics.metric");
 	/**
 	 * The id of the metric.  This is a non-user visible string which will be used a key for managing metrics internal
 	 * to MetricsReloaded.  It should be unique over the space of all defined metrics.

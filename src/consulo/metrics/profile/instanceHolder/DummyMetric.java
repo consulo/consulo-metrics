@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sixrr.metrics.profile.instanceHolder;
+package consulo.metrics.profile.instanceHolder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

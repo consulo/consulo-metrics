@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.metrics.java;
+package consulo.metrics.java;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaPackage;

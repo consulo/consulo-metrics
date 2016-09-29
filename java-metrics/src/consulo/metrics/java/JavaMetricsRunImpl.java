@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.metrics.java;
+package consulo.metrics.java;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiClass;
@@ -23,7 +23,7 @@ import com.intellij.psi.PsiMethod;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.MetricsResultsHolder;
-import com.sixrr.metrics.metricModel.DelegateMetricsHolder;
+import consulo.metrics.metricModel.DelegateMetricsHolder;
 import com.sixrr.metrics.metricModel.MetricsCategoryNameUtil;
 import com.sixrr.metrics.metricModel.MetricsResult;
 import com.sixrr.metrics.utils.MethodUtils;

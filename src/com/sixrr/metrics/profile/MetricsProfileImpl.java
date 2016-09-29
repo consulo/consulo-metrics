@@ -39,8 +39,8 @@ import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
-import com.sixrr.metrics.profile.instanceHolder.DummyMetric;
-import com.sixrr.metrics.profile.instanceHolder.MetricInstanceHolder;
+import consulo.metrics.profile.instanceHolder.DummyMetric;
+import consulo.metrics.profile.instanceHolder.MetricInstanceHolder;
 
 public class MetricsProfileImpl implements MetricsProfile
 {

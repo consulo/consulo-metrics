@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sixrr.metrics.impl.defaultMetricsProvider;
+package consulo.metrics.impl.defaultMetricsProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricProvider;
 import com.sixrr.metrics.PrebuiltMetricProfile;
 import com.sixrr.metrics.impl.defaultMetricsProvider.projectMetrics.LinesOfCodeProjectMetric;
-import com.sixrr.metrics.profile.instanceHolder.MetricInstanceHolder;
+import consulo.metrics.profile.instanceHolder.MetricInstanceHolder;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 
 /**

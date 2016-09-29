@@ -23,7 +23,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.sixrr.metrics.MetricCalculator;
 import com.sixrr.metrics.MetricType;
-import com.sixrr.metrics.impl.SimpleElementCountProjectCalculator;
+import consulo.metrics.impl.SimpleElementCountProjectCalculator;
 import com.sixrr.metrics.impl.defaultMetricsProvider.projectCalculators.LineUtil;
 import com.sixrr.metrics.utils.MetricsReloadedBundle;
 import com.sixrr.stockmetrics.projectMetrics.ProjectMetric;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sixrr.metrics.metricModel;
+package consulo.metrics.metricModel;
 
 import java.util.List;
 
@@ -24,6 +24,9 @@ import com.intellij.openapi.module.Module;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
 import com.sixrr.metrics.MetricsResultsHolder;
+import com.sixrr.metrics.metricModel.MetricsResult;
+import com.sixrr.metrics.metricModel.MetricsRun;
+import com.sixrr.metrics.metricModel.TimeStamp;
 import com.sixrr.metrics.profile.MetricsProfile;
 
 /**

@@ -1,24 +1,24 @@
-<idea-plugin version="2">
-	<id>org.mustbe.consulo.metrics</id>
-	<name>MetricsReloaded</name>
+<idea-plugin>
+	<id>consulo.metrics</id>
+	<name>Metics</name>
 	<vendor>Bas Leijdekkers (Basleijdekkers@gmail.com)</vendor>
 	<version>SNAPSHOT</version>
-	<depends config-file="java.xml" optional="true">org.consulo.java</depends>
+	<depends config-file="java.xml" optional="true">consulo.java</depends>
 	<depends config-file="xml.xml" optional="true">com.intellij.xml</depends>
 
 	<extensionPoints>
 		<extensionPoint name="metricProvider" interface="com.sixrr.metrics.MetricProvider"/>
 		<extensionPoint name="metric" interface="com.sixrr.metrics.Metric"/>
 
-		<extensionPoint name="lineOfCodeFileTypeProvider" beanClass="com.sixrr.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP"/>
+		<extensionPoint name="lineOfCodeFileTypeProvider" beanClass="consulo.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP"/>
 	</extensionPoints>
 
-	<extensions defaultExtensionNs="org.mustbe.consulo.metrics">
-		<metricProvider implementation="com.sixrr.metrics.impl.defaultMetricsProvider.DefaultMetricProvider" />
+	<extensions defaultExtensionNs="consulo.metrics">
+		<metricProvider implementation="consulo.metrics.impl.defaultMetricsProvider.DefaultMetricProvider" />
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<applicationService serviceImplementation="com.sixrr.metrics.profile.instanceHolder.MetricInstanceHolder" />
+		<applicationService serviceImplementation="consulo.metrics.profile.instanceHolder.MetricInstanceHolder" />
 	</extensions>
 
 	<application-components>
@@ -41,7 +41,6 @@
 		<group>
 			<action id="Metrics.ProjectMetricsAction" class="com.sixrr.metrics.plugin.ProjectMetricsAction"
 					text="Calculate Metrics..."/>
-
 			<add-to-group group-id="InspectCodeGroup" anchor="last"/>
 		</group>
 	</actions>

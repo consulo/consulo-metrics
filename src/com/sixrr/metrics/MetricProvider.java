@@ -19,8 +19,8 @@ package com.sixrr.metrics;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * To add metrics to IntellIJ IDEA, you first create the Metric classes for them, and then bind them into IDEA using a
@@ -30,8 +30,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
  */
 public interface MetricProvider
 {
-
-	ExtensionPointName<MetricProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("org.mustbe.consulo.metrics.metricProvider");
+	ExtensionPointName<MetricProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.metrics.metricProvider");
 
 	/**
 	 * Returns the list of metrics classes provided by this provider.
@@ -40,7 +39,7 @@ public interface MetricProvider
 	 */
 	@NotNull
 	@Deprecated
-	@DeprecationInfo("Use ep with name 'org.mustbe.consulo.metrics.metric'")
+	@DeprecationInfo("Use ep with name 'consulo.metrics.metric'")
 	List<Class<? extends Metric>> getMetricClasses();
 
 	/**

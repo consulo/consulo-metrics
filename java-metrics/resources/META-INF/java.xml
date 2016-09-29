@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 <idea-plugin>
-	<extensions defaultExtensionNs="org.mustbe.consulo.metrics">
+	<extensions defaultExtensionNs="consulo.metrics">
 		<lineOfCodeFileTypeProvider fileType="JAVA" />
 
 		<metricProvider implementation="com.sixrr.stockmetrics.JavaMetricProvider"/>

@@ -16,8 +16,8 @@
 
 package com.sixrr.stockmetrics.execution;
 
-import org.mustbe.consulo.metrics.java.JavaMetricsResultsHolder;
-import org.mustbe.consulo.metrics.java.JavaMetricsRunImpl;
+import consulo.metrics.java.JavaMetricsResultsHolder;
+import consulo.metrics.java.JavaMetricsRunImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;

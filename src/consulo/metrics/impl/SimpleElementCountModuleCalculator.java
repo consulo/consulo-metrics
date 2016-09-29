@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sixrr.metrics.impl;
+package consulo.metrics.impl;
 
 import java.util.Set;
 

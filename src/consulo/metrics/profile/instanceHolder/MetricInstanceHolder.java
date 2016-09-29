@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sixrr.metrics.profile.instanceHolder;
+package consulo.metrics.profile.instanceHolder;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -30,11 +29,12 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricProvider;
-import com.sixrr.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP;
+import consulo.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP;
 import com.sixrr.metrics.impl.defaultMetricsProvider.projectMetrics.LinesOfCodeProjectMetric;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
 import com.sixrr.stockmetrics.metricModel.BaseMetric;
+import consulo.annotations.Immutable;
 import consulo.lombok.annotations.ApplicationService;
 import consulo.lombok.annotations.Logger;
 
@@ -112,7 +112,7 @@ public class MetricInstanceHolder
 
 			if(fileTypeByFileName == null)
 			{
-				LOGGER.error("File type is unknown: " + ep.fileType);
+				MetricInstanceHolder.LOGGER.error("File type is unknown: " + ep.fileType);
 				fileTypeByFileName = PlainTextFileType.INSTANCE;
 			}
 			String className = LinesOfCodeProjectMetric.class.getName() + "$" + ep.fileType;
