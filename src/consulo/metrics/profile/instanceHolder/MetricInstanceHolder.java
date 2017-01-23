@@ -23,29 +23,35 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricProvider;
-import consulo.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP;
 import com.sixrr.metrics.impl.defaultMetricsProvider.projectMetrics.LinesOfCodeProjectMetric;
 import com.sixrr.metrics.metricModel.MetricInstance;
 import com.sixrr.metrics.metricModel.MetricInstanceImpl;
 import com.sixrr.stockmetrics.metricModel.BaseMetric;
 import consulo.annotations.Immutable;
-import consulo.lombok.annotations.ApplicationService;
-import consulo.lombok.annotations.Logger;
+import consulo.metrics.impl.defaultMetricsProvider.LineOfCodeFileTypeProviderEP;
 
 /**
  * @author VISTALL
  * @since 09.06.14
  */
-@ApplicationService
-@Logger
 public class MetricInstanceHolder
 {
+	@NotNull
+	public static MetricInstanceHolder getInstance()
+	{
+		return ServiceManager.getService(MetricInstanceHolder.class);
+	}
+
+	private static final Logger LOGGER = Logger.getInstance(MetricInstanceHolder.class);
+
 	private final Map<String, Metric> myMetricInstances = new HashMap<String, Metric>(200);
 
 	public MetricInstanceHolder()
