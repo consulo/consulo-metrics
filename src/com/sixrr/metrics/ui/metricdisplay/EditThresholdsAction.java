@@ -22,7 +22,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.sixrr.metrics.Metric;
 import com.sixrr.metrics.MetricCategory;
@@ -48,8 +47,7 @@ class EditThresholdsAction extends AnAction
 	@Override
 	public void actionPerformed(AnActionEvent event)
 	{
-		final DataContext dataContext = event.getDataContext();
-		final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+		final Project project = event.getProject();
 		assert project != null;
 		final MetricCategory category = toolWindow.getSelectedCategory();
 		final MetricsProfile profile = toolWindow.getCurrentProfile();
